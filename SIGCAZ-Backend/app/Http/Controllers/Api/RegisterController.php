@@ -9,6 +9,8 @@ use App\Models\Participant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Throwable;
+use App\Mail\RegisterCreatedMail;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -51,8 +53,12 @@ class RegisterController extends Controller
             ]);
         });
 
+        foreach ($register->participants as $participant) {
+            Mail::to($participant->email)->send(new RegisterCreatedMail($register));
+        }
+
         return response()->json([
-            'message' => 'Registro creado exitosamente.',
+            'message' => 'Registro creado exitosamente. Recibirás un correo de confirmación con los detalles de tu registro.',
             'data' => $register,
         ], 201);
     }
