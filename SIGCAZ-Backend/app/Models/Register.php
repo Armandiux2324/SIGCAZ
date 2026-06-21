@@ -15,7 +15,7 @@ class Register extends Model
         'origin_type',
         'state',
         'municipality',
-        'group_id',
+        'group',
         'is_first_time',
         'participation_count',
         'attendance_type',
@@ -32,11 +32,6 @@ class Register extends Model
         'participant_count' => 'integer',
         'stay_days' => 'integer',
     ];
-
-    public function group()
-    {
-        return $this->belongsTo(Group::class);
-    }
 
     public function participants()
     {

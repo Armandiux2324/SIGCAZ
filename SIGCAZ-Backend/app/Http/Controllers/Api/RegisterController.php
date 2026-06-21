@@ -24,7 +24,7 @@ class RegisterController extends Controller
                 'origin_type' => $data['origin_type'],
                 'state' => $data['state'],
                 'municipality' => $data['municipality'],
-                'group_id' => $data['group_id'] ?? null,
+                'group' => $data['group'],
                 'is_first_time' => $data['is_first_time'],
                 'participation_count' => $data['participation_count'],
                 'attendance_type' => $data['attendance_type'],
@@ -48,7 +48,6 @@ class RegisterController extends Controller
             }
 
             return $register->load([
-                'group',
                 'participants',
             ]);
         });

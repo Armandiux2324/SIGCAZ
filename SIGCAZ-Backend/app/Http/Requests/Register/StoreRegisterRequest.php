@@ -26,7 +26,7 @@ class StoreRegisterRequest extends FormRequest
             'origin_type' => ['required','in:national,state'],
             'state' => ['required','string','max:255'],
             'municipality' => ['required','string','max:255'],
-            'group_id' => ['nullable','exists:groups,id'],
+            'group' => ['required','string','max:255'],
             'is_first_time' => ['required','boolean'],
             'participation_count' => ['required','integer','min:0'],
             'attendance_type' => ['required','in:alone,accompanied'],

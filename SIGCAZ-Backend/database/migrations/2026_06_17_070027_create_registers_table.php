@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('origin_type', ['national','state',]);
             $table->string('state');
             $table->string('municipality');
-            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
+            $table->string('group');
             $table->boolean('is_first_time');
             $table->unsignedInteger('participation_count')->default(0);
             $table->enum('attendance_type', ['alone','accompanied',]);
