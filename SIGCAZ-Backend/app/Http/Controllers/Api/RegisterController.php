@@ -54,7 +54,7 @@ class RegisterController extends Controller
         });
 
         foreach ($register->participants as $participant) {
-            Mail::to($participant->email)->send(new RegisterCreatedMail($register));
+            Mail::to($participant->email)->queue(new RegisterCreatedMail($register, $participant));
         }
 
         return response()->json([

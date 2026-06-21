@@ -25,8 +25,10 @@ class UserController extends Controller
                 'data' => $user,
             ], 201);
         } catch (Throwable $e) {
+            report($e);
+
             return response()->json([
-                'message' => 'Error al crear el usuario: ' . $e->getMessage(),
+                'message' => 'Error al crear el usuario. Intenta nuevamente más tarde.',
             ], 500);
         }
     }

@@ -10,20 +10,17 @@ use App\Http\Controllers\Api\RegisterController;
 Route::prefix('v1')->group(function () {
     // Ruta de autenticación
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('/users', [UserController::class, 'store']);
     // Rutas de registro de participantes
     Route::post('/registers', [RegisterController::class, 'store']);
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Rutas de usuarios
-        
+        Route::post('/users', [UserController::class, 'store']);
         // Rutas de cuadras
         Route::post('/groups', [GroupController::class, 'store']);
     });
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-        // Route::get('/me', [UserController::class, 'me']);
-        // Route::post('/logout', [UserController::class, 'logout']);
-        // Route::get('/users', [UserController::class, 'index']);
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
     });
 });

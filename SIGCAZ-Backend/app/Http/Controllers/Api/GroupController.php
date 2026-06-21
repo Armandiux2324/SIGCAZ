@@ -29,8 +29,10 @@ class GroupController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
+            report($e);
+
             return response()->json([
-                'message' => 'Error al crear la cuadra: ' . $e->getMessage(),
+                'message' => 'Error al crear la cuadra. Intenta nuevamente más tarde.',
             ], 500);
         }
     }
