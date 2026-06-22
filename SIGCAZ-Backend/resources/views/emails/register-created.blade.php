@@ -79,6 +79,10 @@
                                     <td style="color:#888888;">Días de estancia</td>
                                     <td>{{ $register->stay_days }}</td>
                                 </tr>
+                                <tr>
+                                    <td style="color:#888888;">Método de transporte</td>
+                                    <td>{{ $register->transport_method === 'airplane' ? 'Avión' : ($register->transport_method === 'bus' ? 'Autobús' : 'Automóvil') }}</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>

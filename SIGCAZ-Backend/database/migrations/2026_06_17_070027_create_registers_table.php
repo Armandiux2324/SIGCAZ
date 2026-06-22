@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('accommodation_type', ['airbnb','hotel','own_home','family_or_friends',]);
             $table->string('lodging')->nullable();
             $table->unsignedTinyInteger('stay_days');
+            $table->enum('transport_method', ['airplane','bus','car']);
             $table->enum('folio_delivery_method', ['email','phone']);
             $table->timestamps();
         });

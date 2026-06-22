@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Register\StoreRegisterRequest;
+use App\Http\Requests\Register\SearchRegisterRequest;
 use App\Models\Register;
 use App\Models\Participant;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,7 @@ class RegisterController extends Controller
                 'accommodation_type' => $data['accommodation_type'],
                 'lodging' => $data['lodging'] ?? null,
                 'stay_days' => $data['stay_days'],
+                'transport_method' => $data['transport_method'],
                 'folio_delivery_method' => $data['folio_delivery_method'],
             ]);
 
@@ -60,5 +62,25 @@ class RegisterController extends Controller
             'message' => 'Registro creado exitosamente. Recibirás un correo de confirmación con los detalles de tu registro.',
             'data' => $register,
         ], 201);
+    }
+
+    public function search(SearchRegisterRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $participant = Participant::where('folio', $data['folio'])->whereRaw('LOWER(email) = ?', [strtolower($data['email'])])->first();
+
+        if (! $participant) {
+            return response()->json([
+                'message' => 'No se encontró ningún registro de un participante con ese folio y correo.',
+            ], 404);
+        }
+
+        $register = $participant->register->load('participants');
+
+        return response()->json([
+            'message' => 'Registro encontrado exitosamente.',
+            'data' => $register,
+        ]);
     }
 }

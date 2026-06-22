@@ -10,6 +10,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
     // Rutas de registro de participantes
     Route::post('/registers', [RegisterController::class, 'store']);
+    Route::get('/registers/search', [RegisterController::class, 'search']);
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Rutas de usuarios

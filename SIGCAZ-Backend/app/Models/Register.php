@@ -23,6 +23,7 @@ class Register extends Model
         'accommodation_type',
         'lodging',
         'stay_days',
+        'transport_method',
         'folio_delivery_method',
     ];
 

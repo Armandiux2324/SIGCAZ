@@ -34,6 +34,7 @@ class StoreRegisterRequest extends FormRequest
             'accommodation_type' => ['required','in:airbnb,hotel,own_home,family_or_friends',],
             'lodging' => ['nullable','string','max:255'],
             'stay_days' => ['required','integer','min:1'],
+            'transport_method' => ['required','in:airplane,bus,car',],
             'folio_delivery_method' => ['required','in:email,phone',],
             'participants' => ['required','array','min:1'],
             'participants.*.first_name' => ['required','string','max:255'],
