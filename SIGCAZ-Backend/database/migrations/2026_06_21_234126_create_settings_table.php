@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('event_address');
-            $table->string('event_date');
+            $table->datetime('event_date');
             $table->string('event_image_path')->nullable();
             $table->timestamps();
         });

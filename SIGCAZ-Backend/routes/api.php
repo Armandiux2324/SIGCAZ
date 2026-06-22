@@ -11,6 +11,7 @@ Route::prefix('v1')->group(function () {
     // Rutas de registro de participantes
     Route::post('/registers', [RegisterController::class, 'store']);
     Route::get('/registers/search', [RegisterController::class, 'search']);
+    Route::get('/registers/receipt', [RegisterController::class, 'receipt']);
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Rutas de usuarios

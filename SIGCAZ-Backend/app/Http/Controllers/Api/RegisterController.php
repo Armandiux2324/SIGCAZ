@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Throwable;
 use App\Mail\RegisterCreatedMail;
 use Illuminate\Support\Facades\Mail;
+use App\Services\RegisterReceiptPdfService;
 
 class RegisterController extends Controller
 {
@@ -82,5 +83,22 @@ class RegisterController extends Controller
             'message' => 'Registro encontrado exitosamente.',
             'data' => $register,
         ]);
+    }
+
+    public function receipt(SearchRegisterRequest $request, RegisterReceiptPdfService $pdfService)
+    {
+        $data = $request->validated();
+
+        $participant = Participant::where('folio', $data['folio'])->whereRaw('LOWER(email) = ?', [strtolower($data['email'])])->first();
+
+        if (! $participant) {
+            return response()->json([
+                'message' => 'No se encontró ningún registro con ese folio y correo.',
+            ], 404);
+        }
+
+        $pdf = $pdfService->build($participant);
+
+        return $pdf->download("comprobante-{$participant->folio}.pdf");
     }
 }

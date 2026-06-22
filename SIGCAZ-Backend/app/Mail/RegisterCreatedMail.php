@@ -11,6 +11,8 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use App\Services\RegisterReceiptPdfService;
+use Illuminate\Mail\Mailables\Attachment;
 
 class RegisterCreatedMail extends Mailable implements ShouldQueue
 {
@@ -39,5 +41,14 @@ class RegisterCreatedMail extends Mailable implements ShouldQueue
                 'qrBinary' => $qrBinary,
             ],
         );
+    }
+
+    public function attachments(): array
+    {
+        $pdf = app(RegisterReceiptPdfService::class)->build($this->participant);
+
+        return [
+            Attachment::fromData(fn () => $pdf->output(), "comprobante-{$this->participant->folio}.pdf")->withMime('application/pdf'),
+        ];
     }
 }
