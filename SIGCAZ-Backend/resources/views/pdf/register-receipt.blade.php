@@ -36,13 +36,17 @@
     <div class="section-title">Información general del registro</div>
     <table>
         <tr><td class="label">Cuadrilla</td><td>{{ $register->group }}</td></tr>
-        <tr><td class="label">Origen</td><td>{{ $register->origin_type === 'national' ? 'Nacional' : 'Estatal' }}</td></tr>
+        <tr><td class="label">Origen</td><td>{{ $register->origin_type_label }}</td></tr>
         <tr><td class="label">Estado</td><td>{{ $register->state }}</td></tr>
         <tr><td class="label">Municipio</td><td>{{ $register->municipality }}</td></tr>
-        <tr><td class="label">Tipo de asistencia</td><td>{{ $register->attendance_type === 'accompanied' ? 'Acompañado' : 'Solo' }}</td></tr>
+        <tr><td class="label">Primera vez participando</td><td>{{ $register->is_first_time_label }}</td></tr>
+        <tr><td class="label">Veces que ha participado</td><td>{{ $register->participation_count }}</td></tr>
+        <tr><td class="label">Tipo de asistencia</td><td>{{ $register->attendance_type_label }}</td></tr>
         <tr><td class="label">Total de participantes</td><td>{{ $register->participant_count }}</td></tr>
+        <tr><td class="label">Tipo de hospedaje</td><td>{{ $register->accommodation_type_label }}</td></tr>
+        <tr><td class="label">Hospedaje</td><td>{{ $register->lodging }}</td></tr>
         <tr><td class="label">Días de estancia</td><td>{{ $register->stay_days }}</td></tr>
-        <tr><td class="label">Medio de transporte</td><td>{{ ['car' => 'Automóvil', 'airplane' => 'Avión', 'bus' => 'Autobús'][$register->transport_method] ?? $register->transport_method }}</td></tr>
+        <tr><td class="label">Método de transporte</td><td>{{ $register->transport_method_label }}</td></tr>
     </table>
 
     <div class="section-title">Tus datos</div>
@@ -51,6 +55,7 @@
         <tr><td class="label">Teléfono</td><td>{{ $participant->phone }}</td></tr>
         <tr><td class="label">Correo</td><td>{{ $participant->email }}</td></tr>
         <tr><td class="label">Talla de playera</td><td>{{ $participant->shirt_size }}</td></tr>
+        <tr><td class="label">Género</td><td>{{ $participant->gender_label }}</td></tr>
     </table>
 
     <hr class="divider">

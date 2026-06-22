@@ -38,4 +38,40 @@ class Register extends Model
     {
         return $this->hasMany(Participant::class);
     }
+
+    public function getOriginTypeLabelAttribute(): string
+    {
+        return $this->origin_type === 'national' ? 'Nacional' : 'Estatal';
+    }
+
+    public function getAttendanceTypeLabelAttribute(): string
+    {
+        return $this->attendance_type === 'accompanied' ? 'Acompañado' : 'Solo';
+    }
+
+    public function getIsFirstTimeLabelAttribute(): string
+    {
+        return $this->is_first_time ? 'Sí' : 'No';
+    }
+
+    public function getAccommodationTypeLabelAttribute(): string
+    {
+        return match ($this->accommodation_type) {
+            'airbnb' => 'Airbnb',
+            'hotel' => 'Hotel',
+            'own_home' => 'Casa propia',
+            'family_or_friends' => 'Casa de familiares o amigos',
+            default => $this->accommodation_type,
+        };
+    }
+
+    public function getTransportMethodLabelAttribute(): string
+    {
+        return match ($this->transport_method) {
+            'car' => 'Automóvil',
+            'airplane' => 'Avión',
+            'bus' => 'Autobús',
+            default => $this->transport_method,
+        };
+    }
 }

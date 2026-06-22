@@ -33,4 +33,9 @@ class Participant extends Model
     {
         return $this->hasMany(QrScan::class);
     }
+
+    public function getGenderLabelAttribute(): string
+    {
+        return $this->gender === 'male' ? 'Masculino' : 'Femenino';
+    }
 }

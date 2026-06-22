@@ -57,7 +57,7 @@
                                 </tr>
                                 <tr>
                                     <td style="color:#888888;">Origen</td>
-                                    <td>{{ $register->origin_type === 'national' ? 'Nacional' : 'Estatal' }}</td>
+                                    <td>{{ $register->origin_type_label }}</td>
                                 </tr>
                                 <tr>
                                     <td style="color:#888888;">Estado</td>
@@ -68,12 +68,28 @@
                                     <td>{{ $register->municipality }}</td>
                                 </tr>
                                 <tr>
+                                    <td style="color:#888888;">Primera vez participando</td>
+                                    <td>{{ $register->is_first_time_label }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Veces que ha participado</td>
+                                    <td>{{ $register->participation_count }}</td>
+                                </tr>
+                                <tr>
                                     <td style="color:#888888;">Tipo de asistencia</td>
-                                    <td>{{ $register->attendance_type === 'accompanied' ? 'Acompañado' : 'Solo' }}</td>
+                                    <td>{{ $register->attendance_type_label }}</td>
                                 </tr>
                                 <tr>
                                     <td style="color:#888888;">Total de participantes</td>
                                     <td>{{ $register->participant_count }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Tipo de hospedaje</td>
+                                    <td>{{ $register->accommodation_type_label }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Hospedaje</td>
+                                    <td>{{ $register->lodging }}</td>
                                 </tr>
                                 <tr>
                                     <td style="color:#888888;">Días de estancia</td>
@@ -81,7 +97,7 @@
                                 </tr>
                                 <tr>
                                     <td style="color:#888888;">Método de transporte</td>
-                                    <td>{{ $register->transport_method === 'airplane' ? 'Avión' : ($register->transport_method === 'bus' ? 'Autobús' : 'Automóvil') }}</td>
+                                    <td>{{ $register->transport_method_label }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -108,6 +124,10 @@
                                 <tr>
                                     <td style="color:#888888;">Talla de playera</td>
                                     <td>{{ $participant->shirt_size }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Género</td>
+                                    <td>{{ $participant->gender_label }}</td>
                                 </tr>
                             </table>
                         </td>
