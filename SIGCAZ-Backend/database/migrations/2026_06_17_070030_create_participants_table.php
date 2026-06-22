@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('register_id')->constrained()->cascadeOnDelete();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('phone')->unique();
+            $table->string('email')->unique();
             $table->enum('gender', ['male','female',]);
             $table->string('shirt_size');
             $table->string('qr_path')->nullable();

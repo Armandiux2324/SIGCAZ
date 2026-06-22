@@ -39,8 +39,8 @@ class StoreRegisterRequest extends FormRequest
             'participants' => ['required','array','min:1'],
             'participants.*.first_name' => ['required','string','max:255'],
             'participants.*.last_name' => ['required','string','max:255'],
-            'participants.*.phone' => ['required','string','max:20'],
-            'participants.*.email' => ['required','email','max:255'],
+            'participants.*.phone' => ['required','string','max:20','unique:participants,phone'],
+            'participants.*.email' => ['required','email','max:255','unique:participants,email'],
             'participants.*.gender' => ['required','in:male,female',],
             'participants.*.shirt_size' => ['required','string','max:10'],
         ];

@@ -28,4 +28,9 @@ class Participant extends Model
     {
         return $this->belongsTo(Register::class);
     }
+
+    public function qrScans()
+    {
+        return $this->hasMany(QrScan::class);
+    }
 }
