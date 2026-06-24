@@ -308,3 +308,76 @@ ion-header ion-toolbar {
   color: var(--color-text-muted, #6B7280);
   margin: 0 0 16px;
 }
+
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ── Botones Anterior / Siguiente ── */
+.btn-pag {
+  --border-radius: 10px;
+  --border-color: #1A56E8;
+  --color: #1A56E8;
+  font-weight: 600;
+  height: 38px;
+  min-width: 65px;
+  text-transform: none;
+  transition: 0.2s ease;
+
+  --background-hover: rgba(26, 86, 232, 0.08);
+}
+
+.btn-pag:disabled {
+  opacity: 0.4;
+}
+
+/* ── Contenedor de números ── */
+.paginas-numeros {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #F3F6FF;
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ── Números de página ── */
+.num-pag {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1A56E8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+/* Hover */
+.num-pag:hover {
+  background: rgba(26, 86, 232, 0.08);
+}
+
+/* Página activa */
+.num-pag.activa {
+  background: #1A56E8;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(26, 86, 232, 0.3);
+}
+
+/* Ellipsis (…) */
+.num-pag:empty {
+  pointer-events: none;
+}

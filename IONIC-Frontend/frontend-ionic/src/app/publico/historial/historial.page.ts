@@ -149,3 +149,4 @@ export class HistorialPage implements OnInit {
     URL.revokeObjectURL(url);
   }
 }
+
