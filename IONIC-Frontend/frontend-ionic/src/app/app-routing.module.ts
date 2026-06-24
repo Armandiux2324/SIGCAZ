@@ -8,8 +8,16 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'asistencia',
     pathMatch: 'full'
+  },
+  {
+    path: 'asistencia',
+    loadChildren: () => import('./publico/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
+  },
+  {
+    path: 'historial',
+    loadChildren: () => import('./publico/historial/historial.module').then( m => m.HistorialPageModule)
   },
 ];
 
