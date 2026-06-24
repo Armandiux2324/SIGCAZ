@@ -61,4 +61,9 @@ export class ApiService {
     const params = new HttpParams().set('folio', folio).set('email', email);
     return this.http.get(this.url + '/registers/search', { params });
   }
+
+  getReceiptUrl(folio: string, email: string): string {
+    const params = new HttpParams().set('folio', folio).set('email', email);
+    return `${this.url}/registers/receipt?${params.toString()}`;
+  }
 }
