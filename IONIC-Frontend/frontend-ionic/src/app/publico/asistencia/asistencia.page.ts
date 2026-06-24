@@ -55,15 +55,21 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     try {
       this.qrScanner = new Html5Qrcode('qr-reader');
 
-      await this.qrScanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          this.registrarAsistencia(decodedText);
-          this.stopScan(false);
-        },
-        () => {}
-      );
+    await this.qrScanner.start(
+  { facingMode: 'environment' },
+  {
+    fps: 10,
+    qrbox: {
+      width: 430,
+      height: 430
+    }
+  },
+  (decodedText) => {
+    this.registrarAsistencia(decodedText);
+    this.stopScan(false);
+  },
+  () => {}
+);
 
       // Aplicar flash si ya estaba encendido antes de iniciar
       if (this.flashActivo) {
