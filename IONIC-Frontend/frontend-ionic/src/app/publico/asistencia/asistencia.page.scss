@@ -1,0 +1,419 @@
+// ═══════════════════════════════════════════════
+// Variables del sistema de diseño
+// ═══════════════════════════════════════════════
+:root {
+  --color-primary:      #1A56E8;
+  --color-success:      #15A854;
+  --color-error:        #E03131;
+  --color-warn:         #F59F00;
+  --color-bg:           #F0F4FF;
+  --color-surface:      #FFFFFF;
+  --color-text:         #111827;
+  --color-text-muted:   #6B7280;
+  --color-border:       #E5E7EB;
+  --radius-card:        20px;
+  --radius-btn:         50px;
+  --shadow-card:        0 4px 24px rgba(26, 86, 232, 0.10);
+}
+
+// ── Header ──────────────────────────────────────
+ion-header ion-toolbar {
+  --background: #FFFFFF;
+  --border-color: var(--color-border);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  letter-spacing: -0.3px;
+
+  .title-icon {
+    color: var(--color-primary);
+    font-size: 1.3rem;
+  }
+}
+
+// ── Contenido ────────────────────────────────────
+.asistencia-content {
+  --background: var(--color-bg);
+  --padding-top: 16px;
+  --padding-bottom: 32px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+// ── Scanner Card ─────────────────────────────────
+.scanner-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 20px 16px 16px;
+  margin-bottom: 20px;
+}
+
+.scanner-viewport {
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 260px;
+  border-radius: 16px;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.35s ease;
+
+  &.scanning { background: #0F172A; }
+  &.success  { background: #F0FDF4; }
+  &.error    { background: #FFF5F5; }
+}
+
+// QR Frame con esquinas
+.qr-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.qr-frame {
+  width: 68%;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s;
+
+  .corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-primary);
+    border-style: solid;
+    border-width: 0;
+
+    &.tl { top: 0; left: 0;  border-top-width: 3px; border-left-width: 3px;  border-radius: 4px 0 0 0; }
+    &.tr { top: 0; right: 0; border-top-width: 3px; border-right-width: 3px; border-radius: 0 4px 0 0; }
+    &.bl { bottom: 0; left: 0;  border-bottom-width: 3px; border-left-width: 3px;  border-radius: 0 0 0 4px; }
+    &.br { bottom: 0; right: 0; border-bottom-width: 3px; border-right-width: 3px; border-radius: 0 0 4px 0; }
+  }
+
+  &.frame-success .corner { border-color: var(--color-success); }
+  &.frame-error   .corner { border-color: var(--color-error); }
+}
+
+.qr-icon-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-placeholder-icon {
+  font-size: 64px;
+  color: #D1D5DB;
+}
+
+.qr-result-icon {
+  font-size: 68px;
+
+  &.success-icon { color: var(--color-success); }
+  &.error-icon   { color: var(--color-error); }
+}
+
+// Animación de escaneo
+.scanning-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  animation: scanDown 1.8s ease-in-out infinite;
+  box-shadow: 0 0 12px var(--color-primary);
+}
+
+@keyframes scanDown {
+  0%   { top: 10%; }
+  50%  { top: 90%; }
+  100% { top: 10%; }
+}
+
+.scan-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  position: absolute;
+  bottom: 16px;
+}
+
+// ── Status badge ─────────────────────────────────
+.status-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 100px;
+  width: fit-content;
+  margin-inline: auto;
+
+  ion-icon { font-size: 1rem; }
+
+  &.inactivo  { background: #F3F4F6; color: var(--color-text-muted); }
+  &.escaneando{ background: #EFF6FF; color: var(--color-primary); }
+  &.exito     { background: #F0FDF4; color: var(--color-success); }
+  &.error     { background: #FFF5F5; color: var(--color-error); }
+}
+
+// ── Botones ──────────────────────────────────────
+.action-buttons {
+  margin-top: 12px;
+}
+
+.btn-activar {
+  --background: var(--color-primary);
+  --background-hover: #1748C9;
+  --border-radius: var(--radius-btn);
+  --box-shadow: 0 4px 16px rgba(26, 86, 232, 0.30);
+  font-weight: 600;
+  height: 50px;
+  letter-spacing: 0.2px;
+}
+
+.btn-detener {
+  --border-radius: var(--radius-btn);
+  --color: var(--color-error);
+  --border-color: var(--color-error);
+  font-weight: 600;
+  height: 50px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-reiniciar {
+  flex: 1;
+  --border-radius: var(--radius-btn);
+  --color: var(--color-primary);
+  --border-color: var(--color-primary);
+  font-weight: 600;
+}
+
+.btn-demo {
+  --color: var(--color-text-muted);
+}
+
+.demo-hint {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+
+  ion-button {
+    --color: var(--color-text-muted);
+    font-size: 0.78rem;
+  }
+}
+
+// ── Historial Reciente ────────────────────────────
+.historial-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+}
+
+.ver-todo-btn {
+  --color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+// Estado vacío
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px;
+  color: var(--color-text-muted);
+
+  ion-icon {
+    font-size: 44px;
+    margin-bottom: 10px;
+    opacity: 0.4;
+  }
+
+  p   { margin: 0 0 4px; font-weight: 600; font-size: 0.9rem; }
+  span{ font-size: 0.8rem; }
+}
+
+// Tarjetas de registro
+.registro-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.registro-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F9FAFB;
+  border-radius: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &.new-record {
+    border-color: var(--color-success);
+    background: #F0FDF4;
+    animation: slideIn 0.4s ease;
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+.registro-avatar {
+  ion-icon {
+    font-size: 36px;
+    color: var(--color-primary);
+    opacity: 0.7;
+  }
+}
+
+.registro-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.registro-nombre {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.registro-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.registro-tiempo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.hora {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.fecha {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+
+// ───────────────────────────────────────────────
+// PWA QR SCANNER (html5-qrcode)
+// ───────────────────────────────────────────────
+
+#qr-reader {
+  width: 100%;
+  max-width: 320px;
+  height: 320px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+
+// Video interno del scanner
+#qr-reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+// Canvas overlay (html5-qrcode lo genera)
+#qr-reader__scan_region {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+// Ocultar texto default del plugin
+#qr-reader__dashboard_section {
+  display: none !important;
+}
+
+// ── Ajuste para que no choque con tu overlay ──
+.scanner-viewport.scanning {
+  background: #000 !important;
+}
+
+// ── Hacer que el scanner se centre perfecto ──
+.qr-reader-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

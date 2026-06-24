@@ -11,6 +11,14 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'asistencia',
+    loadChildren: () => import('./publico/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
+  },
+  {
+    path: 'historial',
+    loadChildren: () => import('./publico/historial/historial.module').then( m => m.HistorialPageModule)
+  },
 ];
 
 @NgModule({

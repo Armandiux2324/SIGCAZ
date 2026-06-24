@@ -35,3 +35,50 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+// ════════════════════════════════════════════════
+// variables.scss  –  Sistema de diseño global
+// ════════════════════════════════════════════════
+
+// Paleta principal
+:root {
+  --color-primary:       #1A56E8;
+  --color-primary-light: #4F8EF7;
+  --color-success:       #15A854;
+  --color-error:         #E03131;
+  --color-warn:          #F59F00;
+
+  --color-bg:            #F0F4FF;
+  --color-surface:       #FFFFFF;
+  --color-text:          #111827;
+  --color-text-muted:    #6B7280;
+  --color-border:        #E5E7EB;
+
+  --radius-card:  20px;
+  --radius-btn:   50px;
+  --shadow-card:  0 4px 24px rgba(26, 86, 232, 0.10);
+
+  // Ionic token overrides
+  --ion-background-color:         var(--color-bg);
+  --ion-text-color:               var(--color-text);
+  --ion-color-primary:            var(--color-primary);
+  --ion-color-primary-contrast:   #ffffff;
+  --ion-color-success:            var(--color-success);
+  --ion-color-danger:             var(--color-error);
+  --ion-font-family:              'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// Importar Inter desde Google Fonts (añadir en index.html o aquí)
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* { -webkit-tap-highlight-color: transparent; }
+
+ion-content {
+  --background: var(--color-bg);
+}
+
+ion-button {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
