@@ -1,1 +1,164 @@
-<p>register works!</p>
+<div class="register-container">
+  <h2>Registro de Participantes</h2>
+  <p>Complete el formulario para registrarse en el evento</p>
+
+  <!-- Tipo de participante -->
+  <div class="tipo-registro">
+    <button type="button">Individual <br>Un solo participante</button>
+    <button type="button">Grupal <br>Dos o más participantes</button>
+  </div>
+
+  <!-- DATOS PERSONALES -->
+  <div class="form-section">
+
+    <h3>Datos Personales</h3>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>NOMBRE COMPLETO</label>
+        <input type="text" placeholder="Ej. María del Rosario">
+      </div>
+
+      <div class="form-individual">
+        <label>APELLIDOS</label>
+        <input type="text" placeholder="Ej. Ramirez Mendes">
+      </div>
+
+      <div class="form-individual">
+        <label>TELÉFONO</label>
+        <input type="text" placeholder="10 dígitos">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>CORREO ELECTRÓNICO</label>
+        <input type="email" placeholder="correo@ejemplo.com">
+      </div>
+
+      <div class="form-individual">
+        <label>GÉNERO</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>Masculino</option>
+          <option>Femenino</option>
+          <option>No Binario</option>
+          <option>Prefiero no decirlo</option>
+        </select>
+      </div>
+
+      <div class="form-individual">
+        <label>TALLA DE PLAYERA</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>XS</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+          <option>XXL</option>
+          <option>XXXL</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>ORIGEN</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>Nacional</option>
+          <option>Estatal</option>
+        </select>
+      </div>
+
+      <div class="form-individual">
+        <label>ESTADO</label>
+        <select>
+          <option>Seleccione...</option>
+        </select>
+      </div>
+
+      <div class="form-individual">
+        <label>MUNICIPIO</label>
+        <select>
+          <option>Seleccione...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button">Siguiente</button>
+    </div>
+
+  </div>
+
+  <!-- INFORMACIÓN ADICIONAL -->
+  <div class="form-section">
+
+    <h3>Información Adicional</h3>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>CUADRA A LA QUE PERTENECES</label>
+        <input type="text" placeholder="Ej. Cuadra Villas">
+      </div>
+
+      <div class="form-individual">
+        <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+        <div>
+          <input type="radio" name="primera"> Sí
+          <input type="radio" name="primera"> No
+        </div>
+      </div>
+
+      <div class="form-individual">
+        <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+        <input type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>TIPO DE HOSPEDAJE</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>Airbnb</option>
+          <option>Hotel</option>
+          <option>Hostal</option>
+          <option>Casa Propia / Familiar</option>
+        </select>
+      </div>
+
+      <div class="form-individual">
+        <label>HOSPEDAJE AL QUE LLEGARÁ</label>
+        <input type="text" placeholder="Nombre o dirección">
+      </div>
+
+      <div class="form-individual">
+        <label>DÍAS DE ESTANCIA</label>
+        <input type="number">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-individual">
+        <label>TRANSPORTE QUE USARÁS</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>Automóvil</option>
+          <option>Autobús</option>
+          <option>Avión</option>
+          <option>Motocicleta</option>
+          <option>Otro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button">Anterior</button>
+      <button type="submit">Finalizar Registro</button>
+    </div>
+
+  </div>
+</div>
