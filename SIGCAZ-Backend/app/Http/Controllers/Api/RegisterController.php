@@ -27,8 +27,6 @@ class RegisterController extends Controller
                 'state' => $data['state'],
                 'municipality' => $data['municipality'],
                 'group' => $data['group'],
-                'is_first_time' => $data['is_first_time'],
-                'participation_count' => $data['participation_count'],
                 'attendance_type' => $data['attendance_type'],
                 'participant_count' => $data['participant_count'],
                 'accommodation_type' => $data['accommodation_type'],
@@ -47,6 +45,8 @@ class RegisterController extends Controller
                     'email' => $participantData['email'],
                     'gender' => $participantData['gender'],
                     'shirt_size' => $participantData['shirt_size'],
+                    'is_first_time' => $data['is_first_time'],
+                    'participation_count' => $data['participation_count'],
                 ]);
             }
 

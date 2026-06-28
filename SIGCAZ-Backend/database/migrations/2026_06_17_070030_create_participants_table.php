@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->enum('gender', ['male','female',]);
             $table->string('shirt_size');
+            $table->boolean('is_first_time');
+            $table->unsignedInteger('participation_count')->default(0);
             $table->string('qr_path')->nullable();
             $table->timestamp('attended_at')->nullable();
             $table->timestamps();
