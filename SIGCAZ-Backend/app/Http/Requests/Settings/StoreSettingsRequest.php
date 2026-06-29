@@ -24,8 +24,8 @@ class StoreSettingsRequest extends FormRequest
     {
         return [
             'event_address' => ['required','string','max:255'],
-            'event_date' => ['required','datetime'],
-            'event_image_path' => ['nullable','string','max:255'],
+            'event_date' => ['required','date'],
+            'event_image' => ['nullable','image','max:5120'],
         ];
     }
 }

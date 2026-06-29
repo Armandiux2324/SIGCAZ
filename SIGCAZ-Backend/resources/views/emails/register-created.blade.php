@@ -68,14 +68,6 @@
                                     <td>{{ $register->municipality }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="color:#888888;">Primera vez participando</td>
-                                    <td>{{ $register->is_first_time_label }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#888888;">Veces que ha participado</td>
-                                    <td>{{ $register->participation_count }}</td>
-                                </tr>
-                                <tr>
                                     <td style="color:#888888;">Tipo de asistencia</td>
                                     <td>{{ $register->attendance_type_label }}</td>
                                 </tr>
@@ -128,6 +120,14 @@
                                 <tr>
                                     <td style="color:#888888;">Género</td>
                                     <td>{{ $participant->gender_label }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Primera vez participando</td>
+                                    <td>{{ $participant->is_first_time_label }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#888888;">Veces que ha participado</td>
+                                    <td>{{ $participant->participation_count }}</td>
                                 </tr>
                             </table>
                         </td>

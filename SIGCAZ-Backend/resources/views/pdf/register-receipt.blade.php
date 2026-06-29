@@ -39,8 +39,6 @@
         <tr><td class="label">Origen</td><td>{{ $register->origin_type_label }}</td></tr>
         <tr><td class="label">Estado</td><td>{{ $register->state }}</td></tr>
         <tr><td class="label">Municipio</td><td>{{ $register->municipality }}</td></tr>
-        <tr><td class="label">Primera vez participando</td><td>{{ $register->is_first_time_label }}</td></tr>
-        <tr><td class="label">Veces que ha participado</td><td>{{ $register->participation_count }}</td></tr>
         <tr><td class="label">Tipo de asistencia</td><td>{{ $register->attendance_type_label }}</td></tr>
         <tr><td class="label">Total de participantes</td><td>{{ $register->participant_count }}</td></tr>
         <tr><td class="label">Tipo de hospedaje</td><td>{{ $register->accommodation_type_label }}</td></tr>
@@ -56,6 +54,8 @@
         <tr><td class="label">Correo</td><td>{{ $participant->email }}</td></tr>
         <tr><td class="label">Talla de playera</td><td>{{ $participant->shirt_size }}</td></tr>
         <tr><td class="label">Género</td><td>{{ $participant->gender_label }}</td></tr>
+        <tr><td class="label">Primera vez participando</td><td>{{ $participant->is_first_time_label }}</td></tr>
+        <tr><td class="label">Veces que ha participado</td><td>{{ $participant->participation_count }}</td></tr>
     </table>
 
     <hr class="divider">

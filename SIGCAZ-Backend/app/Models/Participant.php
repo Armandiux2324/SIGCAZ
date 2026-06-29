@@ -21,7 +21,14 @@ class Participant extends Model
         'phone',
         'email',
         'gender',
-        'shirt_size'
+        'shirt_size',
+        'is_first_time',
+        'participation_count',
+    ];
+
+    protected $casts = [
+        'is_first_time' => 'boolean',
+        'participation_count' => 'integer',
     ];
 
     public function register()
@@ -37,5 +44,10 @@ class Participant extends Model
     public function getGenderLabelAttribute(): string
     {
         return $this->gender === 'male' ? 'Masculino' : 'Femenino';
+    }
+
+    public function getIsFirstTimeLabelAttribute(): string
+    {
+        return $this->is_first_time ? 'Sí' : 'No';
     }
 }
