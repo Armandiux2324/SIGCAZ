@@ -9,24 +9,29 @@ use App\Http\Requests\Settings\StoreSettingsRequest;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
-    public function update(StoreSettingsRequest $request, int $id): JsonResponse
+    public function update(StoreSettingsRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
 
-            $settings = Settings::findOrFail($id);
+            $settings = Settings::first();
 
-            $data = $request->validated();
+            $data = $request->safe()->except('event_image');
+
+            if ($request->hasFile('event_image')) {
+                if ($settings->event_image_path) {
+                    Storage::disk('public')->delete($settings->event_image_path);
+                }
+
+                $data['event_image_path'] = $request->file('event_image')->store('event_images', 'public');
+            }
 
             $settings->fill($data);
             $settings->save();
-
-            if ($request->hasFile('event_image_path')) {
-                $path = $request->file('event_image_path')->store('event_images', 'public');
-            }
 
             DB::commit();
 
@@ -37,8 +42,10 @@ class SettingsController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
+            report($e);
+
             return response()->json([
-                'message' => 'Error al actualizar el configuración: ' . $e->getMessage(),
+                'message' => 'Error al actualizar la configuración.',
             ], 500);
         }
     }
