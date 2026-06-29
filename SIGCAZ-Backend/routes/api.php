@@ -23,6 +23,12 @@ Route::prefix('v1')->group(function () {
         Route::delete('/users/{id}', [UserController::class, 'destroy']);
         // Ruta de configuración
         Route::put('/settings', [SettingsController::class, 'update']);
+        // Rutas de registros
+        Route::get('/registers', [RegisterController::class, 'index']);
+        Route::get('/registers/{id}', [RegisterController::class, 'show']);
+        Route::put('/registers/{register}', [RegisterController::class, 'update']);
+        Route::delete('/registers/{id}', [RegisterController::class, 'destroy']);
+
     });
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
