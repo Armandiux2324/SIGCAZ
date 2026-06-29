@@ -2,15 +2,12 @@
   <h2>Registro de Participantes</h2>
   <p>Complete el formulario para registrarse en el evento</p>
 
-  <!-- Tipo de participante -->
   <div class="tipo-registro">
-    <button type="button">Individual <br>Un solo participante</button>
-    <button type="button">Grupal <br>Dos o más participantes</button>
+    <button type="button" class="active">Individual <br><span>Un solo participante</span></button>
+    <button type="button">Grupal <br><span>Dos o más participantes</span></button>
   </div>
 
-  <!-- DATOS PERSONALES -->
   <div class="form-section">
-
     <h3>Datos Personales</h3>
 
     <div class="row">
@@ -64,6 +61,36 @@
 
     <div class="row">
       <div class="form-individual">
+        <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="primera"> Sí</label>
+          <label><input type="radio" name="primera"> No</label>
+        </div>
+      </div>
+
+      <div class="form-individual">
+        <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+        <input type="number" value="0">
+      </div>
+
+      <div class="form-individual">
+        <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
+        <input type="number" value="0">
+      </div>
+    </div>
+
+
+
+    <div class="actions pag-2">
+      <button type="button" class="btn-next">Siguiente</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Datos generales</h3>
+
+    <div class="row">
+      <div class="form-individual">
         <label>ORIGEN</label>
         <select>
           <option>Seleccione...</option>
@@ -87,37 +114,6 @@
       </div>
     </div>
 
-    <div class="actions">
-      <button type="button">Siguiente</button>
-    </div>
-
-  </div>
-
-  <!-- INFORMACIÓN ADICIONAL -->
-  <div class="form-section">
-
-    <h3>Información Adicional</h3>
-
-    <div class="row">
-      <div class="form-individual">
-        <label>CUADRA A LA QUE PERTENECES</label>
-        <input type="text" placeholder="Ej. Cuadra Villas">
-      </div>
-
-      <div class="form-individual">
-        <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
-        <div>
-          <input type="radio" name="primera"> Sí
-          <input type="radio" name="primera"> No
-        </div>
-      </div>
-
-      <div class="form-individual">
-        <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-        <input type="number">
-      </div>
-    </div>
-
     <div class="row">
       <div class="form-individual">
         <label>TIPO DE HOSPEDAJE</label>
@@ -137,7 +133,7 @@
 
       <div class="form-individual">
         <label>DÍAS DE ESTANCIA</label>
-        <input type="number">
+        <input type="number" value="0">
       </div>
     </div>
 
@@ -149,16 +145,20 @@
           <option>Automóvil</option>
           <option>Autobús</option>
           <option>Avión</option>
-          <option>Motocicleta</option>
-          <option>Otro</option>
         </select>
       </div>
+
+      <div class="form-individual">
+        <label>CUADRA A LA QUE PERTENECEN</label>
+        <input type="text" placeholder="Ej. Cuadrilla 1">
+      </div>
+      
+      <div class="form-individual empty-space"></div>
     </div>
 
-    <div class="actions">
-      <button type="button">Anterior</button>
-      <button type="submit">Finalizar Registro</button>
+    <div class="registro-terminado">
+      <button type="button" class="btn-prev">Anterior</button>
+      <button type="submit" class="btn-submit">Finalizar Registro</button>
     </div>
-
   </div>
 </div>
