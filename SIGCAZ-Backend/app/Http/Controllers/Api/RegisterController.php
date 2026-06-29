@@ -46,7 +46,7 @@ class RegisterController extends Controller
                     'gender' => $participantData['gender'],
                     'shirt_size' => $participantData['shirt_size'],
                     'is_first_time' => $participantData['is_first_time'],
-                    'participation_count' => $participantData['participation_count'],
+                    'participation_count' => $participantData['participation_count'] ?? 0,
                 ]);
             }
 

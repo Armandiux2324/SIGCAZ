@@ -42,7 +42,7 @@ class StoreRegisterRequest extends FormRequest
             'participants.*.gender' => ['required','in:male,female',],
             'participants.*.shirt_size' => ['required','string','max:10'],
             'participants.*.is_first_time' => ['required','boolean'],
-            'participants.*.participation_count' => ['nullable','integer','min:0','required_if:participants.*.is_first_time,1,false'],
+            'participants.*.participation_count' => ['nullable','integer','min:0','required_if:participants.*.is_first_time,false,0'],
         ];
     }
 
