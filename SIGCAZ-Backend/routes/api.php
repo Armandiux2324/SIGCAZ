@@ -17,11 +17,16 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Rutas de usuarios
         Route::post('/users', [UserController::class, 'store']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users/{id}', [UserController::class, 'show']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
         // Ruta de configuración
         Route::put('/settings', [SettingsController::class, 'update']);
     });
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+        Route::get('/me', [UserController::class, 'me']);
     });
 });
