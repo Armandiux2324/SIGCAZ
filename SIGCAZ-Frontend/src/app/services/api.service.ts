@@ -6,8 +6,6 @@ import { environment } from '../../environments/environment.prod';
   providedIn: 'root'
 })
 export class ApiService {
-  constructor() { }
-
   url = environment.backend;
 
   addRegister(
@@ -15,8 +13,6 @@ export class ApiService {
     state: string,
     municipality: string,
     group: string,
-    isFirstTime: boolean,
-    participationCount: number,
     attendanceType: string,
     participantCount: number,
     accommodationType: string,
@@ -31,14 +27,15 @@ export class ApiService {
       email: string;
       gender: string;
       shirtSize: string;
-    }[]) {
+      isFirstTime: boolean;
+      participationCount: number;
+    }[]
+  ) {
     return axios.post(this.url + '/registers', {
       origin_type: originType,
       state,
       municipality,
       group,
-      is_first_time: isFirstTime,
-      participation_count: participationCount,
       attendance_type: attendanceType,
       participant_count: participantCount,
       accommodation_type: accommodationType,
@@ -53,16 +50,18 @@ export class ApiService {
         email: p.email,
         gender: p.gender,
         shirt_size: p.shirtSize,
+        is_first_time: p.isFirstTime,
+        participation_count: p.isFirstTime ? 0 : p.participationCount,
       })),
     });
   }
 
   searchRegister(folio: string, email: string) {
-    return axios.get(this.url + '/registers/search', { params: {folio, email} });
+    return axios.get(this.url + '/registers/search', { params: { folio, email } });
   }
 
   getReceiptUrl(folio: string, email: string): string {
-    const params = new URLSearchParams({folio, email,});
+    const params = new URLSearchParams({ folio, email });
     return `${this.url}/registers/receipt?${params.toString()}`;
   }
 }

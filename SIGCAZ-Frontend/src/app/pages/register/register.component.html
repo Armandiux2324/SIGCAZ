@@ -7,158 +7,182 @@
     <button type="button">Grupal <br><span>Dos o más participantes</span></button>
   </div>
 
-  <form [formGroup]="registerForm">
-    <div class="form-section" *ngIf="page == 1">
-      <h3>Datos Personales</h3>
+    <form [formGroup]="registerForm">
 
-      <div class="row">
-        <div class="form-individual">
-          <label>NOMBRE COMPLETO</label>
-          <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
-        </div>
+      <!-- PÁGINA 1: Datos personales -->
+      <div class="form-section" *ngIf="page === 1">
+        <h3>Datos Personales</h3>
 
-        <div class="form-individual">
-          <label>APELLIDOS</label>
-          <input type="text" formControlName="last_name" placeholder="Ej. Ramirez Mendes">
-        </div>
+        <div class="row">
+          <div class="form-individual">
+            <label>NOMBRE(S)</label>
+            <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
+            <span class="error" *ngIf="f['first_name'].invalid && f['first_name'].touched">Campo requerido</span>
+          </div>
 
-        <div class="form-individual">
-          <label>TELÉFONO</label>
-          <input type="text" formControlName="phone" placeholder="10 dígitos">
-        </div>
-      </div>
+          <div class="form-individual">
+            <label>APELLIDOS</label>
+            <input type="text" formControlName="last_name" placeholder="Ej. Ramírez Méndez">
+            <span class="error" *ngIf="f['last_name'].invalid && f['last_name'].touched">Campo requerido</span>
+          </div>
 
-      <div class="row">
-        <div class="form-individual">
-          <label>CORREO ELECTRÓNICO</label>
-          <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
-        </div>
-
-        <div class="form-individual">
-          <label>GÉNERO</label>
-          <select formControlName="gender">
-            <option>Seleccione...</option>
-            <option>Masculino</option>
-            <option>Femenino</option>
-          </select>
-        </div>
-
-        <div class="form-individual">
-          <label>TALLA DE PLAYERA</label>
-          <select formControlName="shirt_size">
-            <option>Seleccione...</option>
-            <option>XS</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-            <option>XXL</option>
-            <option>XXXL</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-individual">
-          <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
-          <div class="radio-group">
-            <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
-            <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+          <div class="form-individual">
+            <label>TELÉFONO</label>
+            <input type="text" formControlName="phone" placeholder="10 dígitos">
+            <span class="error" *ngIf="f['phone'].invalid && f['phone'].touched">Ingresa 10 dígitos</span>
           </div>
         </div>
 
-        <div class="form-individual">
-          <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-          <input type="number" value="0" formControlName="participation_count">
+        <div class="row">
+          <div class="form-individual">
+            <label>CORREO ELECTRÓNICO</label>
+            <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
+            <span class="error" *ngIf="f['email'].invalid && f['email'].touched">Correo inválido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>GÉNERO</label>
+            <select formControlName="gender">
+              <option value="">Seleccione...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+            <span class="error" *ngIf="f['gender'].invalid && f['gender'].touched">Campo requerido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>TALLA DE PLAYERA</label>
+            <select formControlName="shirt_size">
+              <option value="">Seleccione...</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+              <option value="XXXL">XXXL</option>
+            </select>
+            <span class="error" *ngIf="f['shirt_size'].invalid && f['shirt_size'].touched">Campo requerido</span>
+          </div>
         </div>
 
-        <div class="form-individual">
-          <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
-          <input type="number" value="0" formControlName="participant_count">
+        <div class="row">
+          <div class="form-individual">
+            <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+            <div class="radio-group">
+              <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
+              <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+            </div>
+          </div>
+
+          <div class="form-individual" *ngIf="f['is_first_time'].value === false">
+            <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+            <input type="number" min="1" formControlName="participation_count">
+            <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
+          </div>
+        </div>
+
+        <div class="actions pag-2">
+          <button type="button" class="btn-next" (click)="goToPage2()">Siguiente</button>
         </div>
       </div>
 
+      <!-- PÁGINA 2: Datos generales -->
+      <div class="form-section" *ngIf="page === 2">
+        <h3>Datos generales</h3>
 
+        <div class="row">
+          <div class="form-individual">
+            <label>ORIGEN</label>
+            <select formControlName="origin_type">
+              <option value="">Seleccione...</option>
+              <option value="Nacional">Nacional</option>
+              <option value="Estatal">Estatal</option>
+            </select>
+            <span class="error" *ngIf="f['origin_type'].invalid && f['origin_type'].touched">Campo requerido</span>
+          </div>
 
-      <div class="actions pag-2">
-        <button type="button" class="btn-next" (click)="page = 2">Siguiente</button>
+          <div class="form-individual">
+            <label>ESTADO</label>
+            <select formControlName="state">
+              <option value="">Seleccione...</option>
+              <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+            </select>
+            <span class="error" *ngIf="f['state'].invalid && f['state'].touched">Campo requerido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>MUNICIPIO</label>
+            <input type="text" formControlName="municipality" placeholder="Ej. Guadalupe">
+            <span class="error" *ngIf="f['municipality'].invalid && f['municipality'].touched">Campo requerido</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-individual">
+            <label>TIPO DE HOSPEDAJE</label>
+            <select formControlName="accommodation_type">
+              <option value="">Seleccione...</option>
+              <option value="Airbnb">Airbnb</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Hostal">Hostal</option>
+              <option value="Casa Propia / Familiar">Casa Propia / Familiar</option>
+            </select>
+            <span class="error" *ngIf="f['accommodation_type'].invalid && f['accommodation_type'].touched">Campo requerido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>HOSPEDAJE AL QUE LLEGARÁ</label>
+            <input type="text" formControlName="lodging" placeholder="Nombre o dirección">
+          </div>
+
+          <div class="form-individual">
+            <label>DÍAS DE ESTANCIA</label>
+            <input type="number" min="1" formControlName="stay_days">
+            <span class="error" *ngIf="f['stay_days'].invalid && f['stay_days'].touched">Mínimo 1 día</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-individual">
+            <label>TRANSPORTE QUE USARÁS</label>
+            <select formControlName="transport_method">
+              <option value="">Seleccione...</option>
+              <option value="Automóvil">Automóvil</option>
+              <option value="Autobús">Autobús</option>
+              <option value="Avión">Avión</option>
+            </select>
+            <span class="error" *ngIf="f['transport_method'].invalid && f['transport_method'].touched">Campo requerido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>CUADRILLA A LA QUE PERTENECEN</label>
+            <input type="text" formControlName="group" placeholder="Ej. Cuadrilla 1">
+            <span class="error" *ngIf="f['group'].invalid && f['group'].touched">Campo requerido</span>
+          </div>
+
+          <div class="form-individual">
+            <label>MÉTODO DE ENTREGA DEL FOLIO</label>
+            <select formControlName="folio_delivery_method">
+              <option value="email">Correo electrónico</option>
+              <option value="phone">Teléfono</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="registro-terminado">
+          <button type="button" class="btn-prev" (click)="goToPage1()">Anterior</button>
+          <button type="submit" class="btn-submit" [disabled]="loading" (click)="addRegister()">
+            {{ loading ? 'Enviando...' : 'Finalizar Registro' }}
+          </button>
+        </div>
       </div>
+
+    </form>
+
+    <div class="toast" *ngIf="showToastFlag"
+      [class.success]="toastType === 'success'"
+      [class.error]="toastType === 'error'">
+      {{ toastMessage }}
     </div>
-
-    <div class="form-section" *ngIf="page == 2">
-      <h3>Datos generales</h3>
-
-      <div class="row">
-        <div class="form-individual">
-          <label>ORIGEN</label>
-          <select formControlName="origin_type">
-            <option>Seleccione...</option>
-            <option>Nacional</option>
-            <option>Estatal</option>
-          </select>
-        </div>
-
-        <div class="form-individual">
-          <label>ESTADO</label>
-          <select formControlName="state">
-            <option>Seleccione...</option>
-          </select>
-        </div>
-
-        <div class="form-individual">
-          <label>MUNICIPIO</label>
-          <select formControlName="municipality">
-            <option>Seleccione...</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-individual">
-          <label>TIPO DE HOSPEDAJE</label>
-          <select formControlName="accommodation_type">
-            <option>Seleccione...</option>
-            <option>Airbnb</option>
-            <option>Hotel</option>
-            <option>Hostal</option>
-            <option>Casa Propia / Familiar</option>
-          </select>
-        </div>
-
-        <div class="form-individual">
-          <label>HOSPEDAJE AL QUE LLEGARÁ</label>
-          <input type="text" placeholder="Nombre o dirección" formControlName="lodging">
-        </div>
-
-        <div class="form-individual">
-          <label>DÍAS DE ESTANCIA</label>
-          <input type="number" value="0" formControlName="stay_days">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-individual">
-          <label>TRANSPORTE QUE USARÁS</label>
-          <select formControlName="transport_method">
-            <option>Seleccione...</option>
-            <option>Automóvil</option>
-            <option>Autobús</option>
-            <option>Avión</option>
-          </select>
-        </div>
-
-        <div class="form-individual">
-          <label>CUADRA A LA QUE PERTENECEN</label>
-          <input type="text" placeholder="Ej. Cuadrilla 1" formControlName="group">
-        </div>
-        
-        <div class="form-individual empty-space"></div>
-      </div>
-
-      <div class="registro-terminado">
-        <button type="button" class="btn-prev" (click)="page = 1">Anterior</button>
-        <button type="submit" class="btn-submit" (click)="addRegister()">Finalizar Registro</button>
-      </div>
-    </div>
-  </form>
 </div>

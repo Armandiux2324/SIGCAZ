@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-
-interface ParticipantForm {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  gender: string;
-  shirtSize: string;
-}
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -18,111 +9,157 @@ interface ParticipantForm {
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
   loading = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
   showToastFlag = false;
   page = 1;
 
-  dataToAdd = {
-    originType: '',
-    state: '',
-    municipality: '',
-    group: '',
-    isFirstTime: true,
-    participationCount: 0,
-    attendanceType: '',
-    participantCount: 1,
-    accommodationType: '',
-    lodging: '',
-    stayDays: 1,
-    transportMethod: '',
-    folioDeliveryMethod: '',
-    participants: [] as ParticipantForm[],
-  };
+  states: string[] = [
+    'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
+    'Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato',
+    'Guerrero','Hidalgo','Jalisco','Estado de México','Michoacán','Morelos','Nayarit',
+    'Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí',
+    'Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas',
+  ];
 
-  constructor(private api: ApiService, private fb: FormBuilder) {
+  constructor(private api: ApiService, private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  buildForm(): void {
     this.registerForm = this.fb.group({
-      first_name: [''],
-      last_name: [''],
-      phone: [''],
-      email: [''],
-      gender: [''],
-      shirt_size: [''],
-      is_first_time: [true],
-      participation_count: [0],
-      participant_count: [1],
-
-      origin_type: [''],
-      state: [''],
-      municipality: [''],
-      accommodation_type: [''],
+      origin_type: ['', Validators.required],
+      state: ['', Validators.required],
+      municipality: ['', Validators.required],
+      group: ['', Validators.required],
+      accommodation_type: ['', Validators.required],
       lodging: [''],
-      stay_days: [1],
-      transport_method: [''],
-      group: ['']
+      stay_days: [1, [Validators.required, Validators.min(1)]],
+      transport_method: ['', Validators.required],
+      folio_delivery_method: ['email', Validators.required],
+
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      gender: ['', Validators.required],
+      shirt_size: ['', Validators.required],
+      is_first_time: [true, Validators.required],
+      participation_count: [0],
     });
   }
 
-  ngOnInit(): void {
+  get f() {
+    return this.registerForm.controls;
   }
 
-  addRegister() {
+  private page1Fields = [
+    'first_name','last_name','phone','email',
+    'gender','shirt_size','is_first_time','participation_count',
+  ];
+
+  goToPage2(): void {
+    const page1Invalid = this.page1Fields.some(field => {
+      const ctrl = this.registerForm.get(field);
+      ctrl?.markAsTouched();
+      return ctrl?.invalid;
+    });
+
+    if (page1Invalid) return;
+
+    this.page = 2;
+  }
+
+  goToPage1(): void {
+    this.page = 1;
+  }
+
+  private mapGender(val: string): string {
+    return val === 'Masculino' ? 'male' : 'female';
+  }
+
+  private mapOriginType(val: string): string {
+    return val === 'Nacional' ? 'national' : 'state';
+  }
+
+  private mapAccommodationType(val: string): string {
+    const map: Record<string, string> = {
+      'Airbnb': 'airbnb',
+      'Hotel': 'hotel',
+      'Hostal': 'own_home',
+      'Casa Propia / Familiar': 'family_or_friends',
+    };
+    return map[val] ?? val;
+  }
+
+  private mapTransportMethod(val: string): string {
+    const map: Record<string, string> = {
+      'Automóvil': 'car',
+      'Autobús': 'bus',
+      'Avión': 'airplane',
+    };
+    return map[val] ?? val;
+  }
+
+  addRegister(): void {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      // Si hay errores en página 1, volver para que el usuario los vea
+      const page1Invalid = this.page1Fields.some(f => this.registerForm.get(f)?.invalid);
+      if (page1Invalid) this.page = 1;
+      return;
+    }
+
     this.loading = true;
+    const f = this.registerForm.value;
 
     this.api.addRegister(
-      this.dataToAdd.originType,
-      this.dataToAdd.state,
-      this.dataToAdd.municipality,
-      this.dataToAdd.group,
-      this.dataToAdd.isFirstTime,
-      this.dataToAdd.participationCount,
-      this.dataToAdd.attendanceType,
-      this.dataToAdd.participantCount,
-      this.dataToAdd.accommodationType,
-      this.dataToAdd.lodging,
-      this.dataToAdd.stayDays,
-      this.dataToAdd.transportMethod,
-      this.dataToAdd.folioDeliveryMethod,
-      this.dataToAdd.participants
+      this.mapOriginType(f.origin_type),
+      f.state,
+      f.municipality,
+      f.group,
+      'alone',
+      1,
+      this.mapAccommodationType(f.accommodation_type),
+      f.lodging,
+      Number(f.stay_days),
+      this.mapTransportMethod(f.transport_method),
+      f.folio_delivery_method,
+      [{
+        firstName: f.first_name,
+        lastName: f.last_name,
+        phone: f.phone,
+        email: f.email,
+        gender: this.mapGender(f.gender),
+        shirtSize: f.shirt_size,
+        isFirstTime: f.is_first_time,
+        participationCount: f.is_first_time ? 0 : Number(f.participation_count),
+      }],
     ).then(() => {
-      this.toastMessage = 'Registro agregado exitosamente.';
+      this.toastMessage = 'Registro completado. Recibirás un correo de confirmación.';
       this.showToast('success');
       this.loading = false;
       this.resetForm();
-    }).catch(() => {
-      this.toastMessage = 'Error al agregar el registro.';
+    }).catch((error: any) => {
+      const msg = error?.response?.data?.message ?? 'Error al enviar el registro.';
+      this.toastMessage = msg;
       this.showToast('error');
       this.loading = false;
-    })
+    });
   }
 
-  resetForm() {
-    this.dataToAdd = {
-      originType: '',
-      state: '',
-      municipality: '',
-      group: '',
-      isFirstTime: true,
-      participationCount: 0,
-      attendanceType: '',
-      participantCount: 1,
-      accommodationType: '',
-      lodging: '',
-      stayDays: 1,
-      transportMethod: '',
-      folioDeliveryMethod: '',
-      participants: [],
-    };
+  resetForm(): void {
+    this.page = 1;
+    this.buildForm();
   }
 
-  showToast(type: 'success' | 'error') {
+  showToast(type: 'success' | 'error'): void {
     this.toastType = type;
     this.showToastFlag = true;
-
-    setTimeout(() => {
-      this.showToastFlag = false;
-    }, 3000);
+    setTimeout(() => { this.showToastFlag = false; }, 4000);
   }
 }
