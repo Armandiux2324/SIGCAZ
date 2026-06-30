@@ -7,158 +7,158 @@
     <button type="button">Grupal <br><span>Dos o más participantes</span></button>
   </div>
 
-  <div class="form-section">
-    <h3>Datos Personales</h3>
+  <form [formGroup]="registerForm">
+    <div class="form-section" *ngIf="page == 1">
+      <h3>Datos Personales</h3>
 
-    <div class="row">
-      <div class="form-individual">
-        <label>NOMBRE COMPLETO</label>
-        <input type="text" placeholder="Ej. María del Rosario">
-      </div>
+      <div class="row">
+        <div class="form-individual">
+          <label>NOMBRE COMPLETO</label>
+          <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
+        </div>
 
-      <div class="form-individual">
-        <label>APELLIDOS</label>
-        <input type="text" placeholder="Ej. Ramirez Mendes">
-      </div>
+        <div class="form-individual">
+          <label>APELLIDOS</label>
+          <input type="text" formControlName="last_name" placeholder="Ej. Ramirez Mendes">
+        </div>
 
-      <div class="form-individual">
-        <label>TELÉFONO</label>
-        <input type="text" placeholder="10 dígitos">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-individual">
-        <label>CORREO ELECTRÓNICO</label>
-        <input type="email" placeholder="correo@ejemplo.com">
-      </div>
-
-      <div class="form-individual">
-        <label>GÉNERO</label>
-        <select>
-          <option>Seleccione...</option>
-          <option>Masculino</option>
-          <option>Femenino</option>
-          <option>No Binario</option>
-          <option>Prefiero no decirlo</option>
-        </select>
-      </div>
-
-      <div class="form-individual">
-        <label>TALLA DE PLAYERA</label>
-        <select>
-          <option>Seleccione...</option>
-          <option>XS</option>
-          <option>S</option>
-          <option>M</option>
-          <option>L</option>
-          <option>XL</option>
-          <option>XXL</option>
-          <option>XXXL</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-individual">
-        <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
-        <div class="radio-group">
-          <label><input type="radio" name="primera"> Sí</label>
-          <label><input type="radio" name="primera"> No</label>
+        <div class="form-individual">
+          <label>TELÉFONO</label>
+          <input type="text" formControlName="phone" placeholder="10 dígitos">
         </div>
       </div>
 
-      <div class="form-individual">
-        <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-        <input type="number" value="0">
+      <div class="row">
+        <div class="form-individual">
+          <label>CORREO ELECTRÓNICO</label>
+          <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
+        </div>
+
+        <div class="form-individual">
+          <label>GÉNERO</label>
+          <select formControlName="gender">
+            <option>Seleccione...</option>
+            <option>Masculino</option>
+            <option>Femenino</option>
+          </select>
+        </div>
+
+        <div class="form-individual">
+          <label>TALLA DE PLAYERA</label>
+          <select formControlName="shirt_size">
+            <option>Seleccione...</option>
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+            <option>XXL</option>
+            <option>XXXL</option>
+          </select>
+        </div>
       </div>
 
-      <div class="form-individual">
-        <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
-        <input type="number" value="0">
-      </div>
-    </div>
+      <div class="row">
+        <div class="form-individual">
+          <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+          <div class="radio-group">
+            <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
+            <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+          </div>
+        </div>
 
+        <div class="form-individual">
+          <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+          <input type="number" value="0" formControlName="participation_count">
+        </div>
 
-
-    <div class="actions pag-2">
-      <button type="button" class="btn-next">Siguiente</button>
-    </div>
-  </div>
-
-  <div class="form-section">
-    <h3>Datos generales</h3>
-
-    <div class="row">
-      <div class="form-individual">
-        <label>ORIGEN</label>
-        <select>
-          <option>Seleccione...</option>
-          <option>Nacional</option>
-          <option>Estatal</option>
-        </select>
+        <div class="form-individual">
+          <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
+          <input type="number" value="0" formControlName="participant_count">
+        </div>
       </div>
 
-      <div class="form-individual">
-        <label>ESTADO</label>
-        <select>
-          <option>Seleccione...</option>
-        </select>
-      </div>
 
-      <div class="form-individual">
-        <label>MUNICIPIO</label>
-        <select>
-          <option>Seleccione...</option>
-        </select>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="form-individual">
-        <label>TIPO DE HOSPEDAJE</label>
-        <select>
-          <option>Seleccione...</option>
-          <option>Airbnb</option>
-          <option>Hotel</option>
-          <option>Hostal</option>
-          <option>Casa Propia / Familiar</option>
-        </select>
-      </div>
-
-      <div class="form-individual">
-        <label>HOSPEDAJE AL QUE LLEGARÁ</label>
-        <input type="text" placeholder="Nombre o dirección">
-      </div>
-
-      <div class="form-individual">
-        <label>DÍAS DE ESTANCIA</label>
-        <input type="number" value="0">
+      <div class="actions pag-2">
+        <button type="button" class="btn-next" (click)="page = 2">Siguiente</button>
       </div>
     </div>
 
-    <div class="row">
-      <div class="form-individual">
-        <label>TRANSPORTE QUE USARÁS</label>
-        <select>
-          <option>Seleccione...</option>
-          <option>Automóvil</option>
-          <option>Autobús</option>
-          <option>Avión</option>
-        </select>
+    <div class="form-section" *ngIf="page == 2">
+      <h3>Datos generales</h3>
+
+      <div class="row">
+        <div class="form-individual">
+          <label>ORIGEN</label>
+          <select formControlName="origin_type">
+            <option>Seleccione...</option>
+            <option>Nacional</option>
+            <option>Estatal</option>
+          </select>
+        </div>
+
+        <div class="form-individual">
+          <label>ESTADO</label>
+          <select formControlName="state">
+            <option>Seleccione...</option>
+          </select>
+        </div>
+
+        <div class="form-individual">
+          <label>MUNICIPIO</label>
+          <select formControlName="municipality">
+            <option>Seleccione...</option>
+          </select>
+        </div>
       </div>
 
-      <div class="form-individual">
-        <label>CUADRA A LA QUE PERTENECEN</label>
-        <input type="text" placeholder="Ej. Cuadrilla 1">
-      </div>
-      
-      <div class="form-individual empty-space"></div>
-    </div>
+      <div class="row">
+        <div class="form-individual">
+          <label>TIPO DE HOSPEDAJE</label>
+          <select formControlName="accommodation_type">
+            <option>Seleccione...</option>
+            <option>Airbnb</option>
+            <option>Hotel</option>
+            <option>Hostal</option>
+            <option>Casa Propia / Familiar</option>
+          </select>
+        </div>
 
-    <div class="registro-terminado">
-      <button type="button" class="btn-prev">Anterior</button>
-      <button type="submit" class="btn-submit">Finalizar Registro</button>
+        <div class="form-individual">
+          <label>HOSPEDAJE AL QUE LLEGARÁ</label>
+          <input type="text" placeholder="Nombre o dirección" formControlName="lodging">
+        </div>
+
+        <div class="form-individual">
+          <label>DÍAS DE ESTANCIA</label>
+          <input type="number" value="0" formControlName="stay_days">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-individual">
+          <label>TRANSPORTE QUE USARÁS</label>
+          <select formControlName="transport_method">
+            <option>Seleccione...</option>
+            <option>Automóvil</option>
+            <option>Autobús</option>
+            <option>Avión</option>
+          </select>
+        </div>
+
+        <div class="form-individual">
+          <label>CUADRA A LA QUE PERTENECEN</label>
+          <input type="text" placeholder="Ej. Cuadrilla 1" formControlName="group">
+        </div>
+        
+        <div class="form-individual empty-space"></div>
+      </div>
+
+      <div class="registro-terminado">
+        <button type="button" class="btn-prev" (click)="page = 1">Anterior</button>
+        <button type="submit" class="btn-submit" (click)="addRegister()">Finalizar Registro</button>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

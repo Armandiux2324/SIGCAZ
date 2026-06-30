@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 interface ParticipantForm {
   firstName: string;
@@ -17,10 +18,12 @@ interface ParticipantForm {
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
+  registerForm: FormGroup;
   loading = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
   showToastFlag = false;
+  page = 1;
 
   dataToAdd = {
     originType: '',
@@ -39,7 +42,28 @@ export class RegisterComponent implements OnInit {
     participants: [] as ParticipantForm[],
   };
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private fb: FormBuilder) {
+    this.registerForm = this.fb.group({
+      first_name: [''],
+      last_name: [''],
+      phone: [''],
+      email: [''],
+      gender: [''],
+      shirt_size: [''],
+      is_first_time: [true],
+      participation_count: [0],
+      participant_count: [1],
+
+      origin_type: [''],
+      state: [''],
+      municipality: [''],
+      accommodation_type: [''],
+      lodging: [''],
+      stay_days: [1],
+      transport_method: [''],
+      group: ['']
+    });
+  }
 
   ngOnInit(): void {
   }
@@ -62,20 +86,16 @@ export class RegisterComponent implements OnInit {
       this.dataToAdd.transportMethod,
       this.dataToAdd.folioDeliveryMethod,
       this.dataToAdd.participants
-    ).subscribe({
-      next: (data: any) => {
-        this.toastMessage = 'Registro agregado exitosamente.';
-        this.showToast('success');
-        this.loading = false;
-
-        this.resetForm();
-      },
-      error: (error: any) => {
-        this.toastMessage = 'Error al agregar el registro.';
-        this.showToast('error');
-        this.loading = false;
-      }
-    });
+    ).then(() => {
+      this.toastMessage = 'Registro agregado exitosamente.';
+      this.showToast('success');
+      this.loading = false;
+      this.resetForm();
+    }).catch(() => {
+      this.toastMessage = 'Error al agregar el registro.';
+      this.showToast('error');
+      this.loading = false;
+    })
   }
 
   resetForm() {

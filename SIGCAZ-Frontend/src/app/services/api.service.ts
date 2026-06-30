@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 
@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.prod';
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   url = environment.backend;
 
@@ -32,7 +32,7 @@ export class ApiService {
       gender: string;
       shirtSize: string;
     }[]) {
-    return this.http.post(this.url + '/registers', {
+    return axios.post(this.url + '/registers', {
       origin_type: originType,
       state,
       municipality,
@@ -58,12 +58,11 @@ export class ApiService {
   }
 
   searchRegister(folio: string, email: string) {
-    const params = new HttpParams().set('folio', folio).set('email', email);
-    return this.http.get(this.url + '/registers/search', { params });
+    return axios.get(this.url + '/registers/search', { params: {folio, email} });
   }
 
   getReceiptUrl(folio: string, email: string): string {
-    const params = new HttpParams().set('folio', folio).set('email', email);
+    const params = new URLSearchParams({folio, email,});
     return `${this.url}/registers/receipt?${params.toString()}`;
   }
 }

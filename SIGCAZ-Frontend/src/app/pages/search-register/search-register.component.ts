@@ -28,18 +28,15 @@ export class SearchRegisterComponent {
     this.notFound = false;
     this.register = null;
 
-    this.api.searchRegister(this.searchData.folio, this.searchData.email).subscribe({
-      next: (data: any) => {
-        this.register = data.data;
-        this.loading = false;
-      },
-      error: (error: any) => {
-        this.notFound = true;
-        this.loading = false;
-        this.toastMessage = 'No se encontró ningún registro con ese folio y correo.';
-        this.showToast('error');
-      }
-    });
+    this.api.searchRegister(this.searchData.folio, this.searchData.email).then(res => {
+      this.register = res.data;
+      this.loading = false;
+    }).catch(() => {
+      this.notFound = true;
+      this.loading = false;
+      this.toastMessage = 'No se encontró ningún registro con ese folio y correo.';
+      this.showToast('error');
+    })
   }
 
   downloadReceipt() {
