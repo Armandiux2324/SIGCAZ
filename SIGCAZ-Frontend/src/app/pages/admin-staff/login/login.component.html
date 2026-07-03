@@ -1,1 +1,23 @@
-<p>ola</p>
+<div>
+  <h2>Iniciar Sesión</h2>
+  <p>Ingresa tu correo electrónico y contraseña para iniciar sesión.</p>
+
+  <div>
+    <div>
+      <label>Correo Electrónico</label>
+      <input type="text" [(ngModel)]="email" placeholder="Ej. CAB-NACIONAL-2026-1">
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="email" [(ngModel)]="password" placeholder="correo@ejemplo.com">
+    </div>
+
+    <button (click)="login()">
+      {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+    </button>
+  </div>
+
+  <div class="toast" *ngIf="showToastFlag" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>

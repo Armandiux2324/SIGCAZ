@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment.prod';
 export class ApiService {
   url = environment.backend;
 
+  // Funciones públicas
   addRegister(
     originType: string,
     state: string,
@@ -63,5 +64,10 @@ export class ApiService {
   getReceiptUrl(folio: string, email: string): string {
     const params = new URLSearchParams({ folio, email });
     return `${this.url}/registers/receipt?${params.toString()}`;
+  }
+
+  // Funciones administrativas
+  login(email: string, password: string){
+    return axios.post(this.url + '/login', { email, password })
   }
 }
