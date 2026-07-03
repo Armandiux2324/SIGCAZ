@@ -18,4 +18,8 @@ export class HomeComponent {
     this.router.navigate(['/search-register']);
   }
 
+  redirectToLogin(){
+    this.router.navigate(['/login']);
+  }
+
 }
