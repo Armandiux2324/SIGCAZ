@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, PreloadingStrategy, RouterModule, Routes } from '@angular/router';
 
+import { LayoutComponent }  from './layouts/layout/layout.component';
+
 const routes: Routes = [
   {
     path: 'home',

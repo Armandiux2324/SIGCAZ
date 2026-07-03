@@ -8,6 +8,10 @@ import { environment } from '../../environments/environment.prod';
 export class ApiService {
   url = environment.backend;
 
+  getToken(token: string) {
+    return { headers: { Authorization: `Bearer ${token}` } };
+  }
+
   // Funciones públicas
   addRegister(
     originType: string,
@@ -69,5 +73,9 @@ export class ApiService {
   // Funciones administrativas
   login(email: string, password: string){
     return axios.post(this.url + '/login', { email, password })
+  }
+
+  getUser(token: string){
+    return axios.get(this.url + '/me', this.getToken(token))
   }
 }

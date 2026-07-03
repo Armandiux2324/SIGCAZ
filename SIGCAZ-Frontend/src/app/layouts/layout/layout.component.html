@@ -1,0 +1,25 @@
+<div class="layout-wrapper">
+  <app-menu></app-menu>
+
+  <div class="layout-body">
+    <header class="layout-header">
+      <div class="header-left">
+        <img src="/assets/logo.png" alt="SIGCAZ" class="header-logo" routerLink="/admin-staff/dashboard">
+      </div>
+      <div class="header-right">
+        <span class="welcome-text">¡Bienvenido, {{ name }}!</span>
+        <button class="profile-btn" (click)="redirectToProfile()">
+          <i class="bi bi-person-circle"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="layout-main">
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="layout-footer">
+      <!-- Contenido del footer -->
+    </footer>
+  </div>
+</div>
