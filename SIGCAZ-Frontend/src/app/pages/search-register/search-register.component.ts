@@ -19,6 +19,12 @@ export class SearchRegisterComponent {
     email: '',
   };
 
+  transportLabels: Record<string, string> = {
+    car: 'Automóvil',
+    airplane: 'Avión',
+    bus: 'Autobús',
+  };
+
   register: any = null;
 
   constructor(private api: ApiService) { }

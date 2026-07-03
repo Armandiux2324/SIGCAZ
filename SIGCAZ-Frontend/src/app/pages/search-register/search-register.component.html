@@ -1,1 +1,78 @@
-<p>search-register works!</p>
+<div class="search-container">
+  <h2>Consulta de Registro</h2>
+  <p>Ingresa tu folio y correo electrónico para consultar tu registro.</p>
+
+  <div class="search-form">
+    <div class="form-group">
+      <label>FOLIO</label>
+      <input type="text" [(ngModel)]="searchData.folio" placeholder="Ej. CAB-NACIONAL-2026-1">
+    </div>
+
+    <div class="form-group">
+      <label>CORREO ELECTRÓNICO</label>
+      <input type="email" [(ngModel)]="searchData.email" placeholder="correo@ejemplo.com">
+    </div>
+
+    <button (click)="searchRegister()" [disabled]="loading || !searchData.folio || !searchData.email">
+      {{ loading ? 'Buscando...' : 'Buscar' }}
+    </button>
+  </div>
+
+  <div class="not-found" *ngIf="notFound">
+    No se encontró ningún registro con ese folio y correo.
+  </div>
+
+  <div class="result-card" *ngIf="register">
+    <div class="result-header">
+      <div>
+        <span class="label">Folio</span>
+        <strong>{{ register.data.participants[0].folio }}</strong>
+      </div>
+      <button class="btn-download" (click)="downloadReceipt()">Descargar comprobante</button>
+    </div>
+
+    <hr>
+
+    <h3>Información general</h3>
+    <div class="info-grid">
+      <div><span class="label">Cuadrilla: </span><span>{{ register.data.group }}</span></div>
+      <div><span class="label">Origen: </span><span>{{ register.data.origin_type === 'national' ? 'Nacional' : 'Estatal' }}</span></div>
+      <div><span class="label">Estado: </span><span>{{ register.data.state }}</span></div>
+      <div><span class="label">Municipio: </span><span>{{ register.data.municipality }}</span></div>
+      <div><span class="label">Tipo de asistencia: </span><span>{{ register.data.attendance_type === 'accompanied' ? 'Acompañado' : 'Solo' }}</span></div>
+      <div><span class="label">Hospedaje: </span><span>{{ register.data.lodging }}</span></div>
+      <div><span class="label">Días de estancia: </span><span>{{ register.data.stay_days }}</span></div>
+      <div><span class="label">Transporte: </span><span>{{ transportLabels[register.data.transport_method] }}</span></div>
+    </div>
+
+    <h3>Participantes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Talla</th>
+          <th>Primera vez participando</th>
+          <th>Veces que ha participado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of register.data.participants">
+          <td>{{ p.folio }}</td>
+          <td>{{ p.first_name }} {{ p.last_name }}</td>
+          <td>{{ p.phone }}</td>
+          <td>{{ p.email }}</td>
+          <td>{{ p.shirt_size }}</td>
+          <td>{{ p.is_first_time ? 'Sí' : 'No' }}</td>
+          <td>{{ p.participation_count }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="toast" *ngIf="showToastFlag" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+</div>

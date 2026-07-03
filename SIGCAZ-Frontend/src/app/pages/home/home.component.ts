@@ -14,4 +14,8 @@ export class HomeComponent {
     this.router.navigate(['/register']);
   }
 
+  redirectToSearchRegister(){
+    this.router.navigate(['/search-register']);
+  }
+
 }
