@@ -38,7 +38,7 @@ export class LoginComponent {
       this.toastMessage = 'Inicio de sesión exitoso';
       this.showToast('success');
 
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/admin/dashboard']);
     }).catch((error) => {
       this.loading = false;
       this.toastMessage = "Error al iniciar sesión. Verifica tus datos";
