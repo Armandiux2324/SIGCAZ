@@ -53,4 +53,8 @@ export class LoginComponent {
     setTimeout(() => { this.showToastFlag = false; }, 4000);
   }
 
+  backToHome() {
+    this.router.navigate(['/home']);
+  }
+
 }
