@@ -1,30 +1,44 @@
+// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './interceptors/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
-  {
     path: '',
-    redirectTo: 'asistencia',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
+    path: 'login',
+    loadChildren: () =>
+      import('./publico/login/login.module').then(m => m.LoginPageModule)
+  },
+  {
     path: 'asistencia',
-    loadChildren: () => import('./publico/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
+    canActivate: [AuthGuard],   // ← protegida: requiere token
+    loadChildren: () =>
+      import('./publico/asistencia/asistencia.module').then(m => m.AsistenciaPageModule)
   },
   {
     path: 'historial',
-    loadChildren: () => import('./publico/historial/historial.module').then( m => m.HistorialPageModule)
+    canActivate: [AuthGuard],   // ← protegida: requiere token
+    loadChildren: () =>
+      import('./publico/historial/historial.module').then(m => m.HistorialPageModule)
   },
+  {
+    path: '**',
+    redirectTo: 'login'
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./publico/login/login.module').then( m => m.LoginPageModule)
+  }
+
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

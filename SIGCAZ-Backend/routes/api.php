@@ -36,7 +36,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
         Route::get('/me', [UserController::class, 'me']);
         // Rutas de escaneos
-        Route::post('/scans', [QrScanController::class, 'scan']);
-        Route::get('/scans', [QrScanController::class, 'index']);
+        
     });
+    Route::post('/scans', [QrScanController::class, 'scan']);
+        Route::get('/scans', [QrScanController::class, 'index']);
 });
