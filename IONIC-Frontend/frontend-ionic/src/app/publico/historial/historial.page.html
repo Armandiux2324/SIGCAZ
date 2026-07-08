@@ -47,7 +47,6 @@
   <!-- ── FILTROS ── -->
   <div class="filtros-card">
 
-    <!-- Búsqueda -->
     <div class="search-wrapper">
       <ion-icon name="search-outline" class="search-icon"></ion-icon>
       <ion-input
@@ -59,7 +58,6 @@
       </ion-input>
     </div>
 
-    <!-- Filtro fecha -->
     <div class="fecha-row">
       <ion-label class="fecha-label">
         <ion-icon name="calendar-outline"></ion-icon>
@@ -85,8 +83,24 @@
 
   </div>
 
+  <!-- ── LOADING ── -->
+  <div class="loading-state" *ngIf="cargando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <span>Cargando historial…</span>
+  </div>
+
+  <!-- ── ERROR DE RED ── -->
+  <div class="error-state" *ngIf="!cargando && error">
+    <ion-icon name="cloud-offline-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button shape="round" fill="outline" size="small" (click)="cargarHistorial()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Reintentar
+    </ion-button>
+  </div>
+
   <!-- ── LISTA DE REGISTROS ── -->
-  <div class="lista-card">
+  <div class="lista-card" *ngIf="!cargando && !error">
 
     <!-- Vacío -->
     <div class="empty-state" *ngIf="registrosPagina.length === 0">
@@ -129,40 +143,36 @@
   </div>
 
   <!-- ── PAGINACIÓN ── -->
-  <div class="paginacion" *ngIf="totalPaginas > 1">
-     <ion-button
-    fill="outline"
-    shape="round"
-    size="small"
-    class="btn-pag"
-    [disabled]="paginaActual === 1"
-    (click)="cambiarPagina(paginaActual - 1)">
-    Anterior
-  </ion-button>
+  <div class="paginacion" *ngIf="!cargando && totalPaginas > 1">
+
+    <ion-button fill="outline" shape="round" size="small" class="btn-pag"
+                [disabled]="!hayAnterior"
+                (click)="cambiarPagina(paginaActual - 1)">
+      Anterior
+    </ion-button>
 
     <div class="paginas-numeros">
+      <!-- p puede ser number o null (elipsis); el click solo actúa si es number -->
       <span *ngFor="let p of paginasVisibles"
             class="num-pag"
             [class.activa]="p === paginaActual"
-            (click)="cambiarPagina(p)">
-        {{ p === -1 ? '…' : p }}
+            [class.elipsis]="p === null"
+            (click)="p !== null && cambiarPagina(p)">
+        {{ p === null ? '…' : p }}
       </span>
     </div>
 
-     <ion-button
-    fill="outline"
-    shape="round"
-    size="small"
-    class="btn-pag"
-    [disabled]="paginaActual === totalPaginas"
-    (click)="cambiarPagina(paginaActual + 1)">
-    Siguiente
-  </ion-button>
+    <ion-button fill="outline" shape="round" size="small" class="btn-pag"
+                [disabled]="!haySiguiente"
+                (click)="cambiarPagina(paginaActual + 1)">
+      Siguiente
+    </ion-button>
+
   </div>
 
-  <!-- Contador -->
-  <p class="resultado-info" *ngIf="registrosFiltrados.length > 0">
-    Mostrando {{ rangoDesde }}–{{ rangoHasta }} de {{ registrosFiltrados.length }} registros
+  <!-- Contador — usa totalRegistros que viene de la paginación de Laravel -->
+  <p class="resultado-info" *ngIf="!cargando && totalRegistros > 0">
+    Mostrando {{ rangoDesde }}–{{ rangoHasta }} de {{ totalRegistros }} registros
   </p>
 
 </ion-content>

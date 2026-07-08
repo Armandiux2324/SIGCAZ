@@ -1,125 +1,148 @@
+// src/app/services/asistencia.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
-// ── Modelo de datos ──────────────────────────────────────────────────
-export interface RegistroAsistencia {
-  id: string;
-  nombre: string;
-  matricula: string;
-  talla: string;
-  fecha: string;
-  hora: string;
-  qrRaw: string;
-  timestamp: number;
+// ─────────────────────────────────────────────────────────────────────────────
+// Modelos — reflejan exactamente la respuesta de la API Laravel
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface Participante {
+  folio:      string;
+  first_name: string;
+  last_name:  string;
+  shirt_size: string;
+  gender:     string;
 }
 
-// ── Datos de muestra (seed) ──────────────────────────────────────────
-const NOMBRES_MOCK = [
-  'Juan Pérez', 'María García', 'Carlos López', 'Ana Martínez',
-  'Luis Rodríguez', 'Sofía Hernández', 'Miguel Torres', 'Valeria Díaz',
-  'Jorge Sánchez', 'Fernanda Reyes', 'Pedro Gómez', 'Daniela Cruz',
-  'Alejandro Ruiz', 'Mariana Flores', 'Rodrigo Moreno', 'Isabella Vargas',
-];
+// Respuesta del POST /api/v1/scans
+export interface ScanRegistradoResponse {
+  message: string;
+  status:  'valid' | 'invalid' | string;
+  data:    Participante;
+}
 
-const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+// Cada fila del GET /api/v1/scans
+export interface ScanItem {
+  id:          number;
+  scanned_at:  string;       // ISO 8601 → "2026-07-03T06:24:59.000000Z"
+  status:      string;
+  participant: Participante;
+}
 
-// ── Prefijo para QR válidos ──────────────────────────────────────────
-const QR_PREFIX = 'ASISTENCIA:';
+// Paginación Laravel (LengthAwarePaginator)
+export interface PaginacionLaravel {
+  current_page:   number;
+  data:           ScanItem[];
+  first_page_url: string;
+  from:           number;
+  last_page:      number;
+  last_page_url:  string;
+  next_page_url:  string | null;
+  prev_page_url:  string | null;
+  path:           string;
+  per_page:       number;
+  to:             number;
+  total:          number;
+  links: {
+    url:    string | null;
+    label:  string;
+    page:   number | null;
+    active: boolean;
+  }[];
+}
+
+export interface HistorialResponse {
+  message: string;
+  data:    PaginacionLaravel;
+}
+
+// Parámetros opcionales del GET historial
+export interface HistorialParams {
+  page?:   number;
+  search?: string;
+  fecha?:  string;   // YYYY-MM-DD
+}
+
+// Modelo que usan los components internamente (construido desde ScanItem)
+export interface RegistroAsistencia {
+  id:        string;
+  nombre:    string;
+  matricula: string;   // folio
+  talla:     string;
+  fecha:     string;   // formateada "dd/mm/yyyy"
+  hora:      string;   // formateada "HH:MM"
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Service
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
 export class AsistenciaService {
 
-  private registros: RegistroAsistencia[] = [];
+  private readonly base = environment.base_url;
 
-  constructor() {
-    this.seedDatos();
+  constructor(private http: HttpClient) {}
+
+  // ── POST /api/v1/scans ────────────────────────────────────────────────────
+  // Envía el folio leído del QR y recibe los datos del participante
+  registrarScan(folio: string): Observable<ScanRegistradoResponse> {
+    return this.http
+      .post<ScanRegistradoResponse>(`${this.base}/scans`, { folio })
+      .pipe(catchError(err => throwError(() => err)));
   }
 
-  // ── Genera registros de demostración ──────────────────────────────
-  private seedDatos(): void {
-    const hoy = new Date();
+  // ── GET /api/v1/scans ─────────────────────────────────────────────────────
+  // Devuelve el historial paginado con filtros opcionales
+  getHistorial(params: HistorialParams = {}): Observable<HistorialResponse> {
+    let httpParams = new HttpParams();
 
-    for (let i = 0; i < 18; i++) {
-      const daysAgo = Math.floor(i / 4);
-      const fecha = new Date(hoy);
-      fecha.setDate(hoy.getDate() - daysAgo);
+    if (params.page)   httpParams = httpParams.set('page',   params.page.toString());
+    if (params.search) httpParams = httpParams.set('search', params.search);
+    if (params.fecha)  httpParams = httpParams.set('fecha',  params.fecha);
 
-      const hora = new Date(fecha);
-      hora.setMinutes(hora.getMinutes() - (i * 15));
-
-      const nombre = NOMBRES_MOCK[i % NOMBRES_MOCK.length];
-      const matricula = `${2648 + i}U`;
-
-      this.registros.unshift({
-        id: `seed-${i}`,
-        nombre,
-        matricula,
-        talla: TALLAS[i % TALLAS.length],
-        fecha: fecha.toLocaleDateString('es-MX'),
-        hora: hora.toLocaleTimeString('es-MX', {
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        qrRaw: `${QR_PREFIX}${matricula}:${nombre.replace(/ /g, '_')}:${TALLAS[i % TALLAS.length]}`,
-        timestamp: hora.getTime()
-      });
-    }
+    return this.http
+      .get<HistorialResponse>(`${this.base}/scans`, { params: httpParams })
+      .pipe(catchError(err => throwError(() => err)));
   }
 
-  // ── Retorna todos los registros (más recientes primero) ───────────
-  getTodos(): RegistroAsistencia[] {
-    return [...this.registros]
-      .sort((a, b) => b.timestamp - a.timestamp);
+  // ── Helper: solo el array de ScanItem ────────────────────────────────────
+  getScanList(params: HistorialParams = {}): Observable<ScanItem[]> {
+    return this.getHistorial(params).pipe(
+      map(res => res.data.data)
+    );
   }
 
-  // ── Retorna los N más recientes para el preview ───────────────────
-  getRecientes(n: number): RegistroAsistencia[] {
-    return this.getTodos().slice(0, n);
-  }
-
-  // ── Valida si el string tiene el prefijo correcto ─────────────────
-  validarQR(qrData: string): boolean {
-    return qrData.startsWith(QR_PREFIX) && qrData.split(':').length >= 4;
-  }
-
-  // ── Registra una nueva asistencia desde el QR escaneado ──────────
-  registrar(qrData: string): RegistroAsistencia | null {
-    if (!this.validarQR(qrData)) return null;
-
-    // Formato: ASISTENCIA:MATRICULA:NOMBRE_CON_GUIONES:TALLA
-    const partes = qrData.replace(QR_PREFIX, '').split(':');
-    const matricula = partes[0] ?? 'N/A';
-    const nombre = (partes[1] ?? 'Desconocido').replace(/_/g, ' ');
-    const talla = partes[2] ?? 'M';
-
-    const ahora = new Date();
-    const registro: RegistroAsistencia = {
-      id: `r-${Date.now()}`,
-      nombre,
-      matricula,
-      talla,
-      fecha: ahora.toLocaleDateString('es-MX'),
-      hora: ahora.toLocaleTimeString('es-MX', {
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
-      qrRaw: qrData,
-      timestamp: ahora.getTime()
+  // ── Convierte ScanItem → RegistroAsistencia (formato para los components) ─
+  // Úsalo cuando necesites mostrar datos de la API en el mismo formato
+  // que usa asistencia.page y historial.page internamente.
+  mapearRegistro(item: ScanItem): RegistroAsistencia {
+    const fecha = new Date(item.scanned_at);
+    return {
+      id:        item.id.toString(),
+      nombre:    `${item.participant.first_name} ${item.participant.last_name}`,
+      matricula: item.participant.folio,
+      talla:     item.participant.shirt_size,
+      fecha:     fecha.toLocaleDateString('es-MX'),
+      hora:      fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
     };
-
-    this.registros.unshift(registro);
-    return registro;
   }
 
-  // ── Genera un QR mock válido para pruebas ─────────────────────────
-  generarQRMock(): string {
-    const idx = Math.floor(Math.random() * NOMBRES_MOCK.length);
-    const nombre = NOMBRES_MOCK[idx].replace(/ /g, '_');
-    const matricula = `${2648 + Math.floor(Math.random() * 50)}U`;
-    const talla = TALLAS[Math.floor(Math.random() * TALLAS.length)];
-    // 80% de probabilidad de QR válido, 20% de QR inválido
-    return Math.random() < 0.8
-      ? `${QR_PREFIX}${matricula}:${nombre}:${talla}`
-      : 'QR_INVALIDO_DEMO';
+  // ── Construye un RegistroAsistencia desde la respuesta del POST ───────────
+  // Útil en asistencia.page para agregar el nuevo registro al preview local
+  // sin tener que volver a llamar al GET.
+  mapearDesdePost(res: ScanRegistradoResponse): RegistroAsistencia {
+    const ahora = new Date();
+    return {
+      id:        `local-${Date.now()}`,
+      nombre:    `${res.data.first_name} ${res.data.last_name}`,
+      matricula: res.data.folio,
+      talla:     res.data.shirt_size,
+      fecha:     ahora.toLocaleDateString('es-MX'),
+      hora:      ahora.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
+    };
   }
-
 }
