@@ -87,7 +87,7 @@
               </div>
             </div>
 
-            <div class="form-individual" *ngIf="f['is_first_time'].value === true">
+            <div class="form-individual" *ngIf="f['is_first_time'].value === false">
               <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
               <input type="number" min="0" formControlName="participation_count">
               <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
@@ -178,7 +178,7 @@
                   </div>
                 </div>
 
-                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === true">
+                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === false">
                   <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
                   <input type="number" min="0" formControlName="participation_count">
                   <span class="error" *ngIf="getParticipantControls(i)['participation_count'].invalid && getParticipantControls(i)['participation_count'].touched">Campo requerido</span>

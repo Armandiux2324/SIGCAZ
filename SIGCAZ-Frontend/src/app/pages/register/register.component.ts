@@ -203,6 +203,9 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
     const f = this.registerForm.value;
 
+    const companions = Number(f.travel_companions_count ?? 0);
+    const attendanceType = companions > 0 ? 'accompanied' : 'alone';
+
     const members = this.registrationType === 'individual'
       ? [{
           firstName: f.first_name,
@@ -212,8 +215,7 @@ export class RegisterComponent implements OnInit {
           gender: this.mapGender(f.gender),
           shirtSize: f.shirt_size,
           isFirstTime: f.is_first_time,
-          participationCount: f.is_first_time ? Number(f.participation_count) : 0,
-          travelCompanionsCount: Number(f.travel_companions_count),
+          participationCount: f.is_first_time ? 0 : Number(f.participation_count),
         }]
       : f.participants.map((m: any) => ({
           firstName: m.first_name,
@@ -223,8 +225,7 @@ export class RegisterComponent implements OnInit {
           gender: this.mapGender(m.gender),
           shirtSize: m.shirt_size,
           isFirstTime: m.is_first_time,
-          participationCount: m.is_first_time ? Number(m.participation_count) : 0,
-          travelCompanionsCount: Number(m.travel_companions_count),
+          participationCount: m.is_first_time ? 0 : Number(m.participation_count),
         }));
 
     this.api.addRegister(
@@ -232,7 +233,7 @@ export class RegisterComponent implements OnInit {
       f.state,
       f.municipality,
       f.group,
-      this.registrationType === 'individual' ? 'alone' : 'group',
+      attendanceType,
       members.length,
       this.mapAccommodationType(f.accommodation_type),
       f.lodging,
