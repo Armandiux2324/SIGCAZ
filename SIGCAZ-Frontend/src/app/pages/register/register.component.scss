@@ -153,7 +153,7 @@ select:focus {
   visibility: hidden;
 }
 
-
+/* ====== ACTIONS / BOTONES DE NAVEGACIÓN ====== */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -165,31 +165,137 @@ select:focus {
   margin-left: auto;
 }
 
-.actions button {
-  padding: 10px 18px;
+.registro-terminado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.btn-next,
+.btn-prev,
+.btn-submit {
+  padding: 12px 28px;
   border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #111;
+}
+
+.btn-next {
+  background: #111;
+  color: #fff;
+}
+
+.btn-next:hover {
+  background: #000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-prev {
+  background: #fff;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+.btn-prev:hover {
+  border-color: #111;
+  background: #f4f4f4;
+}
+
+.btn-submit {
+  background: #111;
+  color: #fff;
+}
+
+.btn-submit:hover {
+  background: #000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-submit:disabled {
+  background: #999;
+  border-color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ====== CANTIDAD DE PARTICIPANTES ====== */
+.cantidad-participantes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #333;
+}
+
+.cantidad-participantes .counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.cantidad-participantes .counter button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
   border: 1px solid #222;
   background: #fff;
   cursor: pointer;
   font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
 }
 
-.actions button:hover {
+.cantidad-participantes .counter button:hover {
   background: #111;
   color: #fff;
 }
 
-/* botones primarios */
-.btn-next,
-.btn-submit {
-  border: 1px solid #111;
+.cantidad-participantes .max-label {
+  color: #999;
+  font-size: 12px;
 }
 
-.btn-next:hover,
-.btn-submit:hover {
-  background: #111;
-  color: #fff;
+/* ====== TABS DE INTEGRANTES ====== */
+.participant-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 18px;
+}
+
+.participant-tabs .tab {
+  background: none;
+  border: none;
+  padding: 0 0 10px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.participant-tabs .tab.active {
+  color: #111;
+  font-weight: 700;
+  border-bottom-color: #111;
+}
+
+.participant-tabs .tab:hover {
+  color: #111;
 }
 
 /* ====== RESPONSIVE ====== */
@@ -207,7 +313,14 @@ select:focus {
     gap: 10px;
   }
 
-  .actions button {
+  .registro-terminado {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-next,
+  .btn-prev,
+  .btn-submit {
     width: 100%;
   }
 }
