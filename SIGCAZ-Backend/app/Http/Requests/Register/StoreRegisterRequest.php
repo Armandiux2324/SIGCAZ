@@ -27,8 +27,6 @@ class StoreRegisterRequest extends FormRequest
             'state' => ['required','string','max:255'],
             'municipality' => ['required','string','max:255'],
             'group' => ['required','string','max:255'],
-            'is_first_time' => ['required','boolean'],
-            'participation_count' => ['required','integer','min:0'],
             'attendance_type' => ['required','in:alone,accompanied'],
             'participant_count' => ['required','integer','min:1'],
             'accommodation_type' => ['required','in:airbnb,hotel,own_home,family_or_friends',],
@@ -43,6 +41,8 @@ class StoreRegisterRequest extends FormRequest
             'participants.*.email' => ['required','email','max:255','unique:participants,email'],
             'participants.*.gender' => ['required','in:male,female',],
             'participants.*.shirt_size' => ['required','string','max:10'],
+            'participants.*.is_first_time' => ['required','boolean'],
+            'participants.*.participation_count' => ['nullable','integer','min:0','required_if:participants.*.is_first_time,false,0'],
         ];
     }
 

@@ -1,0 +1,54 @@
+<div class="login-wrapper">
+
+  <div class="container">
+
+    <div class="left">
+      <img src="logo.png" class="logo">
+    </div>
+
+
+    <div class="right">
+
+      <h2>INICIAR SESIÓN</h2>
+      <p>Ingresa tu correo electrónico y contraseña para iniciar sesión.</p>
+
+      <div class="form">
+
+        <div class="input-group"><br>
+          <label>Correo Electrónico</label>
+          <input type="text" [(ngModel)]="email" placeholder="correo@ejemplo.com">
+        </div>
+
+        <div class="input-group">
+          <label>Contraseña</label>
+          <input type="text" [(ngModel)]="password" placeholder="********">
+        </div>
+
+        <button (click)="login()">
+          {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        </button>
+
+          <button class="bbtn-back" (click)="backToHome()">
+    Regresar
+  </button>
+
+      </div>
+
+    </div>
+
+    <div class="bottom-cut"></div>
+
+    <div class="toast"
+         *ngIf="showToastFlag"
+         [class.success]="toastType === 'success'"
+         [class.error]="toastType === 'error'">
+      {{ toastMessage }}
+    </div>
+
+  </div>
+
+
+</div>
+
+
+

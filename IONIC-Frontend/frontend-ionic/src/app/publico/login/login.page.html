@@ -1,0 +1,72 @@
+<!-- src/app/publico/login/login.page.html -->
+<ion-content class="login-content">
+
+  <div class="login-wrapper">
+
+    <!-- Logo / Título -->
+    <div class="login-header">
+      <div class="logo-circle">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </div>
+      <h1>Sistema de Asistencia</h1>
+      <p>Ingresa tus credenciales para continuar</p>
+    </div>
+
+    <!-- Card del formulario -->
+    <div class="login-card">
+
+      <!-- Error -->
+      <div class="error-banner" *ngIf="error">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <!-- Email -->
+      <div class="field-group">
+        <label>Correo electrónico</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="correo@ejemplo.com"
+            [(ngModel)]="email"
+            [disabled]="cargando"
+            (keyup.enter)="login()">
+          </ion-input>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field-group">
+        <label>Contraseña</label>
+        <div class="input-wrapper">
+          <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+          <ion-input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            [disabled]="cargando"
+            (keyup.enter)="login()">
+          </ion-input>
+          <ion-button fill="clear" class="toggle-pass" (click)="togglePassword()">
+            <ion-icon [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Botón login -->
+      <ion-button expand="block" shape="round" class="btn-login"
+                  [disabled]="cargando"
+                  (click)="login()">
+        <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
+        <span *ngIf="!cargando">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Iniciar sesión
+        </span>
+      </ion-button>
+
+    </div>
+
+  </div>
+
+</ion-content>

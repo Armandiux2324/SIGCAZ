@@ -16,8 +16,6 @@ class Register extends Model
         'state',
         'municipality',
         'group',
-        'is_first_time',
-        'participation_count',
         'attendance_type',
         'participant_count',
         'accommodation_type',
@@ -28,8 +26,6 @@ class Register extends Model
     ];
 
     protected $casts = [
-        'is_first_time' => 'boolean',
-        'participation_count' => 'integer',
         'participant_count' => 'integer',
         'stay_days' => 'integer',
     ];
@@ -47,11 +43,6 @@ class Register extends Model
     public function getAttendanceTypeLabelAttribute(): string
     {
         return $this->attendance_type === 'accompanied' ? 'Acompañado' : 'Solo';
-    }
-
-    public function getIsFirstTimeLabelAttribute(): string
-    {
-        return $this->is_first_time ? 'Sí' : 'No';
     }
 
     public function getAccommodationTypeLabelAttribute(): string

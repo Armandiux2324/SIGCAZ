@@ -1,0 +1,140 @@
+// src/app/publico/login/login.page.scss
+.login-content {
+  --background: #F0F4FF;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+
+  .logo-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #1A56E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px rgba(26, 86, 232, 0.30);
+
+    ion-icon {
+      font-size: 36px;
+      color: #fff;
+    }
+  }
+
+  h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: #6B7280;
+    margin: 0;
+  }
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+.login-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 24px rgba(26, 86, 232, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Error banner ──────────────────────────────────────────────────────────────
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF5F5;
+  border: 1px solid #FCA5A5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #E03131;
+
+  ion-icon { font-size: 1rem; flex-shrink: 0; }
+}
+
+// ── Campos ────────────────────────────────────────────────────────────────────
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #374151;
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #F3F4F6;
+  border-radius: 12px;
+  padding: 4px 12px;
+  gap: 8px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: #1A56E8;
+    background: #EFF6FF;
+  }
+
+  .field-icon {
+    font-size: 1.1rem;
+    color: #9CA3AF;
+    flex-shrink: 0;
+  }
+
+  ion-input {
+  --background: transparent;
+  --padding-start: 0;
+  --color: #000000;
+  --placeholder-color: #6B7280;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+  .toggle-pass {
+    --color: #9CA3AF;
+    --padding-start: 4px;
+    --padding-end: 0;
+  }
+}
+
+// ── Botón ─────────────────────────────────────────────────────────────────────
+.btn-login {
+  --background: #1A56E8;
+  --background-hover: #1748C9;
+  --border-radius: 50px;
+  --box-shadow: 0 4px 16px rgba(26, 86, 232, 0.30);
+  height: 50px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}

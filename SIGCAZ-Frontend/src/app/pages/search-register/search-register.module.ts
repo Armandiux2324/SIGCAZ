@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { SearchRegisterRoutingModule } from './search-register-routing.module';
 import { SearchRegisterComponent } from './search-register.component';
@@ -11,7 +12,8 @@ import { SearchRegisterComponent } from './search-register.component';
   ],
   imports: [
     CommonModule,
-    SearchRegisterRoutingModule
+    SearchRegisterRoutingModule,
+    FormsModule
   ]
 })
 export class SearchRegisterModule { }

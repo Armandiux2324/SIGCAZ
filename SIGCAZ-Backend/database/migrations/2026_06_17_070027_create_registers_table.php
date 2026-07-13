@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('state');
             $table->string('municipality');
             $table->string('group');
-            $table->boolean('is_first_time');
-            $table->unsignedInteger('participation_count')->default(0);
             $table->enum('attendance_type', ['alone','accompanied',]);
             $table->unsignedInteger('participant_count')->default(1);
             $table->enum('accommodation_type', ['airbnb','hotel','own_home','family_or_friends',]);
