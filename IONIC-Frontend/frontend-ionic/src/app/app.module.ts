@@ -15,8 +15,11 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';  // ← nuevo
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    HttpClientModule,
-    IonicModule.forRoot({ mode: 'ios', animated: true }),
+    HttpClientModule,                                             // ← LÍNEA 2
+    IonicModule.forRoot({
+      mode: 'ios',
+      animated: true,
+    }),
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
