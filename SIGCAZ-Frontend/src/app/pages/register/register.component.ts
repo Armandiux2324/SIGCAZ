@@ -203,8 +203,7 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
     const f = this.registerForm.value;
 
-    const companions = Number(f.travel_companions_count ?? 0);
-    const attendanceType = companions > 0 ? 'accompanied' : 'alone';
+    const attendanceType = this.registrationType === 'group' ? 'accompanied' : Number(f.travel_companions_count ?? 0) > 0 ? 'accompanied' : 'alone';
 
     const members = this.registrationType === 'individual'
       ? [{
