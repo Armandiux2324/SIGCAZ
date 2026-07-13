@@ -3,84 +3,196 @@
   <p>Complete el formulario para registrarse en el evento</p>
 
   <div class="tipo-registro">
-    <button type="button" class="active">Individual <br><span>Un solo participante</span></button>
-    <button type="button">Grupal <br><span>Dos o más participantes</span></button>
+    <button type="button" [class.active]="registrationType === 'individual'" (click)="setRegistrationType('individual')">Individual <br><span>Un solo participante</span></button>
+    <button type="button" [class.active]="registrationType === 'group'" (click)="setRegistrationType('group')">Grupal <br><span>Dos o más participantes</span></button>
+  </div>
+
+  <div class="cantidad-participantes" *ngIf="registrationType === 'group'">
+    <span>Cantidad de participantes</span>
+    <div class="counter">
+      <button type="button" (click)="addParticipant()">+</button>
+      <span>{{ participants.length }}</span>
+      <button type="button" (click)="removeParticipant()">-</button>
+    </div>
+    <span class="max-label">20 max</span>
   </div>
 
     <form [formGroup]="registerForm">
 
       <!-- PÁGINA 1: Datos personales -->
       <div class="form-section" *ngIf="page === 1">
-        <h3>Datos Personales</h3>
 
-        <div class="row">
-          <div class="form-individual">
-            <label>NOMBRE(S)</label>
-            <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
-            <span class="error" *ngIf="f['first_name'].invalid && f['first_name'].touched">Campo requerido</span>
-          </div>
+        <ng-container *ngIf="registrationType === 'individual'">
+          <h3>Datos Personales</h3>
 
-          <div class="form-individual">
-            <label>APELLIDOS</label>
-            <input type="text" formControlName="last_name" placeholder="Ej. Ramírez Méndez">
-            <span class="error" *ngIf="f['last_name'].invalid && f['last_name'].touched">Campo requerido</span>
-          </div>
+          <div class="row">
+            <div class="form-individual">
+              <label>NOMBRE(S)</label>
+              <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
+              <span class="error" *ngIf="f['first_name'].invalid && f['first_name'].touched">Campo requerido</span>
+            </div>
 
-          <div class="form-individual">
-            <label>TELÉFONO</label>
-            <input type="text" formControlName="phone" placeholder="10 dígitos">
-            <span class="error" *ngIf="f['phone'].invalid && f['phone'].touched">Ingresa 10 dígitos</span>
-          </div>
-        </div>
+            <div class="form-individual">
+              <label>APELLIDOS</label>
+              <input type="text" formControlName="last_name" placeholder="Ej. Ramírez Méndez">
+              <span class="error" *ngIf="f['last_name'].invalid && f['last_name'].touched">Campo requerido</span>
+            </div>
 
-        <div class="row">
-          <div class="form-individual">
-            <label>CORREO ELECTRÓNICO</label>
-            <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
-            <span class="error" *ngIf="f['email'].invalid && f['email'].touched">Correo inválido</span>
-          </div>
-
-          <div class="form-individual">
-            <label>GÉNERO</label>
-            <select formControlName="gender">
-              <option value="">Seleccione...</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-            </select>
-            <span class="error" *ngIf="f['gender'].invalid && f['gender'].touched">Campo requerido</span>
-          </div>
-
-          <div class="form-individual">
-            <label>TALLA DE PLAYERA</label>
-            <select formControlName="shirt_size">
-              <option value="">Seleccione...</option>
-              <option value="XS">XS</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
-              <option value="XXXL">XXXL</option>
-            </select>
-            <span class="error" *ngIf="f['shirt_size'].invalid && f['shirt_size'].touched">Campo requerido</span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-individual">
-            <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
-            <div class="radio-group">
-              <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
-              <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+            <div class="form-individual">
+              <label>TELÉFONO</label>
+              <input type="text" formControlName="phone" placeholder="10 dígitos">
+              <span class="error" *ngIf="f['phone'].invalid && f['phone'].touched">Ingresa 10 dígitos</span>
             </div>
           </div>
 
-          <div class="form-individual" *ngIf="f['is_first_time'].value === false">
-            <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-            <input type="number" min="1" formControlName="participation_count">
-            <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
+          <div class="row">
+            <div class="form-individual">
+              <label>CORREO ELECTRÓNICO</label>
+              <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
+              <span class="error" *ngIf="f['email'].invalid && f['email'].touched">Correo inválido</span>
+            </div>
+
+            <div class="form-individual">
+              <label>GÉNERO</label>
+              <select formControlName="gender">
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </select>
+              <span class="error" *ngIf="f['gender'].invalid && f['gender'].touched">Campo requerido</span>
+            </div>
+
+            <div class="form-individual">
+              <label>TALLA DE PLAYERA</label>
+              <select formControlName="shirt_size">
+                <option value="">Seleccione...</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <option value="XXXL">XXXL</option>
+              </select>
+              <span class="error" *ngIf="f['shirt_size'].invalid && f['shirt_size'].touched">Campo requerido</span>
+            </div>
           </div>
-        </div>
+
+          <div class="row">
+            <div class="form-individual">
+              <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+              <div class="radio-group">
+                <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
+                <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+              </div>
+            </div>
+
+            <div class="form-individual" *ngIf="f['is_first_time'].value === true">
+              <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+              <input type="number" min="0" formControlName="participation_count">
+              <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
+            </div>
+
+            <div class="form-individual">
+              <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
+              <input type="number" min="0" formControlName="travel_companions_count">
+              <span class="error" *ngIf="f['travel_companions_count'].invalid && f['travel_companions_count'].touched">Campo requerido</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="registrationType === 'group'" formArrayName="participants">
+          <h3>Datos de los participantes</h3>
+
+          <div class="participant-tabs">
+            <button type="button"
+              *ngFor="let participant of participants.controls; let i = index"
+              class="tab"
+              [class.active]="i === activeParticipantIndex"
+              (click)="setActiveParticipant(i)">
+              Integrante {{ i + 1 }}
+            </button>
+          </div>
+
+          <ng-container *ngFor="let participant of participants.controls; let i = index">
+            <div [formGroupName]="i" [hidden]="i !== activeParticipantIndex">
+              <div class="row">
+                <div class="form-individual">
+                  <label>NOMBRE(S)</label>
+                  <input type="text" formControlName="first_name" placeholder="Ej. María del Rosario">
+                  <span class="error" *ngIf="getParticipantControls(i)['first_name'].invalid && getParticipantControls(i)['first_name'].touched">Campo requerido</span>
+                </div>
+
+                <div class="form-individual">
+                  <label>APELLIDOS</label>
+                  <input type="text" formControlName="last_name" placeholder="Ej. Ramírez Méndez">
+                  <span class="error" *ngIf="getParticipantControls(i)['last_name'].invalid && getParticipantControls(i)['last_name'].touched">Campo requerido</span>
+                </div>
+
+                <div class="form-individual">
+                  <label>TELÉFONO</label>
+                  <input type="text" formControlName="phone" placeholder="10 dígitos">
+                  <span class="error" *ngIf="getParticipantControls(i)['phone'].invalid && getParticipantControls(i)['phone'].touched">Ingresa 10 dígitos</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-individual">
+                  <label>CORREO ELECTRÓNICO</label>
+                  <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
+                  <span class="error" *ngIf="getParticipantControls(i)['email'].invalid && getParticipantControls(i)['email'].touched">Correo inválido</span>
+                </div>
+
+                <div class="form-individual">
+                  <label>GÉNERO</label>
+                  <select formControlName="gender">
+                    <option value="">Seleccione...</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                  </select>
+                  <span class="error" *ngIf="getParticipantControls(i)['gender'].invalid && getParticipantControls(i)['gender'].touched">Campo requerido</span>
+                </div>
+
+                <div class="form-individual">
+                  <label>TALLA DE PLAYERA</label>
+                  <select formControlName="shirt_size">
+                    <option value="">Seleccione...</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                    <option value="XXXL">XXXL</option>
+                  </select>
+                  <span class="error" *ngIf="getParticipantControls(i)['shirt_size'].invalid && getParticipantControls(i)['shirt_size'].touched">Campo requerido</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-individual">
+                  <label>¿PRIMERA VEZ QUE PARTICIPAS?</label>
+                  <div class="radio-group">
+                    <label><input type="radio" [value]="true" formControlName="is_first_time"> Sí</label>
+                    <label><input type="radio" [value]="false" formControlName="is_first_time"> No</label>
+                  </div>
+                </div>
+
+                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === true">
+                  <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
+                  <input type="number" min="0" formControlName="participation_count">
+                  <span class="error" *ngIf="getParticipantControls(i)['participation_count'].invalid && getParticipantControls(i)['participation_count'].touched">Campo requerido</span>
+                </div>
+
+                <div class="form-individual">
+                  <label>¿CON CUÁNTAS PERSONAS VIAJAS?</label>
+                  <input type="number" min="0" formControlName="travel_companions_count">
+                  <span class="error" *ngIf="getParticipantControls(i)['travel_companions_count'].invalid && getParticipantControls(i)['travel_companions_count'].touched">Campo requerido</span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
 
         <div class="actions pag-2">
           <button type="button" class="btn-next" (click)="goToPage2()">Siguiente</button>
@@ -89,7 +201,7 @@
 
       <!-- PÁGINA 2: Datos generales -->
       <div class="form-section" *ngIf="page === 2">
-        <h3>Datos generales</h3>
+        <h3>Datos {{ registrationType === 'group' ? 'del grupo' : 'generales' }}</h3>
 
         <div class="row">
           <div class="form-individual">
@@ -161,13 +273,6 @@
             <span class="error" *ngIf="f['group'].invalid && f['group'].touched">Campo requerido</span>
           </div>
 
-          <div class="form-individual">
-            <label>MÉTODO DE ENTREGA DEL FOLIO</label>
-            <select formControlName="folio_delivery_method">
-              <option value="email">Correo electrónico</option>
-              <option value="phone">Teléfono</option>
-            </select>
-          </div>
         </div>
 
         <div class="registro-terminado">
