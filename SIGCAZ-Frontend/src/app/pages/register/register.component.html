@@ -87,7 +87,7 @@
               </div>
             </div>
 
-            <div class="form-individual" *ngIf="f['is_first_time'].value === false">
+            <div class="form-individual" *ngIf="f['is_first_time'].value === true">
               <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
               <input type="number" min="0" formControlName="participation_count">
               <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
@@ -104,14 +104,25 @@
         <ng-container *ngIf="registrationType === 'group'" formArrayName="participants">
           <h3>Datos de los participantes</h3>
 
-          <div class="participant-tabs">
-            <button type="button"
-              *ngFor="let participant of participants.controls; let i = index"
-              class="tab"
-              [class.active]="i === activeParticipantIndex"
-              (click)="setActiveParticipant(i)">
-              Integrante {{ i + 1 }}
-            </button>
+          <div class="participant-tabs-wrapper">
+            <button type="button" class="tab-nav" (click)="previousParticipant()" [disabled]="activeParticipantIndex === 0" aria-label="Integrante anterior">‹</button>
+
+            <div class="participant-tabs">
+              <button type="button"
+                #tabRef
+                *ngFor="let participant of participants.controls; let i = index"
+                class="tab"
+                [class.active]="i === activeParticipantIndex"
+                (click)="setActiveParticipant(i)">
+                Integrante {{ i + 1 }}
+              </button>
+            </div>
+
+            <button type="button" class="tab-nav" (click)="nextParticipant()" [disabled]="activeParticipantIndex === participants.length - 1" aria-label="Siguiente integrante">›</button>
+          </div>
+
+          <div class="participant-indicator">
+            Integrante {{ activeParticipantIndex + 1 }} de {{ participants.length }}
           </div>
 
           <ng-container *ngFor="let participant of participants.controls; let i = index">
@@ -178,7 +189,7 @@
                   </div>
                 </div>
 
-                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === false">
+                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === true">
                   <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
                   <input type="number" min="0" formControlName="participation_count">
                   <span class="error" *ngIf="getParticipantControls(i)['participation_count'].invalid && getParticipantControls(i)['participation_count'].touched">Campo requerido</span>
