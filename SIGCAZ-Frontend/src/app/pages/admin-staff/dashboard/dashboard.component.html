@@ -37,6 +37,14 @@
   <!-- Barra de filtro y tipo de gráfica -->
   <div class="chart-toolbar">
     <label class="filter-label">
+      Año:
+      <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
+        <option value="">Todos los años</option>
+        <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
+      </select>
+    </label>
+
+    <label class="filter-label">
       Participantes por:
       <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
         <option *ngFor="let opt of filterOptions" [value]="opt.value">{{ opt.label }}</option>

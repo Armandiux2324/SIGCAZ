@@ -46,6 +46,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   chartType: ChartType = 'bar';
   loadingChart = false;
 
+  // Filtro por año
+  availableYears: string[] = [];
+  selectedYear = ''; // '' = todos los años
+
   private mainChart: Chart | null = null;
   private yearChart: Chart | null = null;
 
@@ -69,6 +73,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   constructor(private api: ApiService) {}
 
   ngAfterViewInit(): void {
+    this.loadAvailableYears();
     this.loadSummary();
     this.loadRecentRegisters();
     this.loadMainChart();
@@ -80,9 +85,21 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.yearChart?.destroy();
   }
 
+  loadAvailableYears(): void {
+    this.api.getStatsByYear(this.token).then((res: any) => {
+      const { labels } = res.data.data;
+      this.availableYears = (labels ?? []).slice().sort((a: string, b: string) => Number(b) - Number(a));
+    }).catch(() => {});
+  }
+
+  onYearChange(): void {
+    this.loadSummary();
+    this.loadMainChart();
+  }
+
   loadSummary(): void {
     this.loadingSummary = true;
-    this.api.getStatsSummary(this.token).then((res: any) => {
+    this.api.getStatsSummary(this.token, this.selectedYear).then((res: any) => {
       const data = res.data.data;
       this.totalUsers = data.total_users;
       this.totalRegisters = data.total_registers;
@@ -123,7 +140,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   loadMainChart(): void {
     this.loadingChart = true;
-    this.api.getStatsChart(this.selectedFilter, this.token).then((res: any) => {
+    this.api.getStatsChart(this.selectedFilter, this.token, this.selectedYear).then((res: any) => {
       const { labels, values } = res.data.data;
       this.renderChart(this.mainChartCanvas.nativeElement, labels, values);
       this.loadingChart = false;
@@ -200,11 +217,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   downloadReport(report: { label: string; path: string; downloading: boolean }): void {
     report.downloading = true;
-    this.api.downloadReport(report.path, this.token).then((res: any) => {
+    this.api.downloadReport(report.path, this.token, this.selectedYear).then((res: any) => {
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${report.path}.xlsx`;
+      const suffix = this.selectedYear ? `_${this.selectedYear}` : '';
+      link.download = `${report.path}${suffix}.xlsx`;
       link.click();
       window.URL.revokeObjectURL(url);
       report.downloading = false;

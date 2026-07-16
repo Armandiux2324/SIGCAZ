@@ -127,12 +127,12 @@ export class ApiService {
   }
 
   // Funciones del dashboard / estadísticas
-  getStatsSummary(token: string) {
-    return axios.get(this.url + '/stats/summary', this.getToken(token));
+  getStatsSummary(token: string, year?: string) {
+    return axios.get(this.url + '/stats/summary', { params: { year }, ...this.getToken(token) });
   }
 
-  getStatsChart(filter: string, token: string) {
-    return axios.get(this.url + '/stats/chart', { params: { filter }, ...this.getToken(token) });
+  getStatsChart(filter: string, token: string, year?: string) {
+    return axios.get(this.url + '/stats/chart', { params: { filter, year }, ...this.getToken(token) });
   }
 
   getStatsByYear(token: string) {
@@ -143,9 +143,10 @@ export class ApiService {
     return axios.get(this.url + '/registers', { params: { per_page: perPage }, ...this.getToken(token) });
   }
 
-  downloadReport(reportPath: string, token: string) {
+  downloadReport(reportPath: string, token: string, year?: string) {
     return axios.get(this.url + `/reports/${reportPath}`, {
       responseType: 'blob',
+      params: { year },
       ...this.getToken(token),
     });
   }
