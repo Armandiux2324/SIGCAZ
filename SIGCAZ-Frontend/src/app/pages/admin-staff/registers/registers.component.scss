@@ -1,18 +1,35 @@
-$color-border: #1a1a1a;
+$color-guinda: #6b1220;
+$color-guinda-dark: #4a0c16;
+$color-border: #d8d2d0;
 $color-text: #1a1a1a;
-$color-text-muted: #4a4a4a;
+$color-text-muted: #6a6a6a;
 $color-bg: #ffffff;
+$color-bg-page: #f5f5f7;
 $color-danger: #b02a2a;
-$radius-lg: 24px;
+$color-danger-bg: #fdecec;
+$color-neutral-bg: #f0f1f3;
+$color-neutral-icon: #52585f;
+
+$radius-lg: 20px;
 $radius-md: 12px;
-$radius-sm: 8px;
+$radius-sm: 10px;
+$radius-pill: 999px;
+
+$header-offset: 3.5rem;
 
 .registers-view {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 2vw, 2.5rem);
+  gap: 1.25rem;
+  height: calc(100vh - #{$header-offset} - 3rem);
   width: 100%;
-  padding: clamp(1rem, 2vw, 2rem);
+}
+
+.registers-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-text;
 }
 
 .registers-toolbar {
@@ -21,22 +38,7 @@ $radius-sm: 8px;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.registers-title {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 600;
-  color: $color-text;
-  margin: 0;
-}
-
-.toolbar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  flex: 1;
-  justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .search-box {
@@ -44,56 +46,73 @@ $radius-sm: 8px;
   flex: 1;
   min-width: 220px;
   max-width: 400px;
+}
 
-  .search-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $color-text-muted;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-pill;
+  font-size: 0.95rem;
+  color: $color-text;
+  background: $color-bg;
+
+  &::placeholder {
     color: $color-text-muted;
   }
 
-  .search-input {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.75rem;
-    border: 1.5px solid $color-border;
-    border-radius: $radius-lg;
-    font-size: 0.95rem;
-    color: $color-text;
-    background: $color-bg;
-
-    &::placeholder {
-      color: $color-text-muted;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $color-text;
-    }
+  &:focus {
+    outline: none;
+    border-color: $color-guinda;
   }
 }
 
 .btn-new-register {
   padding: 0.75rem 1.5rem;
-  border: 1.5px solid $color-border;
+  border: none;
   border-radius: $radius-md;
-  background: $color-bg;
-  color: $color-text;
+  background: $color-guinda;
+  color: $color-bg;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: $color-guinda-dark;
   }
 }
 
 .registers-list {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  padding-right: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-border;
+    border-radius: $radius-pill;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 .register-card {
@@ -101,65 +120,98 @@ $radius-sm: 8px;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: clamp(1rem, 3vw, 2.5rem);
-  padding: clamp(1.25rem, 2vw, 2rem);
-  border: 1.5px solid $color-border;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid $color-border;
   border-radius: $radius-lg;
   background: $color-bg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .register-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  color: $color-text;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  color: $color-guinda;
+  padding-right: clamp(1rem, 3vw, 2rem);
+  border-right: 1px solid $color-border;
 }
 
 .register-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem 1.5rem;
   min-width: 0;
 
   p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: $color-text;
     word-break: break-word;
   }
+}
 
-  .info-label {
-    color: $color-text;
-    font-weight: 400;
-  }
+.info-label {
+  color: $color-text-muted;
+  font-weight: 500;
 }
 
 .register-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.cowboy-icon {
+  width: clamp(2.5rem, 5vw, 3.5rem);
+  height: auto;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: none;
-  background: transparent;
-  color: $color-text;
-  font-size: 1.25rem;
-  cursor: pointer;
   border-radius: $radius-sm;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background: $color-neutral-bg;
+  color: $color-neutral-icon;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.06);
+  i {
+    font-size: 1.1rem;
+    line-height: 1;
   }
 
-  &--danger:hover {
-    color: $color-danger;
+  &:hover {
+    background: rgba($color-guinda, 0.1);
+    color: $color-guinda;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-guinda;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  &--danger {
+    &:hover {
+      background: $color-danger-bg;
+      color: $color-danger;
+    }
+
+    &:focus-visible {
+      outline-color: $color-danger;
+    }
   }
 }
 
@@ -168,12 +220,14 @@ $radius-sm: 8px;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  padding-top: 0.5rem;
 }
 
 .page-numbers {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .page-btn {
@@ -181,29 +235,33 @@ $radius-sm: 8px;
   background: $color-bg;
   color: $color-text;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 0.8rem;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba($color-guinda, 0.06);
   }
 
   &--nav {
-    padding: 0.6rem 1.25rem;
+    padding: 0.45rem 1rem;
     border-radius: $radius-sm;
-    font-size: 0.9rem;
   }
 
   &--number {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    font-size: 0.9rem;
   }
 
   &--active {
-    background: $color-text;
+    background: $color-guinda;
     color: $color-bg;
-    border-color: $color-text;
+    border-color: $color-guinda;
+
+    &:hover {
+      background: $color-guinda-dark;
+    }
+    
   }
 }
 
@@ -214,243 +272,43 @@ $radius-sm: 8px;
     text-align: center;
   }
 
-  .register-actions {
-    justify-content: center;
-  }
-
-  .toolbar-actions {
-    justify-content: flex-start;
+  .register-icon {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid $color-border;
+    padding-bottom: 0.75rem;
     width: 100%;
   }
 
-  .search-box {
-    max-width: none;
+  .register-info {
+    grid-template-columns: 1fr;
+    text-align: center;
   }
-}
 
-@media (max-width: 480px) {
+  .register-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 3rem;
+    height: 3rem;
+
+    i {
+      font-size: 1.3rem;
+    }
+  }
+
   .registers-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .toolbar-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-new-register {
-    width: 100%;$color-border: #1a1a1a;
-$color-text: #1a1a1a;
-$radius-pill: 999px;
-$radius-card: 28px;
-$radius-btn: 10px;
-
-.registers-view {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  width: 100%;
-  padding: clamp(1rem, 2vw, 2rem);
-}
-
-.registers-title {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 600;
-  color: $color-text;
-  margin: 0;
-}
-
-.registers-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-}
-
-.search-box {
-  position: relative;
-  flex: 1 1 320px;
-  max-width: 420px;
-
-  .search-icon {
-    position: absolute;
-    left: 1.1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: $color-text;
-    font-size: 1rem;
-  }
-
-  .search-input {
-    width: 100%;
-    padding: 0.7rem 1rem 0.7rem 2.75rem;
-    border: 1.5px solid $color-border;
-    border-radius: $radius-pill;
-    font-size: 0.95rem;
-    color: $color-text;
-    background: #fff;
-
-    &::placeholder {
-      color: $color-text;
-      opacity: 0.7;
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-}
-
-.btn-new-register {
-  margin-left: auto;
-  padding: 0.75rem 1.75rem;
-  border: 1.5px solid $color-border;
-  border-radius: $radius-btn;
-  background: #fff;
-  color: $color-text;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-}
-
-.registers-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-.register-card {
-  display: grid;
-  grid-template-columns: 5rem 1fr auto;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  padding: 1.75rem clamp(1.25rem, 3vw, 2.5rem);
-  border: 1.5px solid $color-border;
-  border-radius: $radius-card;
-  background: #fff;
-}
-
-.register-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: $color-text;
-}
-
-.register-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  min-width: 0;
-
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: $color-text;
-    word-break: break-word;
-  }
-
-  .info-label {
-    font-weight: 400;
-  }
-}
-
-.register-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: $color-text;
-  font-size: 1.4rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 6px;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.06);
-  }
-
-  &--danger:hover {
-    color: #b02a2a;
-  }
-}
-
-.pagination {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.page-numbers {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.page-btn {
-  border: 1.5px solid $color-border;
-  background: #fff;
-  color: $color-text;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  &--nav {
-    padding: 0.6rem 1.5rem;
-    border-radius: $radius-btn;
-    font-size: 0.9rem;
-  }
-
-  &--number {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    font-size: 0.9rem;
-  }
-
-  &--active {
-    background: $color-text;
-    color: #fff;
-  }
-}
-
-@media (max-width: 768px) {
-  .register-card {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
-  }
-
-  .register-actions {
-    justify-content: center;
-  }
-
   .search-box {
     max-width: none;
-    flex-basis: 100%;
   }
 
   .btn-new-register {
-    margin-left: 0;
     width: 100%;
-  }
-}
   }
 }
