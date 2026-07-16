@@ -106,7 +106,19 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         try {
+            $authUser = $request->user();
+
+            if ($authUser->role === 'staff' && $authUser->id !== $user->id) {
+                return response()->json([
+                    'message' => 'No tienes permisos para modificar a otro usuario.',
+                ], 403);
+            }
+
             $data = $request->validated();
+
+            if ($authUser->role === 'staff') {
+                unset($data['role']);
+            }
 
             if (array_key_exists('password', $data)) {
                 $data['password'] = Hash::make($data['password']);
@@ -121,7 +133,6 @@ class UserController extends Controller
             ], 200);
         } catch (Throwable $e) {
             report($e);
-
             return response()->json([
                 'message' => 'Error al actualizar el usuario. Intenta nuevamente más tarde.',
             ], 500);
@@ -148,6 +159,36 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Error al eliminar el usuario: ' . $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function searchByEmail(Request $request): JsonResponse
+    {
+        try {
+            $email = $request->string('email')->trim()->lower();
+
+            if (! $email) {
+                return response()->json([
+                    'message' => 'El parámetro email es requerido.',
+                ], 422);
+            }
+
+            $users = User::where('id', '!=', $request->user()->id)->whereRaw('LOWER(email) LIKE ?', ["%{$email}%"])->get();
+
+            if ($users->isEmpty()) {
+                return response()->json([
+                    'message' => 'No se encontraron usuarios con ese correo.',
+                    'data' => [],
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Usuarios encontrados.',
+                'data' => $users,
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+            return response()->json(['message' => 'Error al buscar usuarios.'], 500);
         }
     }
 }

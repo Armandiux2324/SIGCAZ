@@ -38,11 +38,6 @@ const routes: Routes = [
           import('./pages/admin-staff/registers/registers.module').then(m => m.RegistersModule)
       },
       {
-        path: 'stats',
-        loadChildren: () =>
-          import('./pages/admin-staff/stats/stats.module').then(m => m.StatsModule)
-      },
-      {
         path: 'users',
         loadChildren: () =>
           import('./pages/admin/users/users.module').then(m => m.UsersModule)
