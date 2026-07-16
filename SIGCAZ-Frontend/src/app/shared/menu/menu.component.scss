@@ -19,6 +19,8 @@
 
     .sidebar-logo {
       height: 2rem;
+      max-width: 9rem;
+      object-fit: contain;
       cursor: pointer;
     }
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
+import { SessionService } from '../../../services/session.service';
 
 @Component({
   selector: 'app-settings',
@@ -26,7 +27,7 @@ export class SettingsComponent implements OnInit {
   toastType: 'success' | 'error' = 'success';
   showToastFlag = false;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private session: SessionService) {}
 
   ngOnInit(): void {
     this.loadSettings();
@@ -41,6 +42,7 @@ export class SettingsComponent implements OnInit {
       this.eventTime = data.event_time ?? '';
       this.currentImageUrl = data.event_image_url ?? null;
       this.currentImageName = this.currentImageUrl ? this.currentImageUrl.split('/').pop()! : 'Sin logo asignado';
+      this.session.setEventImage(this.currentImageUrl);
       this.loading = false;
     }).catch(() => {
       this.loading = false;
@@ -78,6 +80,7 @@ export class SettingsComponent implements OnInit {
         const data = res.data.data;
         this.currentImageUrl = data.event_image_url ?? this.currentImageUrl;
         this.currentImageName = this.currentImageUrl ? this.currentImageUrl.split('/').pop()! : this.currentImageName;
+        this.session.setEventImage(this.currentImageUrl);
         this.selectedImageFile = null;
         this.previewUrl = null;
         this.toastMessage = 'Configuración actualizada correctamente.';

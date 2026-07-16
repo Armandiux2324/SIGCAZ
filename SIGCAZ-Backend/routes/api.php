@@ -16,6 +16,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/registers', [RegisterController::class, 'store']);
     Route::get('/registers/search', [RegisterController::class, 'search']);
     Route::get('/registers/receipt', [RegisterController::class, 'receipt']);
+    // Rutas de configuración
+    Route::get('/settings', [SettingsController::class, 'show']);
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Rutas de usuarios
@@ -25,7 +27,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/users/{id}', [UserController::class, 'show']);
         Route::delete('/users/{id}', [UserController::class, 'destroy']);
         // Ruta de configuración
-        Route::get('/settings', [SettingsController::class, 'show']);
         Route::put('/settings', [SettingsController::class, 'update']);
 
     });

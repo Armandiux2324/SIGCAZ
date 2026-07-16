@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-menu',
@@ -7,17 +9,27 @@ import { Router } from '@angular/router';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
   token: any = '';
   userId: any = '';
   role: any = '';
+  eventImageUrl: string | null = null;
 
-  constructor(private router: Router) {}
-  
+  private eventImageSub?: Subscription;
+
+  constructor(private router: Router, private session: SessionService) {}
+
   ngOnInit(){
     this.token = localStorage.getItem('accessToken');
     this.userId = localStorage.getItem('userId');
     this.role = localStorage.getItem('role');
+
+    this.eventImageSub = this.session.eventImage$.subscribe(url => this.eventImageUrl = url);
+    this.session.loadEventImage(this.token);
+  }
+
+  ngOnDestroy(): void {
+    this.eventImageSub?.unsubscribe();
   }
 
   logout() {
