@@ -1,1 +1,138 @@
-<p>users works!</p>
+<div class="users-view">
+  <h1 class="users-title">Gestión de Usuarios</h1>
+
+  <div class="users-toolbar">
+    <div class="search-box">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" class="search-input" placeholder="Buscar por correo..."
+        [(ngModel)]="searchQuery" (ngModelChange)="onSearchInput()" (keyup.enter)="searchUsers()">
+    </div>
+    <button class="btn-new" (click)="openAddModal()">Nuevo Usuario</button>
+  </div>
+
+  <div class="users-list" *ngIf="!loading; else loadingTpl">
+    <p class="empty-msg" *ngIf="users.length === 0">No se encontraron usuarios.</p>
+
+    <article class="user-card" *ngFor="let u of users">
+      <div class="user-icon">
+        <i class="bi bi-person-circle"></i>
+      </div>
+
+      <div class="user-info">
+        <p><span class="info-label">Nombre:</span> {{ u.name }}</p>
+        <p><span class="info-label">Correo:</span> {{ u.email }}</p>
+        <p><span class="info-label">Teléfono:</span> {{ u.phone ?? '—' }}</p>
+        <p>
+          <span class="info-label">Rol:</span>
+          <span class="badge" [class.badge--admin]="u.role === 'admin'">
+            {{ u.role === 'admin' ? 'Administrador' : 'Staff' }}
+          </span>
+        </p>
+      </div>
+
+      <div class="user-actions">
+        <button class="action-btn" title="Editar" (click)="openEditModal(u)">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+        <button class="action-btn action-btn--danger" title="Eliminar" (click)="openDeleteModal(u)">
+          <i class="bi bi-trash3"></i>
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #loadingTpl>
+    <p class="empty-msg">Cargando usuarios...</p>
+  </ng-template>
+</div>
+
+<!-- Modal: Nuevo usuario -->
+<div class="modal-backdrop" *ngIf="showAddModal" (click)="closeAddModal()"></div>
+<div class="modal-box" *ngIf="showAddModal">
+  <div class="modal-header">
+    <h3>Nuevo Usuario</h3>
+    <button class="modal-close" (click)="closeAddModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label>Nombre completo</label>
+      <input type="text" [(ngModel)]="dataToAdd.name" placeholder="Ej. Juan Pérez">
+    </div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" [(ngModel)]="dataToAdd.email" placeholder="correo@ejemplo.com">
+    </div>
+    <div class="field">
+      <label>Teléfono</label>
+      <input type="text" [(ngModel)]="dataToAdd.phone" placeholder="10 dígitos">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="dataToAdd.password" placeholder="Mínimo 8 caracteres">
+    </div>
+    <div class="field">
+      <label>Rol</label>
+      <select [(ngModel)]="dataToAdd.role">
+        <option value="staff">Staff</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeAddModal()">Cancelar</button>
+    <button class="btn-confirm" (click)="addUser()">Crear usuario</button>
+  </div>
+</div>
+
+<!-- Modal: Editar usuario -->
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+<div class="modal-box" *ngIf="showEditModal">
+  <div class="modal-header">
+    <h3>Editar Usuario</h3>
+    <button class="modal-close" (click)="closeEditModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label>Nombre completo</label>
+      <input type="text" [(ngModel)]="dataToEdit.name">
+    </div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" [(ngModel)]="dataToEdit.email">
+    </div>
+    <div class="field">
+      <label>Teléfono</label>
+      <input type="text" [(ngModel)]="dataToEdit.phone">
+    </div>
+    <div class="field">
+      <label>Nueva contraseña <span class="optional">(dejar vacío para no cambiar)</span></label>
+      <input type="password" [(ngModel)]="dataToEdit.password" placeholder="Mínimo 8 caracteres">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeEditModal()">Cancelar</button>
+    <button class="btn-confirm" (click)="editUser()">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- Modal: Confirmar eliminación -->
+<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+<div class="modal-box modal-box--sm" *ngIf="showDeleteModal">
+  <div class="modal-header">
+    <h3>Eliminar usuario</h3>
+    <button class="modal-close" (click)="closeDeleteModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <p>¿Estás seguro de que deseas eliminar a <strong>{{ selectedUser?.name }}</strong>? Esta acción no se puede deshacer.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+    <button class="btn-danger" (click)="deleteUser()">Eliminar</button>
+  </div>
+</div>
+
+<div class="toast-wrapper" *ngIf="showToastFlag">
+  <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+</div>

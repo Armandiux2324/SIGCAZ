@@ -78,4 +78,29 @@ export class ApiService {
   getUser(token: string){
     return axios.get(this.url + '/me', this.getToken(token))
   }
+
+  // Funciones de administración de usuarios
+  getUsers(token: string) {
+    return axios.get(this.url + '/users', this.getToken(token));
+  }
+
+  getUserById(id: string, token: string) {
+    return axios.get(this.url + `/users/${id}`, this.getToken(token));
+  }
+
+  searchUsers(email: string, token: string) {
+    return axios.get(this.url + '/users/search', { params: { email }, ...this.getToken(token) });
+  }
+
+  addUser(name: string, email: string, password: string, phone: string, role: string, token: string) {
+    return axios.post(this.url + '/users', { name, email, password, phone, role }, this.getToken(token));
+  }
+
+  updateUser(id: string, name: string, email: string, phone: string, password: string, token: string) {
+    return axios.put(this.url + `/users/${id}`, { name, email, phone, password }, this.getToken(token));
+  }
+
+  deleteUser(id: string, token: string) {
+    return axios.delete(this.url + `/users/${id}`, this.getToken(token));
+  }
 }
