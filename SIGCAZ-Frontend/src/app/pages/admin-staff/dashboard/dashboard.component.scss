@@ -1,0 +1,249 @@
+$color-border: #1a1a1a;
+$color-text: #1a1a1a;
+$color-muted: #4a4a4a;
+$color-accent: #6B1B1B;
+$radius-card: 24px;
+$radius-btn: 10px;
+$radius-sm: 8px;
+
+.dashboard-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1rem, 2vw, 2rem);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-card;
+  background: #fff;
+
+  i {
+    font-size: 1.75rem;
+    color: $color-accent;
+  }
+}
+
+.summary-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $color-muted;
+}
+
+.summary-value {
+  margin: 0.15rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.chart-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-card;
+  background: #fff;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text;
+
+  select {
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-sm;
+    font-size: 0.9rem;
+    color: $color-text;
+    background: #fff;
+  }
+}
+
+.chart-type-buttons {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-sm;
+    background: #fff;
+    color: $color-text;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:hover { background: rgba(0,0,0,0.04); }
+    &.active { background: $color-text; color: #fff; }
+  }
+}
+
+.btn-export {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: $radius-btn;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover { background: #0b5ed7; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+}
+
+.chart-card {
+  border: 1.5px solid $color-border;
+  border-radius: $radius-card;
+  background: #fff;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chart-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  height: 260px;
+}
+
+.list-card {
+  border: 1.5px solid $color-border;
+  border-radius: $radius-card;
+  background: #fff;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.list-subtitle {
+  margin: -0.25rem 0 0.5rem;
+  font-size: 0.82rem;
+  color: $color-muted;
+}
+
+.empty-msg {
+  color: $color-muted;
+  font-size: 0.9rem;
+}
+
+.recent-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child { border-bottom: none; }
+}
+
+.recent-icon {
+  font-size: 1.75rem;
+  color: $color-muted;
+}
+
+.recent-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.recent-location {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $color-muted;
+}
+
+.recent-folio {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text;
+  white-space: nowrap;
+}
+
+.report-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.88rem;
+  color: $color-text;
+
+  &:last-child { border-bottom: none; }
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #0d6efd;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover { text-decoration: underline; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; text-decoration: none; }
+}
+
+@media (max-width: 992px) {
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 576px) {
+  .summary-grid { grid-template-columns: 1fr; }
+  .btn-export { margin-left: 0; width: 100%; justify-content: center; }
+}

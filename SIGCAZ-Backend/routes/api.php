@@ -45,6 +45,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/scans', [QrScanController::class, 'index']);
         // Rutas de estadísticas
         Route::get('/stats/summary', [StatsController::class, 'summary']);
+        Route::get('/stats/chart', [StatsController::class, 'chart']);
+        Route::get('/stats/by-year', [StatsController::class, 'byYear']);
         // Reportes descargables
         Route::get('/reports/participants', [ReportController::class, 'participants']);
         Route::get('/reports/gender', [ReportController::class, 'byGender']);

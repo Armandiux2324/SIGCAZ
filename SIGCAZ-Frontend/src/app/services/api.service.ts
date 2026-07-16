@@ -125,4 +125,28 @@ export class ApiService {
       },
     });
   }
+
+  // Funciones del dashboard / estadísticas
+  getStatsSummary(token: string) {
+    return axios.get(this.url + '/stats/summary', this.getToken(token));
+  }
+
+  getStatsChart(filter: string, token: string) {
+    return axios.get(this.url + '/stats/chart', { params: { filter }, ...this.getToken(token) });
+  }
+
+  getStatsByYear(token: string) {
+    return axios.get(this.url + '/stats/by-year', this.getToken(token));
+  }
+
+  getRecentRegisters(perPage: number, token: string) {
+    return axios.get(this.url + '/registers', { params: { per_page: perPage }, ...this.getToken(token) });
+  }
+
+  downloadReport(reportPath: string, token: string) {
+    return axios.get(this.url + `/reports/${reportPath}`, {
+      responseType: 'blob',
+      ...this.getToken(token),
+    });
+  }
 }

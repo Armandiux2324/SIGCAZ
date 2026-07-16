@@ -1,1 +1,107 @@
-<p>dashboard works!</p>
+<div class="dashboard-view">
+  <!-- Tarjetas resumen -->
+  <div class="summary-grid">
+    <article class="summary-card">
+      <i class="bi bi-person-fill"></i>
+      <div>
+        <p class="summary-label">Personal Registrado</p>
+        <p class="summary-value">{{ loadingSummary ? '—' : totalUsers }}</p>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <i class="bi bi-people-fill"></i>
+      <div>
+        <p class="summary-label">Registros Totales</p>
+        <p class="summary-value">{{ loadingSummary ? '—' : totalRegisters }}</p>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <i class="bi bi-person-check-fill"></i>
+      <div>
+        <p class="summary-label">Asistencias</p>
+        <p class="summary-value">{{ loadingSummary ? '—' : attended }}</p>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <i class="bi bi-hourglass-split"></i>
+      <div>
+        <p class="summary-label">Pendientes</p>
+        <p class="summary-value">{{ loadingSummary ? '—' : pending }}</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- Barra de filtro y tipo de gráfica -->
+  <div class="chart-toolbar">
+    <label class="filter-label">
+      Participantes por:
+      <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
+        <option *ngFor="let opt of filterOptions" [value]="opt.value">{{ opt.label }}</option>
+      </select>
+    </label>
+
+    <div class="chart-type-buttons">
+      <button [class.active]="chartType === 'line'" (click)="onChartTypeChange('line')">
+        <i class="bi bi-graph-up"></i> Líneas
+      </button>
+      <button [class.active]="chartType === 'bar'" (click)="onChartTypeChange('bar')">
+        <i class="bi bi-bar-chart-fill"></i> Barras
+      </button>
+      <button [class.active]="chartType === 'pie'" (click)="onChartTypeChange('pie')">
+        <i class="bi bi-pie-chart-fill"></i> Pastel
+      </button>
+    </div>
+
+    <button class="btn-export" [disabled]="!currentFilterHasReport" (click)="exportCurrentChart()">
+      <i class="bi bi-download"></i> Exportar
+    </button>
+  </div>
+
+  <!-- Gráficas -->
+  <div class="charts-grid">
+    <section class="chart-card">
+      <div class="chart-canvas-wrapper">
+        <canvas #mainChartCanvas></canvas>
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <h2 class="chart-title">Registros por año</h2>
+      <div class="chart-canvas-wrapper">
+        <canvas #yearChartCanvas></canvas>
+      </div>
+    </section>
+  </div>
+
+  <!-- Registros recientes -->
+  <section class="list-card">
+    <h2 class="list-title">Registros recientes</h2>
+
+    <p class="empty-msg" *ngIf="!loadingRecent && recentRegisters.length === 0">No hay registros recientes.</p>
+
+    <div class="recent-row" *ngFor="let r of recentRegisters">
+      <i class="bi bi-person-circle recent-icon"></i>
+      <div class="recent-info">
+        <p class="recent-name">{{ r.name }}</p>
+        <p class="recent-location">{{ r.location }}</p>
+      </div>
+      <span class="recent-folio">{{ r.folio }}</span>
+    </div>
+  </section>
+
+  <!-- Reportes disponibles -->
+  <section class="list-card">
+    <h2 class="list-title">Reportes disponibles</h2>
+    <p class="list-subtitle">Genera reportes según el filtro seleccionado.</p>
+
+    <div class="report-row" *ngFor="let r of reports">
+      <span>{{ r.label }}</span>
+      <button class="link-btn" [disabled]="r.downloading" (click)="downloadReport(r)">
+        {{ r.downloading ? 'Descargando...' : 'Descargar' }}
+      </button>
+    </div>
+  </section>
+</div>
