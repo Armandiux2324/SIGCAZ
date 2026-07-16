@@ -47,6 +47,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./pages/admin/settings/settings.module').then(m => m.SettingsModule)
       },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./pages/admin-staff/profile/profile.module').then(m => m.ProfileModule)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

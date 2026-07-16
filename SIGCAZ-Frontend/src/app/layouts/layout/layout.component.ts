@@ -29,6 +29,6 @@ export class LayoutComponent implements OnInit {
   }
 
   redirectToProfile(): void {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/admin/profile']);
   }
 }
