@@ -96,7 +96,7 @@ export class ApiService {
     return axios.post(this.url + '/users', { name, email, password, phone, role }, this.getToken(token));
   }
 
-  updateUser(id: string, name: string, email: string, phone: string, password: string, token: string) {
+  updateUser(id: string, name: string, email: string, phone: string, password: string | undefined, token: string) {
     return axios.put(this.url + `/users/${id}`, { name, email, phone, password }, this.getToken(token));
   }
 

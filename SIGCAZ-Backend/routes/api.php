@@ -23,7 +23,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/users', [UserController::class, 'index']);
         Route::get('/users/search', [UserController::class, 'searchByEmail']);
         Route::get('/users/{id}', [UserController::class, 'show']);
-        Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{id}', [UserController::class, 'destroy']);
         // Ruta de configuración
         Route::get('/settings', [SettingsController::class, 'show']);
@@ -34,6 +33,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
         Route::get('/me', [UserController::class, 'me']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
         // Rutas de registros
         Route::get('/registers', [RegisterController::class, 'index']);
         Route::get('/registers/search-filter', [RegisterController::class, 'searchByFilter']);
