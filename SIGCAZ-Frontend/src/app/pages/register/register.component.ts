@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit {
 
   registrationType: 'individual' | 'group' = 'individual';
   activeParticipantIndex = 0;
+
+  @ViewChildren('tabRef') tabRefs!: QueryList<ElementRef<HTMLButtonElement>>;
 
   states: string[] = [
     'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
@@ -102,19 +104,39 @@ export class RegisterComponent implements OnInit {
   addParticipant(): void {
     if (this.participants.length >= 20) return;
     this.participants.push(this.createParticipant());
-    this.activeParticipantIndex = this.participants.length - 1;
+    this.setActiveParticipant(this.participants.length - 1);
   }
 
   removeParticipant(): void {
     if (this.participants.length <= 2) return;
     this.participants.removeAt(this.participants.length - 1);
     if (this.activeParticipantIndex > this.participants.length - 1) {
-      this.activeParticipantIndex = this.participants.length - 1;
+      this.setActiveParticipant(this.participants.length - 1);
     }
   }
 
   setActiveParticipant(index: number): void {
+    if (index < 0 || index > this.participants.length - 1) return;
     this.activeParticipantIndex = index;
+    this.scrollActiveTabIntoView();
+  }
+
+  previousParticipant(): void {
+    if (this.activeParticipantIndex === 0) return;
+    this.setActiveParticipant(this.activeParticipantIndex - 1);
+  }
+
+  nextParticipant(): void {
+    if (this.activeParticipantIndex === this.participants.length - 1) return;
+    this.setActiveParticipant(this.activeParticipantIndex + 1);
+  }
+
+  private scrollActiveTabIntoView(): void {
+    setTimeout(() => {
+      const tabs = this.tabRefs?.toArray();
+      const el = tabs?.[this.activeParticipantIndex]?.nativeElement;
+      el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    });
   }
 
   get f() {
@@ -141,7 +163,7 @@ export class RegisterComponent implements OnInit {
         ctrl.markAllAsTouched();
         if (ctrl.invalid && !hasInvalid) {
           hasInvalid = true;
-          this.activeParticipantIndex = index;
+          this.setActiveParticipant(index);
         }
       });
 

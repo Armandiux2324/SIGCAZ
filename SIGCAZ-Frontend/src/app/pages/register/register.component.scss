@@ -268,15 +268,62 @@ select:focus {
   font-size: 12px;
 }
 
-/* ====== TABS DE INTEGRANTES ====== */
+/* ====== TABS DE INTEGRANTES (SCROLLEABLE) ====== */
+.participant-tabs-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 6px;
+}
+
+.tab-nav {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.tab-nav:hover:not(:disabled) {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.tab-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .participant-tabs {
   display: flex;
-  gap: 24px;
-  border-bottom: 1px solid #e6e6e6;
-  margin-bottom: 18px;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 10px;
+  flex: 1 1 auto;
+}
+
+.participant-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .participant-tabs .tab {
+  flex: 0 0 auto;
   background: none;
   border: none;
   padding: 0 0 10px 0;
@@ -286,6 +333,7 @@ select:focus {
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .participant-tabs .tab.active {
@@ -296,6 +344,12 @@ select:focus {
 
 .participant-tabs .tab:hover {
   color: #111;
+}
+
+.participant-indicator {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 18px;
 }
 
 /* ====== RESPONSIVE ====== */
@@ -322,5 +376,9 @@ select:focus {
   .btn-prev,
   .btn-submit {
     width: 100%;
+  }
+
+  .participant-tabs {
+    gap: 14px;
   }
 }
