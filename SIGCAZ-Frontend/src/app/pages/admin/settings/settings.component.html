@@ -1,1 +1,64 @@
-<p>settings works!</p>
+<div class="settings-view">
+  <h1 class="settings-title">Configuración del evento</h1>
+  <p class="settings-subtitle">Cabalgata Turística SECTURZ</p>
+
+  <p class="empty-msg" *ngIf="loading">Cargando configuración...</p>
+
+  <ng-container *ngIf="!loading">
+    <section class="settings-card">
+      <h2 class="card-title">Información general del evento</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label><i class="bi bi-calendar-event"></i> Fecha del evento</label>
+          <input type="date" [(ngModel)]="eventDate">
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-clock"></i> Hora del evento</label>
+          <input type="time" [(ngModel)]="eventTime">
+        </div>
+
+        <div class="field field--full">
+          <label><i class="bi bi-geo-alt"></i> Ubicación/Lugar</label>
+          <input type="text" [(ngModel)]="eventAddress" placeholder="Ej. Zacatecas, Zac.">
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
+          {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="card-title">Logo del Evento</h2>
+
+      <div class="logo-row">
+        <div class="logo-preview">
+          <img *ngIf="previewUrl || currentImageUrl" [src]="previewUrl ?? currentImageUrl" alt="Logo del evento">
+          <div class="logo-placeholder" *ngIf="!previewUrl && !currentImageUrl">
+            <i class="bi bi-image"></i>
+          </div>
+        </div>
+
+        <div class="logo-info">
+          <p><strong>Logo Actual:</strong> {{ currentImageName }}</p>
+          <p class="logo-hint">Formatos: PNG, SVG, JPG. Tamaño máximo: 2 MB. Se recomienda fondo transparente.</p>
+
+          <label class="btn-upload">
+            <i class="bi bi-upload"></i> Subir nuevo logo
+            <input type="file" accept="image/png,image/svg+xml,image/jpeg" (change)="onImageSelected($event)" hidden>
+          </label>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+</div>
+
+<div class="toast-wrapper" *ngIf="showToastFlag">
+  <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+</div>

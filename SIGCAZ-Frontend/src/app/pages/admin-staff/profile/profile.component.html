@@ -1,1 +1,76 @@
-<p>profile works!</p>
+<div class="settings-view">
+  <h1 class="settings-title">Mi perfil</h1>
+  <p class="settings-subtitle">Consulta y edita tu información de usuario</p>
+
+  <p class="empty-msg" *ngIf="loading">Cargando información del perfil...</p>
+
+  <ng-container *ngIf="!loading">
+    <section class="settings-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <i class="bi bi-person-circle"></i>
+        </div>
+        <div>
+          <h2 class="card-title">{{ name }}</h2>
+          <span class="role-badge" [class.role-admin]="role === 'admin'">{{ roleLabel }}</span>
+          <p class="member-since" *ngIf="memberSince">Miembro desde {{ memberSince }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="card-title">Información personal</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label><i class="bi bi-person"></i> Nombre completo</label>
+          <input type="text" [(ngModel)]="name" placeholder="Nombre completo">
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-envelope"></i> Correo electrónico</label>
+          <input type="email" [(ngModel)]="email" placeholder="correo@ejemplo.com">
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-telephone"></i> Teléfono</label>
+          <input type="tel" [(ngModel)]="phone" placeholder="Teléfono">
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-shield-lock"></i> Rol</label>
+          <input type="text" [value]="roleLabel" disabled>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="card-title">Cambiar contraseña</h2>
+      <p class="settings-subtitle field-hint">Déjalo en blanco si no quieres cambiarla.</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label><i class="bi bi-lock"></i> Nueva contraseña</label>
+          <input type="password" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        </div>
+
+        <div class="field">
+          <label><i class="bi bi-lock-fill"></i> Confirmar contraseña</label>
+          <input type="password" [(ngModel)]="confirmPassword" placeholder="Repite la contraseña" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
+          {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </section>
+  </ng-container>
+</div>
+
+<div class="toast-wrapper" *ngIf="showToastFlag">
+  <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+</div>

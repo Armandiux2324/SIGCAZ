@@ -244,6 +244,40 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function searchByFilter(Request $request): JsonResponse
+    {
+        try {
+            $query = $request->string('q')->trim();
+
+            if (! $query) {
+                return response()->json([
+                    'message' => 'El parámetro de búsqueda es requerido.',
+                ], 422);
+            }
+
+            $participant = Participant::where('folio', 'LIKE', "%{$query}%")->orWhere('first_name', 'LIKE', "%{$query}%")
+                ->orWhere('last_name', 'LIKE', "%{$query}%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
+                ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('phone', 'LIKE', "%{$query}%")->first();
+
+            if (! $participant) {
+                return response()->json([
+                    'message' => 'No se encontró ningún registro con esa búsqueda.',
+                    'data' => null,
+                ], 404);
+            }
+
+            $register = $participant->register->load('participants');
+
+            return response()->json([
+                'message' => 'Registro encontrado.',
+                'data' => $register,
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+            return response()->json(['message' => 'Error al buscar el registro.'], 500);
+        }
+    }
+
     public function receipt(SearchRegisterRequest $request, RegisterReceiptPdfService $pdfService)
     {
         $data = $request->validated();

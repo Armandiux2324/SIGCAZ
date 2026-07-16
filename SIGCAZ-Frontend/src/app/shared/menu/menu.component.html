@@ -1,6 +1,6 @@
 <nav class="sigcaz-sidebar">
   <div class="sidebar-header">
-    <img src="/assets/logo.png" alt="SIGCAZ" class="sidebar-logo" routerLink="/admin/dashboard">
+    <img [src]="eventImageUrl || '/assets/logo.png'" alt="SIGCAZ" class="sidebar-logo" routerLink="/admin/dashboard">
   </div>
 
   <div class="sidebar-section-label">Menú</div>
@@ -16,12 +16,6 @@
       <a routerLink="/admin/registers" routerLinkActive="active">
         <i class="bi bi-card-list"></i>
         <span>Registros</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/admin/stats" routerLinkActive="active">
-        <i class="bi bi-bar-chart-line-fill"></i>
-        <span>Estadísticas</span>
       </a>
     </li>
     <li *ngIf="role === 'admin'">

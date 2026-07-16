@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
+    public function show(): JsonResponse
+    {
+        $settings = Settings::first();
+
+        return response()->json([
+            'data' => [
+                'event_address' => $settings->event_address,
+                'event_date' => optional($settings->event_date)->format('Y-m-d'),
+                'event_time' => optional($settings->event_date)->format('H:i'),
+                'event_image_url' => $settings->event_image_path ? asset('storage/' . $settings->event_image_path) : null,
+            ],
+        ], 200);
+    }
     public function update(StoreSettingsRequest $request): JsonResponse
     {
         try {
@@ -37,7 +50,12 @@ class SettingsController extends Controller
 
             return response()->json([
                 'message' => 'Configuración actualizada correctamente.',
-                'data' => $settings,
+                'data' => [
+                    'event_address' => $settings->event_address,
+                    'event_date' => optional($settings->event_date)->format('Y-m-d'),
+                    'event_time' => optional($settings->event_date)->format('H:i'),
+                    'event_image_url' => $settings->event_image_path ? asset('storage/' . $settings->event_image_path): null,
+                ],
             ], 200);
         } catch (Throwable $e) {
             DB::rollBack();

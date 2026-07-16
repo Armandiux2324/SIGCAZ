@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
+import { SessionService } from '../../../services/session.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginComponent {
   toastType: 'success' | 'error' = 'success';
   showToastFlag = false;
 
-  constructor(private api: ApiService, private router: Router) { }
+  constructor(private api: ApiService, private router: Router, private session: SessionService) { }
 
   login() {
     if (!this.email || !this.password) {
@@ -31,9 +32,9 @@ export class LoginComponent {
     this.api.login(this.email, this.password).then(res => {
       this.loading = false;
       localStorage.setItem('userId', res.data.user.id);
-      localStorage.setItem('name', res.data.user.name);
       localStorage.setItem('role', res.data.user.role);
       localStorage.setItem('accessToken', res.data.access_token);
+      this.session.setName(res.data.user.name);
 
       this.toastMessage = 'Inicio de sesión exitoso';
       this.showToast('success');
