@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\QrScanController;
+use App\Http\Controllers\Api\StatsController;
+use App\Http\Controllers\Api\ReportController;
 
 Route::prefix('v1')->group(function () {
     // Ruta de autenticación
@@ -36,8 +38,19 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
         Route::get('/me', [UserController::class, 'me']);
         // Rutas de escaneos
-        
-    });
-    Route::post('/scans', [QrScanController::class, 'scan']);
+        Route::post('/scans', [QrScanController::class, 'scan']);
         Route::get('/scans', [QrScanController::class, 'index']);
+        // Rutas de estadísticas
+        Route::get('/stats/summary', [StatsController::class, 'summary']);
+        // Reportes descargables
+        Route::get('/reports/participants', [ReportController::class, 'participants']);
+        Route::get('/reports/gender', [ReportController::class, 'byGender']);
+        Route::get('/reports/shirt-size', [ReportController::class, 'byShirtSize']);
+        Route::get('/reports/state', [ReportController::class, 'byState']);
+        Route::get('/reports/municipality', [ReportController::class, 'byMunicipality']);
+        Route::get('/reports/group', [ReportController::class, 'byGroup']);
+        Route::get('/reports/accommodation', [ReportController::class, 'byAccommodation']);
+        Route::get('/reports/participation-count', [ReportController::class, 'byParticipationCount']);
+        Route::get('/reports/attendance', [ReportController::class, 'attendance']);
+    });
 });
