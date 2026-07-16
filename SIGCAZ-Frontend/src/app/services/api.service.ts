@@ -103,4 +103,26 @@ export class ApiService {
   deleteUser(id: string, token: string) {
     return axios.delete(this.url + `/users/${id}`, this.getToken(token));
   }
+  
+  // Funciones de configuración del evento
+  getSettings(token: string) {
+    return axios.get(this.url + '/settings', this.getToken(token));
+  }
+
+  updateSettings(eventAddress: string, eventDate: string, eventTime: string, eventImage: File | null, token: string) {
+    const formData = new FormData();
+    formData.append('event_address', eventAddress);
+    formData.append('event_date', `${eventDate} ${eventTime}`);
+    if (eventImage) {
+      formData.append('event_image', eventImage);
+    }
+    formData.append('_method', 'PUT');
+
+    return axios.post(this.url + '/settings', formData, {
+      headers: {
+        ...this.getToken(token).headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
 }
