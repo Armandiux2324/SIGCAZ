@@ -1,21 +1,36 @@
+:host {
+  --sidebar-width: 14rem;
+  --ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 .sigcaz-sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 14rem;
+  width: var(--sidebar-width);
   height: 100vh;
-  background: #fff;
-  border-right: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   z-index: 200;
+  overflow: hidden;
+  transition: width 0.4s var(--ease-spring), transform 0.4s var(--ease-spring);
+
+  &.sidebar-collapsed {
+    width: 0;
+    border-right: none;
+  }
 
   .sidebar-header {
-    height: 3.5rem;
+    height: 3.75rem;
     display: flex;
     align-items: center;
     padding: 0 1.25rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
 
     .sidebar-logo {
       height: 2rem;
@@ -32,6 +47,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #aaa;
+    white-space: nowrap;
   }
 
   .sidebar-nav {
@@ -48,9 +64,10 @@
       color: #444;
       text-decoration: none;
       font-size: 0.9rem;
-      border-radius: 0.5rem;
-      margin: 0.1rem 0.5rem;
-      transition: background 0.15s, color 0.15s;
+      border-radius: 12px;
+      margin: 0.15rem 0.6rem;
+      white-space: nowrap;
+      transition: background 0.3s var(--ease-spring), color 0.3s var(--ease-spring);
 
       i { font-size: 1rem; color: #888; }
 
@@ -71,7 +88,8 @@
 
   .sidebar-footer {
     padding: 0.75rem 0.5rem;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
 
     .sidebar-logout {
       width: 100%;
@@ -83,9 +101,10 @@
       border: none;
       color: #888;
       font-size: 0.9rem;
-      border-radius: 0.5rem;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      transition: background 0.3s var(--ease-spring), color 0.3s var(--ease-spring);
 
       i { font-size: 1rem; }
 
@@ -94,6 +113,23 @@
         color: #dc3545;
         i { color: #dc3545; }
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .sigcaz-sidebar {
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    box-shadow: none;
+
+    &:not(.sidebar-collapsed) {
+      transform: translateX(0);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+    }
+
+    &.sidebar-collapsed {
+      width: var(--sidebar-width);
     }
   }
 }

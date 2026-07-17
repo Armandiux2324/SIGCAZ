@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionService } from '../../services/session.service';
@@ -10,6 +10,8 @@ import { SessionService } from '../../services/session.service';
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent implements OnInit, OnDestroy {
+  @Input() menuAbierto: boolean = true;
+
   token: any = '';
   userId: any = '';
   role: any = '';

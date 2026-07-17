@@ -1,69 +1,144 @@
+:host {
+  --cupertino-bg: #f5f5f7;
+  --cupertino-white: #ffffff;
+  --cupertino-border: rgba(0, 0, 0, 0.08);
+  --cupertino-text: #1d1d1f;
+  --cupertino-text-secondary: #6e6e73;
+  --cupertino-accent: #6b1b1b;
+  --sidebar-width: 14rem;
+  --sidebar-width-collapsed: 0rem;
+  --ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+
 .layout-wrapper {
   display: flex;
   min-height: 100vh;
+  position: relative;
 }
 
 .layout-body {
   flex: 1;
-  margin-left: 14rem;
+  margin-left: var(--sidebar-width);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #f5f5f7;
+  background: var(--cupertino-bg);
+  transition: margin-left 0.4s var(--ease-spring);
+}
+
+.layout-wrapper.menu-colapsado .layout-body {
+  margin-left: var(--sidebar-width-collapsed);
 }
 
 .layout-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 3.5rem;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  height: 3.75rem;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--cupertino-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
 
-  .header-logo {
-    height: 2rem;
-    cursor: pointer;
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .hamburger-btn {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--cupertino-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 10px;
+      transition: background 0.3s var(--ease-spring);
+
+      &:hover { background: rgba(0, 0, 0, 0.05); }
+    }
+
+    .header-logo {
+      height: 1.9rem;
+      cursor: pointer;
+    }
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
 
     .welcome-text {
       font-size: 0.9rem;
-      color: #555;
+      font-weight: 500;
+      color: var(--cupertino-text-secondary);
     }
 
     .profile-btn {
       background: none;
       border: none;
-      font-size: 1.5rem;
-      color: #6b1b1b;
+      font-size: 1.6rem;
+      color: var(--cupertino-accent);
       cursor: pointer;
       display: flex;
       align-items: center;
       padding: 0;
+      transition: transform 0.3s var(--ease-spring), color 0.3s var(--ease-spring);
 
-      &:hover { color: #333; }
+      &:hover {
+        color: var(--cupertino-text);
+        transform: scale(1.05);
+      }
     }
   }
 }
 
 .layout-main {
   flex: 1;
-  padding: 1.5rem;
+  padding: 1.75rem;
 }
 
 .layout-footer {
   padding: 0.75rem 1.5rem;
-  background: #fff;
-  border-top: 1px solid #e0e0e0;
+  background: var(--cupertino-white);
+  border-top: 1px solid var(--cupertino-border);
   font-size: 0.8rem;
-  color: #888;
+  color: var(--cupertino-text-secondary);
   text-align: center;
+}
+
+.mobile-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .layout-body {
+    margin-left: 0;
+  }
+
+  .layout-wrapper.menu-colapsado .layout-body {
+    margin-left: 0;
+  }
+
+  .mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+    z-index: 199;
+  }
 }

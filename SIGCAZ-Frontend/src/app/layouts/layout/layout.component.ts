@@ -14,6 +14,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   userId: string = '';
   token: string = '';
   role: string = '';
+  menuAbierto: boolean = true;
 
   private nameSub?: Subscription;
 
@@ -24,10 +25,22 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.token = localStorage.getItem('accessToken') ?? '';
     this.role = localStorage.getItem('role') ?? '';
     this.nameSub = this.session.name$.subscribe(name => this.name = name);
+
+    if (window.innerWidth <= 768) {
+      this.menuAbierto = false;
+    }
   }
 
-  ngOnDestroy(): void {
+ ngOnDestroy(): void {
     this.nameSub?.unsubscribe();
+  }
+
+  toggleMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 420);
   }
 
   logout(): void {

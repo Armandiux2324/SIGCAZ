@@ -27,6 +27,7 @@
 
       <div class="card-footer">
         <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
+          <i class="bi bi-check2" *ngIf="!saving"></i>
           {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
         </button>
       </div>
@@ -44,7 +45,7 @@
         </div>
 
         <div class="logo-info">
-          <p><strong>Logo Actual:</strong> {{ currentImageName }}</p>
+          <p class="logo-current"><strong>Logo Actual:</strong> {{ currentImageName }}</p>
           <p class="logo-hint">Formatos: PNG, SVG, JPG. Tamaño máximo: 2 MB. Se recomienda fondo transparente.</p>
 
           <label class="btn-upload">
@@ -59,6 +60,7 @@
 
 <div class="toast-wrapper" *ngIf="showToastFlag">
   <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
-    {{ toastMessage }}
+    <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'" [class.bi-exclamation-circle-fill]="toastType === 'error'"></i>
+    <span>{{ toastMessage }}</span>
   </div>
 </div>

@@ -34,16 +34,8 @@
     </article>
   </div>
 
-  <!-- Barra de filtro y tipo de gráfica -->
+  <!-- Barra de filtro -->
   <div class="chart-toolbar">
-    <label class="filter-label">
-      Año:
-      <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
-        <option value="">Todos los años</option>
-        <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
-      </select>
-    </label>
-
     <label class="filter-label">
       Participantes por:
       <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
@@ -51,28 +43,44 @@
       </select>
     </label>
 
-    <div class="chart-type-buttons">
-      <button [class.active]="chartType === 'line'" (click)="onChartTypeChange('line')">
-        <i class="bi bi-graph-up"></i> Líneas
-      </button>
-      <button [class.active]="chartType === 'bar'" (click)="onChartTypeChange('bar')">
-        <i class="bi bi-bar-chart-fill"></i> Barras
-      </button>
-      <button [class.active]="chartType === 'pie'" (click)="onChartTypeChange('pie')">
-        <i class="bi bi-pie-chart-fill"></i> Pastel
-      </button>
-    </div>
-
-    <button class="btn-export" [disabled]="!currentFilterHasReport" (click)="exportCurrentChart()">
-      <i class="bi bi-download"></i> Exportar
-    </button>
+    <label class="filter-label filter-label-right">
+      Año:
+      <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
+        <option value="">Todos los años</option>
+        <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
+      </select>
+    </label>
   </div>
 
   <!-- Gráficas -->
   <div class="charts-grid">
     <section class="chart-card">
+      <div class="chart-card-header">
+        <button class="chart-menu-btn" (click)="showTypeMenu = !showTypeMenu">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="chart-type-dropdown" *ngIf="showTypeMenu">
+          <button [class.active]="chartType === 'line'" (click)="onChartTypeChange('line'); showTypeMenu = false">
+            <i class="bi bi-graph-up"></i> Líneas
+          </button>
+          <button [class.active]="chartType === 'bar'" (click)="onChartTypeChange('bar'); showTypeMenu = false">
+            <i class="bi bi-bar-chart-fill"></i> Barras
+          </button>
+          <button [class.active]="chartType === 'pie'" (click)="onChartTypeChange('pie'); showTypeMenu = false">
+            <i class="bi bi-pie-chart-fill"></i> Pastel
+          </button>
+        </div>
+      </div>
+
       <div class="chart-canvas-wrapper">
         <canvas #mainChartCanvas></canvas>
+      </div>
+
+      <div class="chart-card-footer">
+        <button class="btn-export" [disabled]="!currentFilterHasReport" (click)="exportCurrentChart()">
+          <i class="bi bi-download"></i> Exportar
+        </button>
       </div>
     </section>
 
@@ -80,6 +88,12 @@
       <h2 class="chart-title">Registros por año</h2>
       <div class="chart-canvas-wrapper">
         <canvas #yearChartCanvas></canvas>
+      </div>
+
+      <div class="chart-card-footer">
+        <button class="btn-export" [disabled]="!currentFilterHasReport" (click)="exportCurrentChart()">
+          <i class="bi bi-download"></i> Exportar
+        </button>
       </div>
     </section>
   </div>
