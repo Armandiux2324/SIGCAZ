@@ -143,6 +143,31 @@ export class ApiService {
     return axios.get(this.url + '/registers', { params: { per_page: perPage }, ...this.getToken(token) });
   }
 
+  // Funciones de administración de registros
+  getRegisters(page: number, perPage: number, token: string) {
+    return axios.get(this.url + '/registers', { params: { page, per_page: perPage }, ...this.getToken(token) });
+  }
+
+  getRegisterById(id: number | string, token: string) {
+    return axios.get(this.url + `/registers/${id}`, this.getToken(token));
+  }
+
+  searchRegistersByFilter(q: string, token: string) {
+    return axios.get(this.url + '/registers/search-filter', { params: { q }, ...this.getToken(token) });
+  }
+
+  addRegisterAdmin(payload: any) {
+    return axios.post(this.url + '/registers', payload);
+  }
+
+  updateRegister(id: number | string, payload: any, token: string) {
+    return axios.put(this.url + `/registers/${id}`, payload, this.getToken(token));
+  }
+
+  deleteRegister(id: number | string, token: string) {
+    return axios.delete(this.url + `/registers/${id}`, this.getToken(token));
+  }
+
   downloadReport(reportPath: string, token: string, year?: string) {
     return axios.get(this.url + `/reports/${reportPath}`, {
       responseType: 'blob',

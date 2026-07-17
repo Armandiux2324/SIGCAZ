@@ -42,8 +42,8 @@
 
 // Paleta principal
 :root {
-  --color-primary:       #1A56E8;
-  --color-primary-light: #4F8EF7;
+  --color-primary:       #6B1B1B;
+  --color-primary-light: #A83232;
   --color-success:       #15A854;
   --color-error:         #E03131;
   --color-warn:          #F59F00;
@@ -56,7 +56,7 @@
 
   --radius-card:  20px;
   --radius-btn:   50px;
-  --shadow-card:  0 4px 24px rgba(26, 86, 232, 0.10);
+  --shadow-card:  0 4px 24px rgba(107, 27, 27, 0.10);
 
   // Ionic token overrides
   --ion-background-color:         var(--color-bg);

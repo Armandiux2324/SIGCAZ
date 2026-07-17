@@ -5,10 +5,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Modelos — reflejan exactamente la respuesta de la API Laravel
-// ─────────────────────────────────────────────────────────────────────────────
-
 export interface Participante {
   folio:      string;
   first_name: string;

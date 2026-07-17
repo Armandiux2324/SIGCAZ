@@ -1,6 +1,3 @@
-// Variables heredadas del sistema de diseño global
-// (definidas en asistencia.page.scss o global.scss)
-
 ion-header ion-toolbar {
   --background: #FFFFFF;
   --border-color: var(--color-border, #E5E7EB);
@@ -16,7 +13,7 @@ ion-header ion-toolbar {
   color: var(--color-text, #111827);
 
   .title-icon {
-    color: var(--color-primary, #1A56E8);
+    color: var(--color-primary, #6B1B1B);
     font-size: 1.2rem;
   }
 }
@@ -44,11 +41,11 @@ ion-header ion-toolbar {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 2px 12px rgba(26, 86, 232, 0.08);
+  box-shadow: 0 2px 12px rgba(107, 27, 27, 0.08);
 
   ion-icon {
     font-size: 22px;
-    color: var(--color-primary, #1A56E8);
+    color: var(--color-primary, #6B1B1B);
     flex-shrink: 0;
   }
 
@@ -79,7 +76,7 @@ ion-header ion-toolbar {
   border-radius: 18px;
   padding: 14px;
   margin-bottom: 14px;
-  box-shadow: 0 2px 12px rgba(26, 86, 232, 0.08);
+  box-shadow: 0 2px 12px rgba(107, 27, 27, 0.08);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -127,7 +124,7 @@ ion-header ion-toolbar {
   color: var(--color-text-muted, #6B7280);
   flex: 1;
 
-  ion-icon { font-size: 1rem; color: var(--color-primary, #1A56E8); }
+  ion-icon { font-size: 1rem; color: var(--color-primary, #6B1B1B); }
 }
 
 .fecha-btn {
@@ -143,7 +140,7 @@ ion-header ion-toolbar {
   background: #FFFFFF;
   border-radius: 18px;
   padding: 10px;
-  box-shadow: 0 2px 12px rgba(26, 86, 232, 0.08);
+  box-shadow: 0 2px 12px rgba(107, 27, 27, 0.08);
   margin-bottom: 14px;
   min-height: 120px;
 }
@@ -176,14 +173,14 @@ ion-header ion-toolbar {
   border: 1px solid var(--color-border, #E5E7EB);
   transition: box-shadow 0.2s;
 
-  &:active { box-shadow: 0 2px 12px rgba(26,86,232,0.15); }
+  &:active { box-shadow: 0 2px 12px rgba(107, 27, 27,0.15); }
 }
 
 .item-left .avatar-circle {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1A56E8 0%, #4F8EF7 100%);
+  background: linear-gradient(135deg, #6B1B1B 0%, #A83232 100%);
   color: white;
   font-weight: 800;
   font-size: 1rem;
@@ -220,7 +217,7 @@ ion-header ion-toolbar {
 .badge-matricula,
 .badge-talla {
   --background: #EFF6FF;
-  --color: #1A56E8;
+  --color: #6B1B1B;
   font-size: 0.68rem;
   font-weight: 600;
   display: flex;
@@ -248,7 +245,7 @@ ion-header ion-toolbar {
 .item-hora {
   font-size: 0.84rem;
   font-weight: 800;
-  color: var(--color-primary, #1A56E8);
+  color: var(--color-primary, #6B1B1B);
 }
 
 .item-fecha {
@@ -268,7 +265,7 @@ ion-header ion-toolbar {
 .btn-pag {
   --border-radius: 50%;
   --border-color: var(--color-border, #E5E7EB);
-  --color: var(--color-primary, #1A56E8);
+  --color: var(--color-primary, #6B1B1B);
   width: 36px;
   height: 36px;
 }
@@ -293,7 +290,7 @@ ion-header ion-toolbar {
   transition: background 0.2s, color 0.2s;
 
   &.activa {
-    background: var(--color-primary, #1A56E8);
+    background: var(--color-primary, #6B1B1B);
     color: #FFFFFF;
   }
 
@@ -322,15 +319,15 @@ ion-header ion-toolbar {
 /* ── Botones Anterior / Siguiente ── */
 .btn-pag {
   --border-radius: 10px;
-  --border-color: #1A56E8;
-  --color: #1A56E8;
+  --border-color: #6B1B1B;
+  --color: #6B1B1B;
   font-weight: 600;
   height: 38px;
   min-width: 65px;
   text-transform: none;
   transition: 0.2s ease;
 
-  --background-hover: rgba(26, 86, 232, 0.08);
+  --background-hover: rgba(107, 27, 27, 0.08);
 }
 
 .btn-pag:disabled {
@@ -358,7 +355,7 @@ ion-header ion-toolbar {
   border-radius: 50%;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1A56E8;
+  color: #6B1B1B;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
@@ -367,14 +364,14 @@ ion-header ion-toolbar {
 
 /* Hover */
 .num-pag:hover {
-  background: rgba(26, 86, 232, 0.08);
+  background: rgba(107, 27, 27, 0.08);
 }
 
 /* Página activa */
 .num-pag.activa {
-  background: #1A56E8;
+  background: #6B1B1B;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(26, 86, 232, 0.3);
+  box-shadow: 0 4px 12px rgba(107, 27, 27, 0.3);
 }
 
 /* Ellipsis (…) */

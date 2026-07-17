@@ -4,54 +4,355 @@
   <div class="registers-toolbar">
     <div class="search-box">
       <i class="bi bi-search search-icon"></i>
-      <input type="text" class="search-input" placeholder="Buscar Registros...">
+      <input type="text" class="search-input" placeholder="Buscar por folio, nombre, correo o teléfono..."
+        [(ngModel)]="searchQuery" (ngModelChange)="onSearchInput()" (keyup.enter)="searchRegisters()">
     </div>
 
-    <button class="btn-new-register">
+    <button class="btn-new-register" (click)="openAddModal()">
       Nuevo Registro
     </button>
   </div>
 
   <div class="registers-list">
-    <article class="register-card">
-      <div class="register-icon">
-        <img src="image.png" class="cowboy-icon" />
-      </div>
+    <p class="empty-msg" *ngIf="!loading && registers.length === 0">No se encontraron registros.</p>
+    <p class="empty-msg" *ngIf="loading">Cargando registros...</p>
 
-      <div class="register-info">
-        <p><span class="info-label">Origen:</span> Nacional</p>
-        <p><span class="info-label">Estado:</span> Zacatecas</p>
-        <p><span class="info-label">Municipio:</span> Zacatecas</p>
-        <p><span class="info-label">Tipo de Hospedaje:</span> Zacatecas</p>
-        <p><span class="info-label">Hospedaje al que llegarán:</span> Zacatecas</p>
-        <p><span class="info-label">Días de estancia:</span> Zacatecas</p>
-        <p><span class="info-label">Transporte que usarán:</span> Zacatecas</p>
-      </div>
+    <ng-container *ngIf="!loading">
+      <article class="register-card" *ngFor="let r of registers">
+        <div class="register-icon">
+          <img src="image.png" class="cowboy-icon" />
+        </div>
 
-      <div class="register-actions">
-        <button class="action-btn" title="Código QR">
-          <i class="bi bi-qr-code"></i>
-        </button>
-        <button class="action-btn" title="Editar">
-          <i class="bi bi-pencil-square"></i>
-        </button>
-        <button class="action-btn action-btn--danger" title="Eliminar">
-          <i class="bi bi-trash3"></i>
-        </button>
-      </div>
-    </article>
+        <div class="register-info">
+          <p><span class="info-label">Origen:</span> {{ originLabel(r.origin_type) }}</p>
+          <p><span class="info-label">Estado:</span> {{ r.state }}</p>
+          <p><span class="info-label">Municipio:</span> {{ r.municipality }}</p>
+          <p><span class="info-label">Cuadrilla:</span> {{ r.group }}</p>
+          <p><span class="info-label">Tipo de Hospedaje:</span> {{ accommodationLabel(r.accommodation_type) }}</p>
+          <p><span class="info-label">Hospedaje al que llegarán:</span> {{ r.lodging || '—' }}</p>
+          <p><span class="info-label">Días de estancia:</span> {{ r.stay_days }}</p>
+          <p><span class="info-label">Transporte que usarán:</span> {{ transportLabel(r.transport_method) }}</p>
+          <p><span class="info-label">Participantes:</span> {{ r.participants?.length ?? 0 }}</p>
+        </div>
 
+        <div class="register-actions">
+          <button class="action-btn" title="Editar" (click)="openEditModal(r)">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button class="action-btn action-btn--danger" title="Eliminar" (click)="openDeleteModal(r)">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+      </article>
+    </ng-container>
 
-
-    <nav class="pagination">
-      <button class="page-btn page-btn--nav">Anterior</button>
+    <nav class="pagination" *ngIf="!searchMode && lastPage > 1">
+      <button class="page-btn page-btn--nav" [disabled]="currentPage === 1" (click)="previousPage()">Anterior</button>
 
       <div class="page-numbers">
-        <button class="page-btn page-btn--number page-btn--active">1</button>
-        <button class="page-btn page-btn--number">2</button>
-        <button class="page-btn page-btn--number">3</button>
+        <button class="page-btn page-btn--number" *ngFor="let p of pageNumbers"
+          [class.page-btn--active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
       </div>
 
-      <button class="page-btn page-btn--nav">Siguiente</button>
+      <button class="page-btn page-btn--nav" [disabled]="currentPage === lastPage" (click)="nextPage()">Siguiente</button>
     </nav>
   </div>
+</div>
+
+<!-- Modal: Nuevo registro -->
+<div class="modal-backdrop" *ngIf="showAddModal" (click)="closeAddModal()"></div>
+<div class="modal-box" *ngIf="showAddModal">
+  <div class="modal-header">
+    <h3>Nuevo Registro</h3>
+    <button class="modal-close" (click)="closeAddModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="field-row">
+      <div class="field">
+        <label>Origen</label>
+        <select [(ngModel)]="dataToAdd.origin_type">
+          <option *ngFor="let o of originOptions" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <input type="text" [(ngModel)]="dataToAdd.state" placeholder="Ej. Zacatecas">
+      </div>
+      <div class="field">
+        <label>Municipio</label>
+        <input type="text" [(ngModel)]="dataToAdd.municipality" placeholder="Ej. Guadalupe">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Cuadrilla</label>
+        <input type="text" [(ngModel)]="dataToAdd.group" placeholder="Ej. Cuadrilla 1">
+      </div>
+      <div class="field">
+        <label>Tipo de hospedaje</label>
+        <select [(ngModel)]="dataToAdd.accommodation_type">
+          <option *ngFor="let a of accommodationOptions" [value]="a.value">{{ a.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hospedaje al que llegarán</label>
+        <input type="text" [(ngModel)]="dataToAdd.lodging" placeholder="Nombre o dirección">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Días de estancia</label>
+        <input type="number" min="1" [(ngModel)]="dataToAdd.stay_days">
+      </div>
+      <div class="field">
+        <label>Transporte</label>
+        <select [(ngModel)]="dataToAdd.transport_method">
+          <option *ngFor="let t of transportOptions" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Entrega de folio</label>
+        <select [(ngModel)]="dataToAdd.folio_delivery_method">
+          <option *ngFor="let f of folioDeliveryOptions" [value]="f.value">{{ f.label }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="participants-section">
+      <div class="participants-header">
+        <h4>Participantes</h4>
+        <button class="btn-add-participant" (click)="addParticipant('add')">
+          <i class="bi bi-plus-lg"></i> Agregar participante
+        </button>
+      </div>
+
+      <div class="participant-block" *ngFor="let p of dataToAdd.participants; let i = index">
+        <div class="participant-block-header">
+          <span>Participante {{ i + 1 }}</span>
+          <button class="btn-remove-participant" *ngIf="dataToAdd.participants.length > 1"
+            (click)="removeParticipant('add', i)" title="Quitar participante">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Nombre(s)</label>
+            <input type="text" [(ngModel)]="p.first_name">
+          </div>
+          <div class="field">
+            <label>Apellidos</label>
+            <input type="text" [(ngModel)]="p.last_name">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Correo electrónico</label>
+            <input type="email" [(ngModel)]="p.email">
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" [(ngModel)]="p.phone">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Género</label>
+            <select [(ngModel)]="p.gender">
+              <option *ngFor="let g of genderOptions" [value]="g.value">{{ g.label }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Talla de playera</label>
+            <select [(ngModel)]="p.shirt_size">
+              <option *ngFor="let s of shirtSizeOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Primera vez?</label>
+            <select [(ngModel)]="p.is_first_time">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="field" *ngIf="!p.is_first_time">
+            <label>Veces que ha participado</label>
+            <input type="number" min="0" [(ngModel)]="p.participation_count">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeAddModal()">Cancelar</button>
+    <button class="btn-confirm" [disabled]="saving" (click)="addRegister()">
+      {{ saving ? 'Guardando...' : 'Crear registro' }}
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Editar registro -->
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+<div class="modal-box" *ngIf="showEditModal">
+  <div class="modal-header">
+    <h3>Editar Registro</h3>
+    <button class="modal-close" (click)="closeEditModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="field-row">
+      <div class="field">
+        <label>Origen</label>
+        <select [(ngModel)]="dataToEdit.origin_type">
+          <option *ngFor="let o of originOptions" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <input type="text" [(ngModel)]="dataToEdit.state">
+      </div>
+      <div class="field">
+        <label>Municipio</label>
+        <input type="text" [(ngModel)]="dataToEdit.municipality">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Cuadrilla</label>
+        <input type="text" [(ngModel)]="dataToEdit.group">
+      </div>
+      <div class="field">
+        <label>Tipo de hospedaje</label>
+        <select [(ngModel)]="dataToEdit.accommodation_type">
+          <option *ngFor="let a of accommodationOptions" [value]="a.value">{{ a.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hospedaje al que llegarán</label>
+        <input type="text" [(ngModel)]="dataToEdit.lodging">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Días de estancia</label>
+        <input type="number" min="1" [(ngModel)]="dataToEdit.stay_days">
+      </div>
+      <div class="field">
+        <label>Transporte</label>
+        <select [(ngModel)]="dataToEdit.transport_method">
+          <option *ngFor="let t of transportOptions" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Entrega de folio</label>
+        <select [(ngModel)]="dataToEdit.folio_delivery_method">
+          <option *ngFor="let f of folioDeliveryOptions" [value]="f.value">{{ f.label }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="participants-section">
+      <div class="participants-header">
+        <h4>Participantes</h4>
+        <button class="btn-add-participant" (click)="addParticipant('edit')">
+          <i class="bi bi-plus-lg"></i> Agregar participante
+        </button>
+      </div>
+
+      <div class="participant-block" *ngFor="let p of dataToEdit.participants; let i = index">
+        <div class="participant-block-header">
+          <span>Participante {{ i + 1 }}</span>
+          <button class="btn-remove-participant" *ngIf="dataToEdit.participants.length > 1"
+            (click)="removeParticipant('edit', i)" title="Quitar participante">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Nombre(s)</label>
+            <input type="text" [(ngModel)]="p.first_name">
+          </div>
+          <div class="field">
+            <label>Apellidos</label>
+            <input type="text" [(ngModel)]="p.last_name">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Correo electrónico</label>
+            <input type="email" [(ngModel)]="p.email">
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" [(ngModel)]="p.phone">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Género</label>
+            <select [(ngModel)]="p.gender">
+              <option *ngFor="let g of genderOptions" [value]="g.value">{{ g.label }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Talla de playera</label>
+            <select [(ngModel)]="p.shirt_size">
+              <option *ngFor="let s of shirtSizeOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Primera vez?</label>
+            <select [(ngModel)]="p.is_first_time">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+          <div class="field" *ngIf="!p.is_first_time">
+            <label>Veces que ha participado</label>
+            <input type="number" min="0" [(ngModel)]="p.participation_count">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeEditModal()">Cancelar</button>
+    <button class="btn-confirm" [disabled]="saving" (click)="editRegister()">
+      {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Confirmar eliminación -->
+<div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+<div class="modal-box modal-box--sm" *ngIf="showDeleteModal">
+  <div class="modal-header">
+    <h3>Eliminar registro</h3>
+    <button class="modal-close" (click)="closeDeleteModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <p>¿Estás seguro de que deseas eliminar el registro de <strong>{{ selectedRegister?.municipality }}, {{ selectedRegister?.state }}</strong>? Esta acción no se puede deshacer.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+    <button class="btn-danger" (click)="deleteRegister()">Eliminar</button>
+  </div>
+</div>
+
+<div class="toast-wrapper" *ngIf="showToastFlag">
+  <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+</div>

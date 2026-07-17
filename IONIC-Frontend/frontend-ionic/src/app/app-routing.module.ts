@@ -1,4 +1,3 @@
-// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './interceptors/auth.guard';
@@ -16,13 +15,13 @@ const routes: Routes = [
   },
   {
     path: 'asistencia',
-    canActivate: [AuthGuard],   // ← protegida: requiere token
+    canActivate: [AuthGuard],  
     loadChildren: () =>
       import('./publico/asistencia/asistencia.module').then(m => m.AsistenciaPageModule)
   },
   {
     path: 'historial',
-    canActivate: [AuthGuard],   // ← protegida: requiere token
+    canActivate: [AuthGuard],  
     loadChildren: () =>
       import('./publico/historial/historial.module').then(m => m.HistorialPageModule)
   },
@@ -30,10 +29,6 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'login'
   },
-  {
-    path: 'login',
-    loadChildren: () => import('./publico/login/login.module').then( m => m.LoginPageModule)
-  }
 
 ];
 

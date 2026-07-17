@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { RegistersRoutingModule } from './registers-routing.module';
 import { RegistersComponent } from './registers.component';
@@ -11,6 +12,7 @@ import { RegistersComponent } from './registers.component';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     RegistersRoutingModule
   ]
 })
