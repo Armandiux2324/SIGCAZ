@@ -7,7 +7,9 @@
       <input type="text" class="search-input" placeholder="Buscar por correo..."
         [(ngModel)]="searchQuery" (ngModelChange)="onSearchInput()" (keyup.enter)="searchUsers()">
     </div>
-    <button class="btn-new" (click)="openAddModal()">Nuevo Usuario</button>
+    <button class="btn-new" (click)="openAddModal()">
+      <i class="bi bi-plus-lg"></i> Nuevo Usuario
+    </button>
   </div>
 
   <div class="users-list" *ngIf="!loading; else loadingTpl">
@@ -15,19 +17,16 @@
 
     <article class="user-card" *ngFor="let u of users">
       <div class="user-icon">
-        <i class="bi bi-person-circle"></i>
+        <i class="bi bi-person-fill"></i>
       </div>
 
       <div class="user-info">
-        <p><span class="info-label">Nombre:</span> {{ u.name }}</p>
-        <p><span class="info-label">Correo:</span> {{ u.email }}</p>
-        <p><span class="info-label">Teléfono:</span> {{ u.phone ?? '—' }}</p>
-        <p>
-          <span class="info-label">Rol:</span>
-          <span class="badge" [class.badge--admin]="u.role === 'admin'">
-            {{ u.role === 'admin' ? 'Administrador' : 'Staff' }}
-          </span>
-        </p>
+        <p class="user-name">{{ u.name }}</p>
+        <p class="user-email">{{ u.email }}</p>
+        <p class="user-phone" *ngIf="u.phone"><i class="bi bi-telephone"></i> {{ u.phone }}</p>
+        <span class="badge" [class.badge--admin]="u.role === 'admin'">
+          {{ u.role === 'admin' ? 'Administrador' : 'Staff' }}
+        </span>
       </div>
 
       <div class="user-actions">
@@ -133,6 +132,7 @@
 
 <div class="toast-wrapper" *ngIf="showToastFlag">
   <div class="sigcaz-toast" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
-    {{ toastMessage }}
+    <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'" [class.bi-exclamation-circle-fill]="toastType === 'error'"></i>
+    <span>{{ toastMessage }}</span>
   </div>
 </div>

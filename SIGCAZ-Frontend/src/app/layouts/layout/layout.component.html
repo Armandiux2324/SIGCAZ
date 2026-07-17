@@ -1,8 +1,15 @@
-<div class="layout-wrapper">
-  <app-menu></app-menu>
+<div class="layout-wrapper" [class.menu-colapsado]="!menuAbierto">
+  <app-menu [menuAbierto]="menuAbierto"></app-menu>
 
   <div class="layout-body">
     <header class="layout-header">
+      <div class="header-left">
+        <button class="hamburger-btn" (click)="toggleMenu()">
+          <i class="bi bi-list"></i>
+        </button>
+       
+      </div>
+
       <div class="header-right">
         <span class="welcome-text">¡Bienvenido, {{ name }}!</span>
         <button class="profile-btn" (click)="redirectToProfile()">
@@ -19,4 +26,6 @@
       <!-- Contenido del footer -->
     </footer>
   </div>
+
+  <div class="mobile-backdrop" *ngIf="menuAbierto" (click)="toggleMenu()"></div>
 </div>

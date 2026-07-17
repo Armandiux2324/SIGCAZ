@@ -28,6 +28,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   totalRegisters = 0;
   attended = 0;
   pending = 0;
+  showTypeMenu = false;
 
   // Gráfica principal
   filterOptions: FilterOption[] = [
