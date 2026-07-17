@@ -20,21 +20,17 @@ export class AuthService {
 
   // ── POST /api/v1/login ────────────────────────────────────────────────────
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${this.base}/login`, { email, password })
-      .pipe(
+    return this.http.post<LoginResponse>(`${this.base}/login`, { email, password }).pipe(
         tap(res => this.guardarToken(res.access_token))
       );
   }
 
-  // ── POST /api/v1/logout ───────────────────────────────────────────────────
   logout(): Observable<any> {
     return this.http.post(`${this.base}/logout`, {}).pipe(
       tap(() => this.eliminarToken())
     );
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
   guardarToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }

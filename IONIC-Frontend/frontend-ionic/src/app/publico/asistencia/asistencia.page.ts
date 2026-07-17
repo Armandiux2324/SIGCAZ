@@ -1,4 +1,3 @@
-// src/app/pages/asistencia/asistencia.page.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -22,19 +21,18 @@ export class AsistenciaPage implements OnInit, OnDestroy {
   registrosRecientes: RegistroAsistencia[] = [];
   justRegistered = false;
 
-  // Datos del último participante registrado (para mostrar la card verde)
   ultimoRegistro: ScanRegistradoResponse['data'] | null = null;
 
-  // Mensajes de error provenientes de Laravel
+
   mensajeError = '';
   cargando     = false;
-
-  // Flash
   flashActivo = false;
 
   private resetTimeout: any;
   private qrScanner: Html5Qrcode | null = null;
   private scanning = false;
+  private ultimoFolioMostrado: string | null = null;
+  private ultimoScaneoTs = 0;
 
   constructor(
     private router: Router,
@@ -42,7 +40,6 @@ export class AsistenciaPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Carga el historial reciente desde la API al abrir la pantalla
     this.cargarRecientes();
   }
 
@@ -51,23 +48,20 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     this.stopScan();
   }
 
-  // ── Carga los 4 registros más recientes desde Laravel ─────────────────────
   cargarRecientes(): void {
     this.asistenciaService.getScanList({ page: 1 }).subscribe({
       next: (items) => {
-        // Tomamos solo los primeros 4 y los mapeamos al formato del template
+        // Toma solo los primeros 4 
         this.registrosRecientes = items
           .slice(0, 4)
           .map(item => this.asistenciaService.mapearRegistro(item));
       },
       error: () => {
-        // Si falla (sin conexión al iniciar), dejamos la lista vacía sin romper
         this.registrosRecientes = [];
       }
     });
   }
 
-  // ── Iniciar escáner ────────────────────────────────────────────────────────
   async startScan(): Promise<void> {
     if (this.scanning) return;
     this.scanning        = true;
@@ -75,6 +69,8 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     this.justRegistered  = false;
     this.mensajeError    = '';
     this.ultimoRegistro  = null;
+    this.ultimoFolioMostrado = null;
+    clearTimeout(this.resetTimeout);
 
     try {
       this.qrScanner = new Html5Qrcode('qr-reader');
@@ -83,8 +79,17 @@ export class AsistenciaPage implements OnInit, OnDestroy {
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 430, height: 430 } },
         (decodedText) => {
-          // Detener antes de llamar a la API para no leer el mismo QR dos veces
-          this.stopScan(false);
+          if (this.cargando) return;
+
+          const ahora = Date.now();
+          const mismoFolioReciente =
+            decodedText === this.ultimoFolioMostrado &&
+            (ahora - this.ultimoScaneoTs) < 60000;
+
+          if (mismoFolioReciente) return;
+
+          this.ultimoFolioMostrado = decodedText;
+          this.ultimoScaneoTs = ahora;
           this.registrarAsistencia(decodedText);
         },
         () => {}
@@ -100,8 +105,10 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     }
   }
 
-  // ── Detener escáner ────────────────────────────────────────────────────────
   async stopScan(resetEstado = true): Promise<void> {
+    clearTimeout(this.resetTimeout);
+    this.ultimoFolioMostrado = null;
+
     if (this.flashActivo) {
       await this.aplicarFlash(false).catch(() => {});
       this.flashActivo = false;
@@ -121,7 +128,6 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     this.scanning = false;
   }
 
-  // ── Toggle flash ───────────────────────────────────────────────────────────
   async toggleFlash(): Promise<void> {
     this.flashActivo = !this.flashActivo;
     if (this.scanning && this.qrScanner) {
@@ -146,7 +152,6 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     }
   }
 
-  // ── Recargar cámara ────────────────────────────────────────────────────────
   async recargarCamara(): Promise<void> {
     if (this.scanning) {
       await this.stopScan(false);
@@ -161,7 +166,6 @@ export class AsistenciaPage implements OnInit, OnDestroy {
     }
   }
 
-  // ── Llama POST /api/v1/scans con el folio leído del QR ────────────────────
   registrarAsistencia(folio: string): void {
     this.cargando     = true;
     this.mensajeError = '';
@@ -175,22 +179,23 @@ export class AsistenciaPage implements OnInit, OnDestroy {
           this.justRegistered = true;
           this.ultimoRegistro = res.data;
 
-          // Agrega al preview local sin llamar de nuevo a la API
           const nuevo = this.asistenciaService.mapearDesdePost(res);
           this.registrosRecientes = [nuevo, ...this.registrosRecientes].slice(0, 4);
 
-          // Auto-reset a los 3 s
-          this.resetTimeout = setTimeout(() => this.resetScan(), 3000);
+          clearTimeout(this.resetTimeout);
+          this.resetTimeout = setTimeout(() => this.resetScan(), 60000);
 
         } else {
-          // La API respondió 200 pero con status != valid (ya registrado, etc.)
-          this.estado       = 'error';
+          this.estado = 'error';
           this.mensajeError = res.message;
+
+          clearTimeout(this.resetTimeout);
+          this.resetTimeout = setTimeout(() => this.resetScan(), 60000);
         }
       },
       error: (err) => {
         this.cargando = false;
-        this.estado   = 'error';
+        this.estado = 'error';
 
         if (err.status === 422) {
           this.mensajeError = err.error?.message ?? 'QR inválido.';
@@ -201,16 +206,19 @@ export class AsistenciaPage implements OnInit, OnDestroy {
         } else {
           this.mensajeError = err.error?.message ?? 'Error inesperado.';
         }
+
+        clearTimeout(this.resetTimeout);
+        this.resetTimeout = setTimeout(() => this.resetScan(), 60000);
       }
     });
   }
 
-  // ── Reset UI ───────────────────────────────────────────────────────────────
   resetScan(): void {
     clearTimeout(this.resetTimeout);
-    this.estado         = 'inactivo';
-    this.justRegistered = false;
-    this.ultimoRegistro = null;
-    this.mensajeError   = '';
+    this.estado             = this.scanning ? 'escaneando' : 'inactivo';
+    this.justRegistered     = false;
+    this.ultimoRegistro     = null;
+    this.mensajeError       = '';
+    this.ultimoFolioMostrado = null;
   }
 }

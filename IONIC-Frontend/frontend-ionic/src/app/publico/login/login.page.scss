@@ -1,4 +1,3 @@
-// src/app/publico/login/login.page.scss
 .login-content {
   --background: #F0F4FF;
 }
@@ -21,12 +20,12 @@
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: #1A56E8;
+    background: #6B1B1B;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 16px;
-    box-shadow: 0 8px 24px rgba(26, 86, 232, 0.30);
+    box-shadow: 0 8px 24px rgba(107, 27, 27, 0.30);
 
     ion-icon {
       font-size: 36px;
@@ -55,7 +54,7 @@
   padding: 24px 20px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 24px rgba(26, 86, 232, 0.10);
+  box-shadow: 0 4px 24px rgba(107, 27, 27, 0.10);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -101,7 +100,7 @@
   transition: border-color 0.2s;
 
   &:focus-within {
-    border-color: #1A56E8;
+    border-color: #6B1B1B;
     background: #EFF6FF;
   }
 
@@ -129,12 +128,18 @@
 
 // ── Botón ─────────────────────────────────────────────────────────────────────
 .btn-login {
-  --background: #1A56E8;
-  --background-hover: #1748C9;
+  --background: #6B1B1B;
+  --background-hover: #5E1818;
   --border-radius: 50px;
-  --box-shadow: 0 4px 16px rgba(26, 86, 232, 0.30);
+  --box-shadow: 0 4px 16px rgba(107, 27, 27, 0.30);
   height: 50px;
   font-weight: 700;
   font-size: 0.95rem;
   margin-top: 4px;
 }
+
+
+
+
+
+

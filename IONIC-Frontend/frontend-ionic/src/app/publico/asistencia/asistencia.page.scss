@@ -2,7 +2,7 @@
 // Variables del sistema de diseño
 // ═══════════════════════════════════════════════
 :root {
-  --color-primary:      #1A56E8;
+  --color-primary:      #6B1B1B;
   --color-success:      #15A854;
   --color-error:        #E03131;
   --color-warn:         #F59F00;
@@ -13,7 +13,7 @@
   --color-border:       #E5E7EB;
   --radius-card:        20px;
   --radius-btn:         50px;
-  --shadow-card:        0 4px 24px rgba(26, 86, 232, 0.10);
+  --shadow-card:        0 4px 24px rgba(107, 27, 27, 0.10);
 }
 
 // ── Header ──────────────────────────────────────
@@ -198,9 +198,9 @@ ion-header ion-toolbar {
 
 .btn-activar {
   --background: var(--color-primary);
-  --background-hover: #1748C9;
+  --background-hover: #5E1818;
   --border-radius: var(--radius-btn);
-  --box-shadow: 0 4px 16px rgba(26, 86, 232, 0.30);
+  --box-shadow: 0 4px 16px rgba(107, 27, 27, 0.30);
   font-weight: 600;
   height: 50px;
   letter-spacing: 0.2px;
@@ -475,8 +475,8 @@ ion-header ion-toolbar {
 
 // Recargar → hint de color azul al hacer tap
 .btn-recargar:active {
-  --color: var(--color-primary, #1A56E8);
-  --border-color: var(--color-primary, #1A56E8);
+  --color: var(--color-primary, #6B1B1B);
+  --border-color: var(--color-primary, #6B1B1B);
 }
 
 // El botón principal ocupa el espacio restante
