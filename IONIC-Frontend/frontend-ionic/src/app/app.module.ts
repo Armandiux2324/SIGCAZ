@@ -22,7 +22,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';  // ← nuevo
     }),
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: false, //isDevMode() ? false : true,
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
