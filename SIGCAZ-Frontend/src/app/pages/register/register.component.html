@@ -17,7 +17,7 @@
     <span class="max-label">20 max</span>
   </div>
 
-    <form [formGroup]="registerForm">
+    <form [formGroup]="registerForm" (ngSubmit)="addRegister()">
 
       <!-- PÁGINA 1: Datos personales -->
       <div class="form-section" *ngIf="page === 1">
@@ -288,7 +288,7 @@
 
         <div class="registro-terminado">
           <button type="button" class="btn-prev" (click)="goToPage1()">Anterior</button>
-          <button type="submit" class="btn-submit" [disabled]="loading" (click)="addRegister()">
+          <button type="submit" class="btn-submit" [disabled]="loading">
             {{ loading ? 'Enviando...' : 'Finalizar Registro' }}
           </button>
         </div>
