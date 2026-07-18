@@ -208,11 +208,16 @@ export class RegisterComponent implements OnInit {
     const groupFieldsInvalid = ['origin_type','state','municipality','group','accommodation_type','stay_days','transport_method']
       .some(field => this.registerForm.get(field)?.invalid);
 
-    if (this.registrationType === 'individual' && this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      const page1Invalid = this.page1Fields.some(f => this.registerForm.get(f)?.invalid);
-      if (page1Invalid) this.page = 1;
-      return;
+    if (this.registrationType === 'individual') {
+      const individualFieldsInvalid =
+        this.page1Fields.some(f => this.registerForm.get(f)?.invalid) || groupFieldsInvalid;
+
+      if (individualFieldsInvalid) {
+        this.registerForm.markAllAsTouched();
+        const page1Invalid = this.page1Fields.some(f => this.registerForm.get(f)?.invalid);
+        if (page1Invalid) this.page = 1;
+        return;
+      }
     }
 
     if (this.registrationType === 'group' && (this.participants.invalid || groupFieldsInvalid)) {
