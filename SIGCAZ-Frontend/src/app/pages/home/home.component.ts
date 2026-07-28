@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  menuOpen = false;
+
   constructor(private router: Router) {}
 
   redirectToRegister(){
@@ -22,4 +24,11 @@ export class HomeComponent {
     this.router.navigate(['/login']);
   }
 
+  toggleMenu(){
+    this.menuOpen = !this.menuOpen;
+  }
+
+  scrollToTop(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

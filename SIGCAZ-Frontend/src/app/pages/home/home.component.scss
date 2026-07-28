@@ -1,0 +1,483 @@
+// home.component.scss
+$color-primary: #7a0c2e;
+$color-primary-dark: #5c0921;
+$color-accent: #d12d45;
+$color-gold: #c1873c;
+$color-text: #333;
+$color-white: #fff;
+$font-main: 'Montserrat', sans-serif;
+$transition-base: 0.3s ease;
+
+// ==========================================================================
+// Header / Navbar
+// ==========================================================================
+.transparent-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%);
+  padding: 15px 30px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    width: 130px;
+    height: auto;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: $color-white;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 110;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      a {
+        display: inline-block;
+        color: $color-white;
+        text-decoration: none;
+        font-family: $font-main;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        padding: 10px 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color $transition-base, transform $transition-base;
+
+        &:hover {
+          background-color: $color-accent;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .transparent-header {
+    .hamburger {
+      display: block;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      height: 100vh;
+      width: 260px;
+      background-color: $color-primary;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 30px;
+      transition: right $transition-base;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+
+      &.active {
+        right: 0;
+      }
+
+      li {
+        width: 100%;
+
+        a {
+          width: 100%;
+          padding: 14px 10px;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// Hero / Carousel (Bootstrap nativo)
+// ==========================================================================
+.hero-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+#carouselExampleIndicators {
+  width: 100%;
+}
+
+.carousel-inner {
+  width: 100%;
+}
+
+.carousel-item {
+  width: 100%;
+
+  &.active {
+    display: block;
+  }
+}
+
+.hero-image {
+  width: 100%;
+  height: 85vh;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: $color-white;
+  z-index: 10;
+  width: 90%;
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+}
+
+// ==========================================================================
+// Bienvenida
+// ==========================================================================
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-title {
+  color: $color-accent;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: $font-main;
+}
+
+// ==========================================================================
+// Video Section
+// ==========================================================================
+.video-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.zac-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px;
+  gap: 60px;
+}
+
+.zac-text {
+  flex: 1;
+  max-width: 350px;
+
+  h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: $color-gold;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    font-family: $font-main;
+  }
+
+  p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    border-bottom: 2px dotted #ccc;
+    padding-bottom: 10px;
+  }
+}
+
+.zac-video {
+  flex: 2;
+  max-width: 800px;
+  width: 100%;
+}
+
+.embed-responsive {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  .embed-responsive-item,
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    border: 0;
+  }
+}
+
+// ==========================================================================
+// Icon Section
+// ==========================================================================
+.icon-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 30px 0 10px;
+  text-align: center;
+  flex-wrap: wrap;
+
+  .icon-item {
+    width: 200px;
+    color: $color-text;
+    cursor: pointer;
+    background-color: $color-white;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px 15px;
+    transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base;
+
+    p {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0;
+      color: $color-primary;
+      font-family: $font-main;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+      border-color: $color-accent;
+    }
+  }
+}
+
+// ==========================================================================
+// Botón volver arriba
+// ==========================================================================
+.to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background-color: $color-primary;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: background-color $transition-base, transform $transition-base;
+  z-index: 200;
+
+  &:hover {
+    background-color: $color-primary-dark;
+    transform: translateY(-3px);
+  }
+}
+
+// ==========================================================================
+// Footer
+// ==========================================================================
+.zacatecas-footer {
+  background-image: url('https://static.caribbeannewsdigital.com/cdn/ff/NvnTTCnxhY6iEdfFp3jA9rjwQSphDlVyAcKpFLPpi8U/1707784608/public/sites/default/files/es/imagenes_noticias/201038-zacatecas.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: $color-white;
+  padding: 50px 30px 20px;
+  font-family: $font-main;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-left {
+  flex: 1 1 250px;
+
+  .logo {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+
+  .contacto p {
+    margin: 6px 0;
+    font-size: 14px;
+
+    i {
+      margin-right: 6px;
+    }
+  }
+}
+
+.footer-column {
+  flex: 1 1 180px;
+
+  h4 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid $color-white;
+    padding-bottom: 5px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+  }
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin-top: 40px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .gobierno-logo {
+    width: 150px;
+  }
+
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+    transition: color $transition-base;
+
+    &:hover {
+      color: #ffcccb;
+    }
+  }
+
+  .meetings-logo img {
+    width: 100px;
+  }
+}
+
+// ==========================================================================
+// Responsive
+// ==========================================================================
+@media (max-width: 992px) {
+  .hero-image {
+    height: 65vh;
+  }
+
+  .hero-text h2 {
+    font-size: 2.2rem;
+  }
+
+  .zac-layout {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .zac-text {
+    max-width: 100%;
+  }
+
+  .zac-video {
+    max-width: 100%;
+  }
+
+  .icon-section {
+    gap: 20px;
+
+    .icon-item {
+      width: 45%;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-image {
+    height: 55vh;
+  }
+
+  .hero-text {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+
+    h2 {
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+  }
+
+  .embed-responsive {
+    aspect-ratio: 16 / 9;
+  }
+
+  .icon-section .icon-item {
+    width: 100%;
+  }
+
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-text h2 {
+    font-size: 1.4rem;
+  }
+}
