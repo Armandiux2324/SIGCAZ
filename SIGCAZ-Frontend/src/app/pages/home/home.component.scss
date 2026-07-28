@@ -9,16 +9,19 @@ $font-main: 'Montserrat', sans-serif;
 $transition-base: 0.3s ease;
 
 // ==========================================================================
-// Header / Navbar
+// Header / Navbar (fijo, frosted glass)
 // ==========================================================================
 .transparent-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%);
-  padding: 15px 30px;
+  z-index: 1000;
+  background-color: rgba(50, 50, 50, 0.2);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 30px;
 
   .header-content {
     display: flex;
@@ -27,9 +30,9 @@ $transition-base: 0.3s ease;
     max-width: 1300px;
     margin: 0 auto;
   }
-
+//revisar
   .logo {
-    width: 130px;
+    width: 65px;
     height: auto;
   }
 
@@ -45,7 +48,7 @@ $transition-base: 0.3s ease;
     color: $color-white;
     font-size: 28px;
     cursor: pointer;
-    z-index: 110;
+    z-index: 1100;
   }
 
   .nav-links {
@@ -81,6 +84,10 @@ $transition-base: 0.3s ease;
 
 @media (max-width: 992px) {
   .transparent-header {
+    .logo {
+      width: 150px;
+    }
+
     .hamburger {
       display: block;
     }
@@ -117,15 +124,17 @@ $transition-base: 0.3s ease;
   }
 }
 
-// ==========================================================================
-// Hero / Carousel (Bootstrap nativo)
-// ==========================================================================
+// compensa el header fijo para que no tape el hero
 .hero-section {
   position: relative;
   width: 100%;
   overflow: hidden;
+  margin-top: 0;
 }
 
+// ==========================================================================
+// Hero / Carousel (Bootstrap nativo)
+// ==========================================================================
 #carouselExampleIndicators {
   width: 100%;
 }
@@ -188,7 +197,7 @@ $transition-base: 0.3s ease;
 }
 
 // ==========================================================================
-// Video Section
+// Video Section (responsivo 16:9)
 // ==========================================================================
 .video-wrapper {
   max-width: 1000px;
@@ -236,6 +245,7 @@ $transition-base: 0.3s ease;
   position: relative;
   display: block;
   width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -245,7 +255,6 @@ $transition-base: 0.3s ease;
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
     height: 100%;
     width: 100%;
     border: 0;
@@ -317,7 +326,7 @@ $transition-base: 0.3s ease;
 }
 
 // ==========================================================================
-// Footer
+// Footer + Scroll Reveal (Mini Zoom)
 // ==========================================================================
 .zacatecas-footer {
   background-image: url('https://static.caribbeannewsdigital.com/cdn/ff/NvnTTCnxhY6iEdfFp3jA9rjwQSphDlVyAcKpFLPpi8U/1707784608/public/sites/default/files/es/imagenes_noticias/201038-zacatecas.jpg');
@@ -327,6 +336,15 @@ $transition-base: 0.3s ease;
   color: $color-white;
   padding: 50px 30px 20px;
   font-family: $font-main;
+
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  &.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .footer-content {
@@ -342,7 +360,7 @@ $transition-base: 0.3s ease;
   flex: 1 1 250px;
 
   .logo {
-    width: 150px;
+    width: 60px;
     margin-bottom: 20px;
   }
 
@@ -459,10 +477,6 @@ $transition-base: 0.3s ease;
       font-size: 1.6rem;
       line-height: 1.2;
     }
-  }
-
-  .embed-responsive {
-    aspect-ratio: 16 / 9;
   }
 
   .icon-section .icon-item {
