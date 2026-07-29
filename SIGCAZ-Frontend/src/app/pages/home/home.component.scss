@@ -104,7 +104,8 @@ $transition-base: 0.3s ease;
         padding: 10px 16px;
         border-radius: 30px;
         cursor: pointer;
-        transition: background-color $transition-base, transform $transition-base, color $transition-base;
+        transition: background-color $transition-base, transform $transition-base, color $transition-base, filter $transition-base;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.22);
 
         &:hover {
           background-color: rgba(255, 255, 255, 0.15);
@@ -128,6 +129,16 @@ $transition-base: 0.3s ease;
           background-color: rgba(255, 255, 255, 0.15);
         }
       }
+
+      &.nav-highlight a {
+        color: $color-gold;
+        filter: drop-shadow(0 0 3px rgba(193, 135, 60, 0.55));
+      }
+    }
+
+    .nav-link-shadow {
+      color: $color-gold;
+      text-shadow: 0 1px 6px rgba(193, 135, 60, 0.65);
     }
   }
 }
@@ -1201,7 +1212,7 @@ $transition-base: 0.3s ease;
   }
 }
 
-// ==========================================================================
+/// ==========================================================================
 // Footer (contenido conservado, diseño renovado)
 // ==========================================================================
 .zacatecas-footer {
@@ -1210,12 +1221,16 @@ $transition-base: 0.3s ease;
   color: $color-white;
   padding: 80px 30px 0;
   font-family: $font-main;
-
-  opacity: 0;
-  transform: translateY(24px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.7s ease, transform 0.7s ease;
 
-  &.is-visible {
+  &.animate {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  &.animate.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
@@ -1273,6 +1288,30 @@ $transition-base: 0.3s ease;
       color: $color-gold;
       width: 16px;
       text-align: center;
+    }
+  }
+
+  .admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-family: $font-main;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color $transition-base;
+
+    i {
+      font-size: 11px;
+      color: inherit;
+      width: auto;
+    }
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.75);
     }
   }
 }
