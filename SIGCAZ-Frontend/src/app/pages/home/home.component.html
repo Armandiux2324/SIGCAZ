@@ -1,81 +1,222 @@
 <!-- home.component.html -->
-<header class="transparent-header">
+<header class="site-header" [class.scrolled]="scrolled">
   <div class="header-content">
-    <img src="logo.png" alt="MarcaZac.png" class="logo">
-    <nav>
-      <button class="hamburger" aria-label="Abrir menú" (click)="toggleMenu()">☰</button>
+    <a href="#inicio" class="logo-link" aria-label="Inicio">
+      <img src="logo.png" alt="Zacatecas" class="logo">
+    </a>
+
+    <nav aria-label="Navegación principal">
+      <button class="hamburger" aria-label="Abrir menú" (click)="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+
       <ul class="nav-links" [class.active]="menuOpen">
-        <li><a (click)="redirectToRegister()">Registrarse</a></li>
-        <li><a (click)="redirectToSearchRegister()">Consultar Registro</a></li>
-        <li><a (click)="redirectToLogin()">Inicio de Sesión Administrativo</a></li>
+        <li><a href="#acerca" (click)="toggleMenu()">Acerca del Evento</a></li>
+        <li><a href="#galeria" (click)="toggleMenu()">Galería</a></li>
+        <li><a href="#faq" (click)="toggleMenu()">Preguntas Frecuentes</a></li>
+        <li class="nav-cta"><a (click)="redirectToRegister()">Registrarse</a></li>
+        <li class="nav-cta nav-cta--outline"><a (click)="redirectToSearchRegister()">Consultar Registro</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-<section class="hero-section">
- <div #heroCarousel id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="imagen_5.png" class="d-block w-100 hero-image" alt="pueblos magicos">
-      </div>
-      <div class="carousel-item">
-        <img src="imagen_4.png" class="d-block w-100 hero-image" alt="actividades">
-      </div>
-      <div class="carousel-item">
-        <img src="imagen_3.png" class="d-block w-100 hero-image" alt="de noche en zac">
-      </div>
-      <div class="carousel-item">
-        <img src="imagen_1.png" class="d-block w-100 hero-image" alt="informacion util">
-      </div>
-      <div class="carousel-item">
-        <img src="imagen_2.png" class="d-block w-100 hero-image" alt="informacion util">
-      </div>
+<section id="inicio" class="hero-section" aria-label="Bienvenida">
+  <div class="hero-slides">
+    <div *ngFor="let slide of heroSlides; let i = index" class="hero-slide" [class.is-active]="i === activeSlide">
+      <img [src]="slide.src" [alt]="slide.alt" class="hero-image">
     </div>
   </div>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <span class="hero-badge">Registro abierto</span>
+    <h1 class="hero-title">Vive una experiencia <span>inolvidable</span> en Zacatecas</h1>
+    <p class="hero-subtitle">
+      Forma parte de uno de los eventos turísticos más importantes del estado y
+      descubre historia, cultura, gastronomía y tradición.
+    </p>
+
+    <div class="hero-actions">
+      <button type="button" class="btn btn-primary" (click)="redirectToRegister()">Registrarme</button>
+      <button type="button" class="btn btn-outline" (click)="redirectToSearchRegister()">Consultar mi Registro</button>
+    </div>
+  </div>
+
+  <div class="hero-indicators" role="tablist" aria-label="Imágenes de Zacatecas">
+    <button *ngFor="let slide of heroSlides; let i = index" type="button" role="tab"
+      [attr.aria-selected]="i === activeSlide" [attr.aria-label]="'Ver imagen ' + (i + 1)" class="hero-indicator"
+      [class.is-active]="i === activeSlide" (click)="goToSlide(i)"></button>
+  </div>
+
+  <a href="#acerca" class="hero-scroll-hint" [class.is-hidden]="scrolled"
+    aria-label="Desplazarse a la siguiente sección">
+    <span>Descubre</span>
+    <span class="hero-scroll-hint__pill"><span class="hero-scroll-hint__dot"></span></span>
+  </a>
 </section>
 <br><br>
 
-<section class="magic-towns">
-  <div class="container">
-    <h1 class="section-title">¡Bienvenidos a Zacatecas!</h1>
+<section id="acerca" class="about-event" aria-label="Acerca del evento">
+  <div class="about-event__container">
+    <div class="about-event__media reveal">
+      <img src="imagen_2.png" alt="Vista del centro histórico de Zacatecas" class="about-event__image">
+
+    </div>
+
+    <div class="about-event__content reveal">
+      <span class="eyebrow"><span class="eyebrow__line"></span>Acerca del evento</span>
+      <h2 class="about-event__title">Un espacio para honrar la historia, la tradición y <span>identidad de
+          Zacatecas</span></h2>
+      <p class="about-event__text">
+        La Cabalgata "Toma de Zacatecas" es el evento ecuestre más importante del estado, organizado anualmente para
+        conmemorar el histórico triunfo de la Batalla de Zacatecas de 1914. Durante tres días, cientos de cabalgantes
+        recorren los municipios de Calera, Morelos y el Centro Histórico de Zacatecas, culminando el recorrido en el
+        emblemático Cerro de La Bufa, en un ambiente lleno de tradición, cultura y orgullo zacatecano.
+      </p>
+
+      <div class="about-event__pillars">
+        <div class="pillar">
+          <h3><i class="bi bi-check-circle-fill"></i> ¿Qué es?</h3>
+          <p>Una cabalgata conmemorativa que reúne a jinetes, familias y visitantes para celebrar uno de los
+            acontecimientos históricos más importantes de Zacatecas.</p>
+        </div>
+        <div class="pillar">
+          <h3><i class="bi bi-check-circle-fill"></i> Objetivos</h3>
+          <p>Preservar las tradiciones ecuestres, fortalecer la identidad histórica del estado y promover el turismo
+            cultural mediante una celebración que integra historia, convivencia y patrimonio.</p>
+        </div>
+        <div class="pillar">
+          <h3><i class="bi bi-check-circle-fill"></i> ¿Quién participa?</h3>
+          <p>Cabalgantes provenientes de distintos municipios de Zacatecas, así como de otros estados de México y
+            Estados Unidos, además de familias, turistas, asociaciones ecuestres y público en general.</p>
+        </div>
+        <div class="pillar">
+          <h3><i class="bi bi-check-circle-fill"></i> Beneficios</h3>
+          <p>Recorrido por sitios emblemáticos, actividades culturales, verbenas populares, presentaciones musicales,
+            ceremonias cívicas y una experiencia que fortalece el sentido de pertenencia y la riqueza cultural de
+            Zacatecas.</p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-about" (click)="redirectToRegister()">
+        Registrarme <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </section>
 
-<section class="video-section">
-  <div class="container text-center video-wrapper">
-    <div class="container zac-layout">
-      <div class="zac-text">
-        <h2>Descubre<br>Zacatecas</h2>
-        <p>Una ciudad llena de historia, cultura y experiencias únicas.<br>Sumérgete en su belleza colonial y maravíllate con su esencia.</p>
+<section id="video" class="video-section" aria-label="Video promocional">
+  <div class="video-section__container">
+    <div class="video-card reveal">
+      <div class="embed-responsive">
+        <iframe class="embed-responsive-item" [src]="videoUrl"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
       </div>
-      <div class="zac-video">
-        <div class="embed-responsive">
-          <iframe class="embed-responsive-item"
-            [src]="videoUrl"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+    </div>
+
+    <div class="video-info reveal">
+      <span class="eyebrow"><span class="eyebrow__line"></span>Video promocional</span>
+      <h2 class="video-info__title">Vive la cabalgata <span>Toma de Zacatecas</span></h2>
+      <p class="video-info__text">
+        Forma parte de una tradición que recorre los caminos donde la historia y la cultura de Zacatecas cobran vida. Durante tres días, los cabalgantes atraviesan municipios emblemáticos los cuales son:
+      </p>
+
+      <ul class="video-info__highlights">
+        <li><span class="dot"></span>Etapa 1 - Calera: Inicio oficial con el desembarco de los equinos, recorrido por las principales calles y verbena popular.</li>
+        <li><span class="dot"></span>Etapa 2 - Morelos: Recorrido de Calera a Morelos, recepción de cabalgantes y tradicional callejoneada.</li>
+        <li><span class="dot"></span>Etapa 3 - Zacatecas: Paso por el Centro Histórico y llegada al Cerro de La Bufa para el cierre oficial.</li>
+      </ul>
+
+      <div class="icon-section">
+        <div class="icon-item" (click)="redirectToRegister()">
+          <i class="bi bi-pencil-square"></i>
+          <p>Registrarse</p>
+        </div>
+        <div class="icon-item" (click)="redirectToSearchRegister()">
+          <i class="bi bi-search"></i>
+          <p>Consultar Registro</p>
+        </div>
+        <div class="icon-item" (click)="redirectToLogin()">
+          <i class="bi bi-shield-lock"></i>
+          <p>Inicio de Sesión Administrativo</p>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="icon-section">
-      <div class="icon-item" (click)="redirectToRegister()">
-        <p>Registrarse</p>
-      </div>
-      <div class="icon-item" (click)="redirectToSearchRegister()">
-        <p>Consultar Registro</p>
-      </div>
-      <div class="icon-item" (click)="redirectToLogin()">
-        <p>Inicio de Sesión Administrativo</p>
+<section id="beneficios" class="benefits" aria-label="Beneficios de asistir">
+  <div class="benefits__container">
+    <div class="benefits__heading reveal">
+      <span class="eyebrow"><span class="eyebrow__line"></span>Beneficios de asistir</span>
+      <h2>¿Por qué asistir al encuentro?</h2>
+      <p>Ocho razones para reservar tu lugar en la edición más completa que hemos preparado.</p>
+    </div>
+
+    <div class="benefits__grid">
+      <div *ngFor="let benefit of benefits; let i = index" class="benefit-card reveal"
+        [style.transition-delay.ms]="i * 70">
+        <span class="benefit-card__icon"><i class="bi" [ngClass]="benefit.icon"></i></span>
+        <h3 class="benefit-card__title">{{ benefit.title }}</h3>
+        <p class="benefit-card__description">{{ benefit.description }}</p>
       </div>
     </div>
   </div>
 </section>
 
+<section id="galeria" class="gallery" aria-label="Galería">
+  <div class="gallery__container">
+    <div class="gallery__heading reveal">
+      <span class="eyebrow"><span class="eyebrow__line"></span>Galería</span>
+      <h2>Zacatecas en imágenes</h2>
+      <p>Una muestra de los escenarios, sabores y tradiciones que vivirás durante el encuentro.</p>
+    </div>
 
+    <div class="gallery__grid">
+      <button *ngFor="let photo of galleryPhotos; let i = index" type="button" class="gallery-item reveal"
+        [ngClass]="photo.span" [style.transition-delay.ms]="i * 60">
+        <img [src]="photo.src" [alt]="photo.alt" class="gallery-item__image">
+        <span class="gallery-item__overlay"></span>
+        <span class="gallery-item__caption">{{ photo.caption }}</span>
+        <span class="gallery-item__expand"><i class="bi bi-arrows-angle-expand"></i></span>
+      </button>
+    </div>
+  </div>
+</section>
+ 
+<section id="faq" class="faq" aria-label="Preguntas frecuentes">
+  <div class="faq__container">
+    <div class="faq__heading reveal">
+      <span class="eyebrow"><span class="eyebrow__line"></span>Preguntas frecuentes</span>
+      <h2>Resolvemos tus dudas</h2>
+      <p>Si no encuentras la respuesta que buscas, nuestro equipo de atención te ayuda con gusto.</p>
+      <a href="mailto:info@zacatecastravel.com" class="btn btn-about">
+        <i class="bi bi-envelope"></i> Escribir a la Secretaría
+      </a>
+    </div>
+
+    <div class="faq__accordion reveal">
+      <div *ngFor="let item of faqs; let i = index" class="accordion-item" [class.is-open]="activeFaq === i">
+        <button type="button" class="accordion-item__trigger" [attr.aria-expanded]="activeFaq === i"
+          (click)="toggleFaq(i)">
+          {{ item.question }}
+          <i class="bi bi-chevron-down accordion-item__icon"></i>
+        </button>
+        <div class="accordion-item__panel">
+          <p class="accordion-item__content">{{ item.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer #footerRef class="zacatecas-footer">
+  <div class="footer-bg" [style.background-image]="'url(imagen_3.png)'"></div>
+  <div class="footer-overlay"></div>
+
   <div class="footer-content">
     <div class="footer-left">
       <img src="deslumbrate.png" alt="Zacatecas ¡Deslumbrante!" class="logo" />
@@ -117,34 +258,34 @@
     </div>
   </div>
 
-
   <div class="footer-bottom">
-  <img src="logoGob.png" alt="Zacatecas Gobierno del Estado" class="gobierno-logo" />
+    <img src="logoGob.png" alt="Zacatecas Gobierno del Estado" class="gobierno-logo" />
 
-  <div class="social-icons">
-    <a href="https://www.facebook.com/ZacSecturz">
-      <i class="fab fa-facebook-f"></i>
-    </a>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/ZacSecturz" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
 
-    <a href="https://x.com/ZacatecasTravel">
-      <i class="fab fa-twitter"></i>
-    </a>
+      <a href="https://x.com/ZacatecasTravel" aria-label="X">
+        <i class="fab fa-twitter"></i>
+      </a>
 
-    <a href="https://www.instagram.com/zacatecas_travel/">
-      <i class="fab fa-instagram"></i>
-    </a>
+      <a href="https://www.instagram.com/zacatecas_travel/" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
 
-    <a href="https://www.youtube.com/user/ZACATECASSUENABIEN">
-      <i class="fab fa-youtube"></i>
-    </a>
-  </div>
+      <a href="https://www.youtube.com/user/ZACATECASSUENABIEN" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </div>
 
-
-
-
-    
     <div class="meetings-logo">
       <img src="met.jpeg" alt="Zacatecas Meetings" />
     </div>
+  </div>
+
+  <div class="footer-legal">
+    <p>&copy; <span>Desarrollado por Armando Candelas, Acosta Piñon y Dulce Mota</span> — Todos los derechos reservados.
+    </p>
   </div>
 </footer>
