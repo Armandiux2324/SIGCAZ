@@ -119,7 +119,13 @@
           <option *ngFor="let t of transportOptions" [value]="t.value">{{ t.label }}</option>
         </select>
       </div>
-
+      <div class="field">
+        <label>Entrega de folio</label>
+        <select [(ngModel)]="dataToAdd.folio_delivery_method">
+          <option *ngFor="let f of folioDeliveryOptions" [value]="f.value">{{ f.label }}</option>
+        </select>
+      </div>
+    </div>
 
     <div class="participants-section">
       <div class="participants-header">
