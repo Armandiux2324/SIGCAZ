@@ -234,10 +234,13 @@
             </select>
             <span class="error" *ngIf="f['state'].invalid && f['state'].touched">Campo requerido</span>
           </div>
-
+ 
           <div class="form-individual">
             <label>MUNICIPIO</label>
-            <input type="text" formControlName="municipality" placeholder="Ej. Guadalupe">
+            <select formControlName="municipality" [disabled]="!f['state'].value">
+              <option value="">{{ f['state'].value ? 'Seleccione...' : 'Primero elija un estado' }}</option>
+              <option *ngFor="let m of municipalities" [value]="m">{{ m }}</option>
+            </select>
             <span class="error" *ngIf="f['municipality'].invalid && f['municipality'].touched">Campo requerido</span>
           </div>
         </div>

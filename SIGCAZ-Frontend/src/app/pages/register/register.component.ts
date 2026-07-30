@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../data/mexico-estados';
 
 @Component({
   selector: 'app-register',
@@ -29,13 +30,10 @@ export class RegisterComponent implements OnInit {
 
   @ViewChildren('tabRef') tabRefs!: QueryList<ElementRef<HTMLButtonElement>>;
 
-  states: string[] = [
-    'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
-    'Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato',
-    'Guerrero','Hidalgo','Jalisco','Estado de México','Michoacán','Morelos','Nayarit',
-    'Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí',
-    'Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas',
-  ];
+  states: string[] = ESTADOS;
+
+  // Municipios disponibles según el estado seleccionado
+  municipalities: string[] = [];
 
   constructor(private api: ApiService, private fb: FormBuilder) {}
 
@@ -66,6 +64,11 @@ export class RegisterComponent implements OnInit {
       travel_companions_count: [0, [Validators.required, Validators.min(0)]],
 
       participants: this.fb.array([this.createParticipant(), this.createParticipant()]),
+    });
+
+    this.registerForm.get('state')?.valueChanges.subscribe((estado: string) => {
+      this.municipalities = ESTADOS_MUNICIPIOS[estado] ?? [];
+      this.registerForm.get('municipality')?.setValue('');
     });
   }
 
