@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
