@@ -30,22 +30,33 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   pending = 0;
   showTypeMenu = false;
 
-  // Gráfica principal
-  filterOptions: FilterOption[] = [
-    { value: 'registered', label: 'Participantes registrados', reportPath: 'participants' },
-    { value: 'gender', label: 'Género', reportPath: 'gender' },
-    { value: 'shirt_size', label: 'Talla', reportPath: 'shirt-size' },
-    { value: 'origin_type', label: 'Origen (Nacional/Estatal)' },
-    { value: 'state', label: 'Estado', reportPath: 'state' },
-    { value: 'municipality', label: 'Municipio', reportPath: 'municipality' },
-    { value: 'group', label: 'Cuadrilla', reportPath: 'group' },
-    { value: 'accommodation_type', label: 'Tipo de hospedaje', reportPath: 'accommodation' },
-    { value: 'participation_count', label: 'Veces que han participado', reportPath: 'participation-count' },
-  ];
+  // Colores fijos por género
+  private readonly genderColors: Record<string, string> = {
+    mujer: '#e49da7', // rosa
+    femenino: '#e49da7',
+    f: '#e49da7',
+    hombre: '#8ec0d2', // azul
+    masculino: '#8ec0d2',
+    m: '#8ec0d2',
+  };
 
-  selectedFilter = 'gender';
-  chartType: ChartType = 'bar';
-  loadingChart = false;
+  // Gráfica principal
+// Gráfica principal
+filterOptions: FilterOption[] = [
+  { value: 'registered', label: 'Registrados', reportPath: 'participants' },
+  { value: 'gender', label: 'Género', reportPath: 'gender' },
+  { value: 'shirt_size', label: 'Talla', reportPath: 'shirt-size' },
+  { value: 'origin_type', label: 'Origen (Nacional/Estatal)' },
+  { value: 'state', label: 'Estado', reportPath: 'state' },
+  { value: 'municipality', label: 'Municipio', reportPath: 'municipality' },
+  { value: 'group', label: 'Cuadrilla', reportPath: 'group' },
+  { value: 'accommodation_type', label: 'Tipo de hospedaje', reportPath: 'accommodation' },
+  { value: 'participation_count', label: 'Veces que han participado', reportPath: 'participation-count' },
+];
+
+selectedFilter = 'registered';
+chartType: ChartType = 'bar';
+loadingChart = false;
 
   // Filtro por año
   availableYears: string[] = [];
@@ -157,10 +168,30 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     }).catch(() => {});
   }
 
+  /**
+   * Devuelve el color correspondiente a una etiqueta de género (rosa/azul),
+   * o null si la etiqueta no corresponde a un género reconocido.
+   */
+  private getGenderColor(label: string): string | null {
+    const key = (label ?? '').toString().trim().toLowerCase();
+    return this.genderColors[key] ?? null;
+  }
+
   private renderChart(canvas: HTMLCanvasElement, labels: string[], values: number[]): void {
     this.mainChart?.destroy();
 
-    const palette = ['#6B1B1B', '#1a1a1a', '#a83232', '#4a4a4a', '#c96a6a', '#7d7d7d', '#8f2323', '#b5b5b5'];
+    const defaultPalette = ['#eb815b', '#8ec0d2', '#efc255', '#9dbe9e', '#e49da7', '#d2b68e', '#913e3f', '#504f51'];
+    const isGenderFilter = this.selectedFilter === 'gender';
+
+    // Si el filtro actual es género, usamos rosa/azul según la etiqueta;
+    // si alguna etiqueta no coincide con un género conocido, se usa el color por defecto.
+    const backgroundColor = isGenderFilter
+      ? labels.map((label, i) => this.getGenderColor(label) ?? defaultPalette[i % defaultPalette.length])
+      : (this.chartType === 'line' ? 'rgba(235,129,91,0.15)' : defaultPalette);
+
+    const borderColor = isGenderFilter
+      ? labels.map((label, i) => this.getGenderColor(label) ?? defaultPalette[i % defaultPalette.length])
+      : '#eb815b';
 
     const config: ChartConfiguration = {
       type: this.chartType,
@@ -169,8 +200,8 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
         datasets: [{
           label: 'Participantes',
           data: values,
-          backgroundColor: this.chartType === 'line' ? 'rgba(107,27,27,0.15)' : palette,
-          borderColor: '#6B1B1B',
+          backgroundColor,
+          borderColor,
           borderWidth: this.chartType === 'line' ? 2 : 1,
           tension: 0.35,
           fill: this.chartType === 'line',
@@ -201,8 +232,8 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
         datasets: [{
           label: 'Registros',
           data: values,
-          borderColor: '#6B1B1B',
-          backgroundColor: 'rgba(107,27,27,0.15)',
+          borderColor: '#8ec0d2',
+          backgroundColor: 'rgba(142,192,210,0.18)',
           tension: 0.35,
           fill: true,
         }],
@@ -235,6 +266,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   get currentFilterHasReport(): boolean {
     const option = this.filterOptions.find(o => o.value === this.selectedFilter);
     return !!option?.reportPath;
+  }
+
+  get currentFilterLabel(): string {
+    return this.filterOptions.find(o => o.value === this.selectedFilter)?.label ?? 'Participantes';
   }
 
   exportCurrentChart(): void {

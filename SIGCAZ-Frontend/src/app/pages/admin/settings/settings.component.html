@@ -26,8 +26,7 @@
       </div>
 
       <div class="card-footer">
-        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
-          <i class="bi bi-check2" *ngIf="!saving"></i>
+        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving"> <i *ngIf="!saving"></i>
           {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
         </button>
       </div>

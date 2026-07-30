@@ -1,18 +1,34 @@
-$color-guinda: #6b1220;
+// ===============================
+// Paleta de colores
+// ===============================
+$color-guinda:      #6b1220;
 $color-guinda-dark: #4a0c16;
-$color-border: rgba(0, 0, 0, 0.08);
-$color-border-strong: #e5e5ea;
-$color-text: #1a1a1a;
-$color-muted: #6e6e73;
-$color-danger: #d9453d;
-$color-success: #34a853;
-$color-dark: #1c1c1e;
+$color-coral:       #eb815b;
+$color-rosa:        #e49da7;
+$color-azul:        #8ec0d2;
+$color-beige:       #d2b68e;
+$color-verde:       #9dbe9e;
+$color-amarillo:    #efc255;
+$color-gris:        #504f51;
+
+$color-primary:   $color-guinda;
+$color-secondary: $color-azul;
+$color-success:   $color-verde;
+$color-danger:    #d9453d;
+$color-neutral:   $color-gris;
+
+$color-text: #26242a;
+$color-muted: #8a8790;
+$color-border: rgba(80, 79, 81, 0.12);
+$color-border-strong: #e5e2df;
+$color-dark: #26242a;
+
 $radius-pill: 999px;
-$radius-card: 20px;
-$radius-btn: 10px;
+$radius-card: 22px;
+$radius-btn: 12px;
 $radius-md: 12px;
-$radius-sm: 8px;
-$ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+$radius-sm: 10px;
+$ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
 $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", sans-serif;
 
 .users-view {
@@ -21,6 +37,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   gap: 1.75rem;
   padding: clamp(1rem, 2vw, 2rem);
   font-family: $font-system;
+  color: $color-text;
 }
 
 .users-title {
@@ -68,8 +85,8 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
 
     &:focus {
       outline: none;
-      border-color: $color-guinda;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-guinda, 0.1);
     }
   }
 }
@@ -78,7 +95,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: $radius-md;
-  background: $color-guinda;
+  background: $color-primary;
   color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
@@ -87,9 +104,13 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background-color 0.2s ease, transform 0.15s $ease-spring;
+  box-shadow: 0 8px 18px rgba($color-guinda, 0.22);
+  transition: background-color 0.3s $ease-spring, transform 0.2s $ease-spring, box-shadow 0.3s $ease-spring;
 
-  &:hover { background: $color-guinda-dark; }
+  &:hover {
+    background: $color-guinda-dark;
+    transform: translateY(-2px);
+  }
   &:active { transform: scale(0.97); }
 }
 
@@ -102,6 +123,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
 .empty-msg {
   color: $color-muted;
   font-size: 0.95rem;
+  padding: 1rem 0;
 }
 
 .user-card {
@@ -109,15 +131,16 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   grid-template-columns: 3.5rem 1fr auto;
   align-items: center;
   gap: clamp(1rem, 3vw, 2rem);
-  padding: 1.15rem clamp(1.25rem, 3vw, 1.75rem);
+  padding: 1.2rem clamp(1.25rem, 3vw, 1.75rem);
   border: 1px solid $color-border;
   border-radius: $radius-card;
   background: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  transition: box-shadow 0.3s $ease-spring;
+  box-shadow: 0 2px 10px rgba(80, 79, 81, 0.04);
+  transition: box-shadow 0.4s $ease-spring, transform 0.4s $ease-spring;
 
   &:hover {
-    box-shadow: 0 6px 26px rgba(0, 0, 0, 0.07);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(80, 79, 81, 0.1);
   }
 }
 
@@ -127,11 +150,16 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  color: $color-dark;
-  background: #f2f2f7;
-  border-radius: 50%;
+  font-size: 1.55rem;
+  color: $color-primary;
+  background: rgba($color-guinda, 0.1);
+  border-radius: 16px;
   flex-shrink: 0;
+  transition: transform 0.4s $ease-spring;
+
+  .user-card:hover & {
+    transform: scale(1.06) rotate(-3deg);
+  }
 }
 
 .user-info {
@@ -144,7 +172,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
 .user-name {
   margin: 0;
   font-size: 0.98rem;
-  font-weight: 600;
+  font-weight: 700;
   color: $color-text;
   word-break: break-word;
 }
@@ -168,17 +196,17 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
 .badge {
   display: inline-block;
   width: fit-content;
-  margin-top: 0.4rem;
-  padding: 0.2rem 0.7rem;
+  margin-top: 0.45rem;
+  padding: 0.22rem 0.75rem;
   border-radius: $radius-pill;
   font-size: 0.72rem;
-  font-weight: 600;
-  background: #f2f2f7;
-  color: $color-muted;
+  font-weight: 700;
+  background: rgba($color-azul, 0.18);
+  color: color-mix(in srgb, $color-azul 55%, $color-text);
 
   &--admin {
-    background: rgba(28, 28, 30, 0.08);
-    color: $color-dark;
+    background: rgba($color-guinda, 0.12);
+    color: $color-primary;
   }
 }
 
@@ -200,13 +228,16 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   font-size: 1.1rem;
   cursor: pointer;
   border-radius: $radius-sm;
-  transition: background 0.25s $ease-spring, color 0.25s $ease-spring;
+  transition: background 0.25s $ease-spring, color 0.25s $ease-spring, transform 0.25s $ease-spring;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba($color-guinda, 0.08);
+    color: $color-primary;
+    transform: translateY(-2px);
   }
 
   &--danger:hover {
+    background: rgba($color-danger, 0.1);
     color: $color-danger;
   }
 }
@@ -215,7 +246,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(38, 36, 42, 0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 400;
@@ -228,11 +259,11 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   transform: translate(-50%, -50%);
   z-index: 401;
   background: #fff;
-  border-radius: 20px;
+  border-radius: 22px;
   width: min(480px, 92vw);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 24px 64px rgba(38, 36, 42, 0.22);
   max-height: 90vh;
   overflow-y: auto;
 
@@ -248,14 +279,14 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: $color-text;
     letter-spacing: -0.01em;
   }
 }
 
 .modal-close {
-  background: #f2f2f7;
+  background: $color-border-strong;
   border: none;
   width: 1.75rem;
   height: 1.75rem;
@@ -268,7 +299,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   justify-content: center;
   transition: background 0.25s $ease-spring, color 0.25s $ease-spring;
 
-  &:hover { background: #e5e5ea; color: $color-text; }
+  &:hover { background: rgba($color-guinda, 0.12); color: $color-primary; }
 }
 
 .modal-body {
@@ -300,17 +331,17 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
     font-size: 0.92rem;
     font-family: $font-system;
     color: $color-text;
-    background: #fafafa;
+    background: #faf8f6;
     width: 100%;
     transition: border-color 0.3s $ease-spring, background 0.3s $ease-spring, box-shadow 0.3s $ease-spring;
 
-    &:hover { border-color: $color-border-strong; }
+    &:hover { border-color: rgba($color-guinda, 0.35); }
 
     &:focus {
       outline: none;
       background: #fff;
-      border-color: $color-dark;
-      box-shadow: 0 0 0 3px rgba(28, 28, 30, 0.06);
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-guinda, 0.1);
     }
   }
 }
@@ -337,26 +368,28 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   background: #fff;
   color: $color-text;
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.25s $ease-spring;
 
-  &:hover { background: rgba(0, 0, 0, 0.04); }
+  &:hover { background: rgba(80, 79, 81, 0.06); }
 }
 
 .btn-confirm {
   padding: 0.6rem 1.4rem;
   border: none;
   border-radius: $radius-btn;
-  background: $color-dark;
+  background: $color-primary;
   color: #fff;
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s $ease-spring, transform 0.15s $ease-spring;
+  box-shadow: 0 8px 18px rgba($color-guinda, 0.25);
+  transition: background 0.25s $ease-spring, transform 0.2s $ease-spring;
 
-  &:hover { background: #000; }
-  &:active { transform: scale(0.97); }
+  &:hover:not(:disabled) { background: $color-guinda-dark; }
+  &:active:not(:disabled) { transform: scale(0.97); }
+  &:disabled { opacity: 0.5; box-shadow: none; cursor: not-allowed; }
 }
 
 .btn-danger {
@@ -366,9 +399,9 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   background: $color-danger;
   color: #fff;
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s $ease-spring, transform 0.15s $ease-spring;
+  transition: background 0.25s $ease-spring, transform 0.2s $ease-spring;
 
   &:hover { background: #b8342c; }
   &:active { transform: scale(0.97); }
@@ -391,10 +424,10 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvet
   color: $color-text;
   font-size: 0.86rem;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 12px 28px rgba(80, 79, 81, 0.16);
   border: 1px solid $color-border-strong;
 
   i { font-size: 1rem; }

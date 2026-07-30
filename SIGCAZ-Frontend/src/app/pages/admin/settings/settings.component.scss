@@ -1,13 +1,33 @@
-$color-border: rgba(0, 0, 0, 0.08);
-$color-border-strong: #1a1a1a;
-$color-text: #1a1a1a;
-$color-muted: #6e6e73;
-$color-danger: #d9453d;
-$color-success: #34a853;
-$radius-card: 20px;
-$radius-btn: 10px;
-$radius-sm: 8px;
-$ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+// ===============================
+// Paleta de colores
+// ===============================
+$color-guinda:      #6b1220;
+$color-guinda-dark: #4a0c16;
+$color-coral:       #eb815b;
+$color-rosa:        #e49da7;
+$color-azul:        #8ec0d2;
+$color-beige:       #d2b68e;
+$color-verde:       #9dbe9e;
+$color-amarillo:    #efc255;
+$color-gris:        #504f51;
+
+$color-primary:   $color-guinda;
+$color-secondary: $color-azul;
+$color-success:   $color-verde;
+$color-danger:    #b02a2a;
+$color-neutral:   $color-gris;
+
+$color-text: #26242a;
+$color-muted: #8a8790;
+$color-border: rgba(80, 79, 81, 0.12);
+$color-border-strong: #26242a;
+$color-surface: #fff;
+$color-surface-soft: #faf8f6;
+
+$radius-card: 22px;
+$radius-btn: 12px;
+$radius-sm: 10px;
+$ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
 $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
 
 .settings-view {
@@ -16,17 +36,16 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
   gap: 1.5rem;
   padding: clamp(1rem, 2vw, 2rem);
   font-family: $font-system;
+  color: $color-text;
 }
 
 .settings-title {
   font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 600;
+  font-weight: 700;
   color: $color-text;
   margin: 0;
   letter-spacing: -0.02em;
 }
-
-
 
 .settings-subtitle {
   margin: -1rem 0 0;
@@ -42,24 +61,36 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
 .settings-card {
   border: 1px solid $color-border;
   border-radius: $radius-card;
-  background: #fff;
-  padding: 1.5rem clamp(1.25rem, 3vw, 2rem);
+  background: $color-surface;
+  box-shadow: 0 2px 10px rgba(80, 79, 81, 0.04);
+  padding: 1.6rem clamp(1.25rem, 3vw, 2rem);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  transition: box-shadow 0.3s $ease-spring;
+  transition: box-shadow 0.4s $ease-spring, transform 0.4s $ease-spring;
 
   &:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 14px 32px rgba(80, 79, 81, 0.08);
   }
 }
 
 .card-title {
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.02rem;
-  font-weight: 600;
+  font-weight: 700;
   color: $color-text;
   letter-spacing: -0.01em;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $color-primary;
+  }
 }
 
 .form-grid {
@@ -85,7 +116,10 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
     align-items: center;
     gap: 0.4rem;
 
-    i { font-size: 0.85rem; }
+    i {
+      font-size: 0.85rem;
+      color: $color-primary;
+    }
   }
 
   input {
@@ -95,9 +129,9 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
     font-size: 0.95rem;
     font-family: $font-system;
     color: $color-text;
-    background: #fafafa;
+    background: $color-surface-soft;
     width: 100%;
-    transition: border-color 0.3s $ease-spring, background 0.3s $ease-spring;
+    transition: border-color 0.3s $ease-spring, background 0.3s $ease-spring, box-shadow 0.3s $ease-spring;
 
     &::-webkit-calendar-picker-indicator {
       cursor: pointer;
@@ -108,13 +142,14 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
     }
 
     &:hover {
-      border-color: rgba(0, 0, 0, 0.15);
+      border-color: rgba($color-primary, 0.4);
     }
 
     &:focus {
       outline: none;
       background: #fff;
-      border-color: $color-border-strong;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-guinda, 0.12);
     }
   }
 }
@@ -128,19 +163,23 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.7rem 1.5rem;
+  padding: 0.7rem 1.6rem;
   border: none;
   border-radius: $radius-btn;
-  background: $color-text;
+  background: $color-primary;
   color: #fff;
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s $ease-spring, transform 0.2s $ease-spring;
+  box-shadow: 0 8px 18px rgba($color-guinda, 0.25);
+  transition: background 0.3s $ease-spring, transform 0.3s $ease-spring, box-shadow 0.3s $ease-spring;
 
-  &:hover:not(:disabled) { background: #333; }
+  &:hover:not(:disabled) {
+    background: $color-guinda-dark;
+    transform: translateY(-2px);
+  }
   &:active:not(:disabled) { transform: scale(0.97); }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled { opacity: 0.5; box-shadow: none; cursor: not-allowed; }
 }
 
 .logo-row {
@@ -153,14 +192,14 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
 .logo-preview {
   width: 6.5rem;
   height: 6.5rem;
-  border: 1px solid $color-border;
+  border: 2px solid rgba($color-guinda, 0.15);
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: #fafafa;
+  background: $color-surface-soft;
   transition: border-color 0.3s $ease-spring;
 
   img {
@@ -186,7 +225,7 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
     font-size: 0.88rem;
     color: $color-text;
 
-    strong { font-weight: 600; }
+    strong { font-weight: 700; }
   }
 
   .logo-hint {
@@ -202,17 +241,20 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
   align-items: center;
   gap: 0.5rem;
   width: fit-content;
-  padding: 0.6rem 1.25rem;
-  border: 1px solid $color-border-strong;
+  padding: 0.6rem 1.3rem;
+  border: 1px solid rgba($color-guinda, 0.35);
   border-radius: $radius-btn;
   background: #fff;
-  color: $color-text;
+  color: $color-primary;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s $ease-spring, transform 0.2s $ease-spring;
+  transition: background 0.3s $ease-spring, transform 0.2s $ease-spring, border-color 0.3s $ease-spring;
 
-  &:hover { background: rgba(0, 0, 0, 0.04); }
+  &:hover {
+    background: rgba($color-guinda, 0.08);
+    border-color: $color-primary;
+  }
   &:active { transform: scale(0.97); }
 }
 
@@ -233,11 +275,11 @@ $font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue"
   color: $color-text;
   font-size: 0.88rem;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 28px rgba(80, 79, 81, 0.16);
+  border: 1px solid $color-border;
 
   i { font-size: 1.05rem; }
 
