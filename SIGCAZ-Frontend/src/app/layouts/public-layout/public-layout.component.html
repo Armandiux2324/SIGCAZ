@@ -1,0 +1,106 @@
+<!-- public-layout.component.html -->
+<header class="site-header" [class.scrolled]="scrolled">
+  <div class="header-content">
+    <a [routerLink]="['/home']" class="logo-link" aria-label="Inicio">
+      <img src="logo.png" alt="Zacatecas" class="logo">
+    </a>
+
+    <nav aria-label="Navegación principal">
+      <button class="hamburger" aria-label="Abrir menú" (click)="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" [class.active]="menuOpen">
+        <li><a [routerLink]="['/home']" fragment="acerca" (click)="toggleMenu()">Acerca del Evento</a></li>
+        <li><a [routerLink]="['/home']" fragment="galeria" (click)="toggleMenu()">Galería</a></li>
+        <li><a [routerLink]="['/home']" fragment="faq" (click)="toggleMenu()">Preguntas Frecuentes</a></li>
+        <li class="nav-cta"><a (click)="redirectToRegister()">Registrarse</a></li>
+        <li class="nav-cta nav-cta--outline"><a (click)="redirectToSearchRegister()">Consultar Registro</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="public-layout-main">
+  <router-outlet></router-outlet>
+</main>
+
+<footer #footerRef class="zacatecas-footer">
+  <div class="footer-bg" [style.background-image]="'url(imagen_3.png)'"></div>
+  <div class="footer-overlay"></div>
+
+  <div class="footer-content">
+    <div class="footer-left">
+      <img src="deslumbrate.png" alt="Zacatecas ¡Deslumbrante!" class="logo" />
+      <div class="contacto">
+        <p><i class="fas fa-phone-alt"></i> 492 925 1277</p>
+        <p><i class="fas fa-envelope"></i> info&#64;zacatecastravel.com</p>
+        <p><i class="fas fa-info-circle"></i> Información sobre Módulos y Secretaría</p>
+        <a class="admin-link" (click)="redirectToLogin()">
+          <i class="bi bi-lock-fill"></i> Inicio de Sesión Administrativo
+        </a>
+      </div>
+    </div>
+    <div class="footer-column">
+      <h4>Descubre</h4>
+      <ul>
+        <li>Museos</li>
+        <li>Lugares únicos</li>
+        <li>Fiestas y Festivales</li>
+        <li>Imperdibles</li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Explora</h4>
+      <ul>
+        <li>Teleférico</li>
+        <li>Actividades</li>
+        <li>Pueblos Mágicos</li>
+        <li>Plazas y Parques</li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h4>Descargas</h4>
+      <ul>
+        <li>Guía Turística</li>
+        <li>40 Formas de Vivir Zacatecas</li>
+        <li>Destino de Romance</li>
+        <li>Folleto</li>
+        <li>Autoguías ZACaminando</li>
+        <li>"Saborea Zacatecas"</li>
+        <li>Material Promocional</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <img src="logoGob.png" alt="Zacatecas Gobierno del Estado" class="gobierno-logo" />
+
+    <div class="social-icons">
+      <a href="https://www.facebook.com/ZacSecturz" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+
+      <a href="https://x.com/ZacatecasTravel" aria-label="X">
+        <i class="fab fa-twitter"></i>
+      </a>
+
+      <a href="https://www.instagram.com/zacatecas_travel/" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+
+      <a href="https://www.youtube.com/user/ZACATECASSUENABIEN" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </div>
+
+    <div class="meetings-logo">
+      <img src="met.jpeg" alt="Zacatecas Meetings" />
+    </div>
+  </div>
+
+  <div class="footer-legal">
+    <p>&copy; <span>Desarrollado por Armando Candelas, Acosta Piñon y Dulce Mota</span> — Todos los derechos reservados.
+    </p>
+  </div>
+</footer>

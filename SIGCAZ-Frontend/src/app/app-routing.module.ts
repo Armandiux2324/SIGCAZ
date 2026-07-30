@@ -1,22 +1,29 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layouts/layout/layout.component';
+import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () =>
-      import('./pages/home/home.module').then(m => m.HomeModule)
-  },
-  {
-    path: 'register',
-    loadChildren: () =>
-      import('./pages/register/register.module').then(m => m.RegisterModule)
-  },
-  {
-    path: 'search-register',
-    loadChildren: () =>
-      import('./pages/search-register/search-register.module').then(m => m.SearchRegisterModule)
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      {
+        path: 'home',
+        loadChildren: () =>
+          import('./pages/home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'register',
+        loadChildren: () =>
+          import('./pages/register/register.module').then(m => m.RegisterModule)
+      },
+      {
+        path: 'search-register',
+        loadChildren: () =>
+          import('./pages/search-register/search-register.module').then(m => m.SearchRegisterModule)
+      },
+    ]
   },
   {
     path: 'login',
@@ -60,7 +67,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  imports: [RouterModule.forRoot(routes, {
+    preloadingStrategy: PreloadAllModules,
+    scrollPositionRestoration: 'enabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

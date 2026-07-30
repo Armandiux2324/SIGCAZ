@@ -29,6 +29,7 @@ class Participant extends Model
     protected $casts = [
         'is_first_time' => 'boolean',
         'participation_count' => 'integer',
+        'attended_at' => 'datetime',
     ];
 
     public function register()
