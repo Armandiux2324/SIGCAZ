@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
+import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../../data/mexico-estados';
 
 type ParticipantForm = {
   id?: number;
@@ -67,6 +68,10 @@ export class RegistersComponent implements OnInit {
 
   dataToAdd = emptyRegisterForm();
   dataToEdit: any = emptyRegisterForm();
+
+  states: string[] = ESTADOS;
+  municipalitiesAdd: string[] = [];
+  municipalitiesEdit: string[] = [];
 
   originOptions = [
     { value: 'national', label: 'Nacional' },
@@ -164,6 +169,7 @@ export class RegistersComponent implements OnInit {
 
   openAddModal(): void {
     this.dataToAdd = emptyRegisterForm();
+    this.municipalitiesAdd = [];
     this.showAddModal = true;
   }
 
@@ -174,6 +180,16 @@ export class RegistersComponent implements OnInit {
   addParticipant(target: 'add' | 'edit'): void {
     const form = target === 'add' ? this.dataToAdd : this.dataToEdit;
     form.participants.push(emptyParticipant());
+  }
+
+  onStateChange(target: 'add' | 'edit'): void {
+    if (target === 'add') {
+      this.municipalitiesAdd = ESTADOS_MUNICIPIOS[this.dataToAdd.state] ?? [];
+      this.dataToAdd.municipality = '';
+    } else {
+      this.municipalitiesEdit = ESTADOS_MUNICIPIOS[this.dataToEdit.state] ?? [];
+      this.dataToEdit.municipality = '';
+    }
   }
 
   removeParticipant(target: 'add' | 'edit', index: number): void {
@@ -229,6 +245,7 @@ export class RegistersComponent implements OnInit {
         participation_count: p.participation_count ?? 0,
       })),
     };
+    this.municipalitiesEdit = ESTADOS_MUNICIPIOS[register.state] ?? [];
     this.showEditModal = true;
   }
 
