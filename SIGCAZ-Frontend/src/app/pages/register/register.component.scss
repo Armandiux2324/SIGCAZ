@@ -21,11 +21,11 @@ body {
   color: $color-text;
 }
 
-/* ====== WRAPPER (solo separación de bordes, sin tarjeta) ====== */
+/* ====== WRAPPER (separación de bordes + espacio bajo el header público) ====== */
 .register-wrap {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 40px 40px;
+  padding: 125px 40px 40px;
 }
 
 /* ====== TÍTULO Y SUBTÍTULO ====== */
@@ -35,7 +35,7 @@ body {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   line-height: 1.18;
   color: $color-text;
-  margin: 125px 0 6px;
+  margin: 0 0 6px;
 }
 
 .register-subtitle {
@@ -411,6 +411,241 @@ select {
   margin-bottom: 20px;
 }
 
+/* ====== PANTALLA DE CONFIRMACIÓN ====== */
+.confirmation-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.confirmation-view > * {
+  animation: fade-in-up 0.5s ease both;
+}
+
+.confirmation-view > *:nth-child(1) { animation-delay: 0s; }
+.confirmation-view > *:nth-child(2) { animation-delay: 0.08s; }
+.confirmation-view > *:nth-child(3) { animation-delay: 0.16s; }
+.confirmation-view > *:nth-child(4) { animation-delay: 0.24s; }
+
+.confirmation-header {
+  text-align: center;
+  border: 1px solid #eee;
+  border-radius: 22px;
+  padding: 40px 28px;
+  background: $color-white;
+}
+
+.confirmation-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(122, 12, 46, 0.1);
+  color: $color-primary;
+  font-size: 26px;
+  animation: pop-in 0.4s ease 0.1s both;
+}
+
+.confirmation-title {
+  margin: 0 0 8px;
+  font-family: $font-main;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  color: $color-text;
+}
+
+.confirmation-text {
+  margin: 0;
+  font-family: $font-main;
+  font-size: 14px;
+  color: #777;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.confirmation-card {
+  transition: box-shadow $transition-base, transform $transition-base;
+
+  &:hover {
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.confirmation-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: $font-main;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: $color-primary;
+  background: rgba(122, 12, 46, 0.1);
+  white-space: nowrap;
+
+  &--group {
+    color: color.adjust($color-gold, $lightness: -12%);
+    background: rgba(193, 135, 60, 0.16);
+  }
+}
+
+.confirmation-card p {
+  margin: 0;
+  font-family: $font-main;
+  font-size: 14px;
+  color: $color-text;
+}
+
+.folio-box {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.folios-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.folio-card {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  background: #faf5f2;
+  transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base;
+
+  .folio-qr {
+    width: 84px;
+    height: 84px;
+    font-size: 26px;
+    flex: 0 0 auto;
+  }
+
+  .form-individual {
+    gap: 2px;
+
+    label {
+      margin-bottom: 2px;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.07);
+    border-color: rgba(122, 12, 46, 0.25);
+  }
+}
+
+.folio-card-details {
+  display: flex;
+  flex: 1 1 260px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.folio-qr {
+  flex: 0 0 auto;
+  width: 140px;
+  height: 140px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #faf5f2;
+  color: #bbb;
+  font-size: 42px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.folio-details {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.folio-code {
+  font-weight: 700;
+  color: $color-primary;
+  font-size: 16px;
+}
+
+.confirmation-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  background: #faf5f2;
+  font-family: $font-main;
+  font-size: 13px;
+  color: $color-text;
+
+  i {
+    color: $color-primary;
+    font-size: 16px;
+  }
+}
+
+.confirmation-actions {
+  margin-top: 0;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* ====== TOAST ====== */
 .toast {
   position: fixed;
@@ -437,7 +672,7 @@ select {
 /* ====== RESPONSIVE ====== */
 @media (max-width: 900px) {
   .register-wrap {
-    padding: 0 20px 24px;
+    padding: 100px 20px 24px;
   }
 
   .row {
@@ -466,5 +701,10 @@ select {
 
   .participant-tabs {
     gap: 16px;
+  }
+
+  .folio-box {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
