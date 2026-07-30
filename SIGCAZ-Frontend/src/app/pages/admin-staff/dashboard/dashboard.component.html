@@ -1,32 +1,32 @@
 <div class="dashboard-view">
   <!-- Tarjetas resumen -->
   <div class="summary-grid">
-    <article class="summary-card">
-      <i class="bi bi-person-fill"></i>
+    <article class="summary-card summary-card--coral">
+      <span class="summary-icon"><i class="bi bi-person-fill"></i></span>
       <div>
         <p class="summary-label">Personal Registrado</p>
         <p class="summary-value">{{ loadingSummary ? '—' : totalUsers }}</p>
       </div>
     </article>
 
-    <article class="summary-card">
-      <i class="bi bi-people-fill"></i>
+    <article class="summary-card summary-card--azul">
+      <span class="summary-icon"><i class="bi bi-people-fill"></i></span>
       <div>
         <p class="summary-label">Registros Totales</p>
         <p class="summary-value">{{ loadingSummary ? '—' : totalRegisters }}</p>
       </div>
     </article>
 
-    <article class="summary-card">
-      <i class="bi bi-person-check-fill"></i>
+    <article class="summary-card summary-card--verde">
+      <span class="summary-icon"><i class="bi bi-person-check-fill"></i></span>
       <div>
         <p class="summary-label">Asistencias</p>
         <p class="summary-value">{{ loadingSummary ? '—' : attended }}</p>
       </div>
     </article>
 
-    <article class="summary-card">
-      <i class="bi bi-hourglass-split"></i>
+    <article class="summary-card summary-card--vino">
+      <span class="summary-icon"><i class="bi bi-hourglass-split"></i></span>
       <div>
         <p class="summary-label">Pendientes</p>
         <p class="summary-value">{{ loadingSummary ? '—' : pending }}</p>
@@ -56,6 +56,8 @@
   <div class="charts-grid">
     <section class="chart-card">
       <div class="chart-card-header">
+        <h2 class="chart-title">{{ currentFilterLabel }}</h2>
+
         <button class="chart-menu-btn" (click)="showTypeMenu = !showTypeMenu">
           <i class="bi bi-list"></i>
         </button>
@@ -100,12 +102,12 @@
 
   <!-- Registros recientes -->
   <section class="list-card">
-    <h2 class="list-title">Registros recientes</h2>
+    <h2 class="list-title"><i class="bi bi-clock-history list-title-icon icon-clock"></i> Registros recientes</h2>
 
     <p class="empty-msg" *ngIf="!loadingRecent && recentRegisters.length === 0">No hay registros recientes.</p>
 
     <div class="recent-row" *ngFor="let r of recentRegisters">
-      <i class="bi bi-person-circle recent-icon"></i>
+      <span class="recent-icon"><i class="bi bi-person-circle icon-user"></i></span>
       <div class="recent-info">
         <p class="recent-name">{{ r.name }}</p>
         <p class="recent-location">{{ r.location }}</p>
@@ -116,11 +118,11 @@
 
   <!-- Reportes disponibles -->
   <section class="list-card">
-    <h2 class="list-title">Reportes disponibles</h2>
+    <h2 class="list-title"><i class="bi bi-file-earmark-bar-graph list-title-icon"></i> Reportes disponibles</h2>
     <p class="list-subtitle">Genera reportes según el filtro seleccionado.</p>
 
     <div class="report-row" *ngFor="let r of reports">
-      <span>{{ r.label }}</span>
+      <span class="report-label"><i class="bi bi-file-earmark-arrow-down"></i> {{ r.label }}</span>
       <button class="link-btn" [disabled]="r.downloading" (click)="downloadReport(r)">
         {{ r.downloading ? 'Descargando...' : 'Descargar' }}
       </button>

@@ -21,29 +21,24 @@ body {
   color: $color-text;
 }
 
-/* ====== CONTENEDOR PRINCIPAL ====== */
-.register-container {
-  width: 100%;
+/* ====== WRAPPER (solo separación de bordes, sin tarjeta) ====== */
+.register-wrap {
   max-width: 1400px;
-  margin: 60px auto;
-  background: $color-white;
-  border: 1px solid #eee;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
-  margin-top: 125px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
 }
 
-.register-container h2 {
+/* ====== TÍTULO Y SUBTÍTULO ====== */
+.register-title {
   font-family: $font-main;
   font-weight: 300;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   line-height: 1.18;
   color: $color-text;
-  margin: 0 0 6px;
+  margin: 125px 0 6px;
 }
 
-.register-container p {
+.register-subtitle {
   margin-top: 0;
   margin-bottom: 28px;
   font-family: $font-main;
@@ -441,9 +436,8 @@ select {
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 900px) {
-  .register-container {
-    padding: 24px;
-    margin: 30px 16px;
+  .register-wrap {
+    padding: 0 20px 24px;
   }
 
   .row {
