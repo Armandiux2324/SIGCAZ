@@ -19,6 +19,14 @@ export class RegisterComponent implements OnInit {
   registrationType: 'individual' | 'group' = 'individual';
   activeParticipantIndex = 0;
 
+  // ====== Estado de confirmación de registro ======
+  // Controla si se muestra el formulario o la pantalla de confirmación,
+  // ambos dentro del mismo RegisterComponent (sin nueva ruta/componente).
+  registrationComplete = false;
+  registrationResult: any = null;
+  lastSubmissionType: 'individual' | 'group' = 'individual';
+  private lastSubmissionCount = 0;
+
   @ViewChildren('tabRef') tabRefs!: QueryList<ElementRef<HTMLButtonElement>>;
 
   states: string[] = [
@@ -254,6 +262,11 @@ export class RegisterComponent implements OnInit {
           participationCount: m.is_first_time ? 0 : Number(m.participation_count),
         }));
 
+    // Guardamos el tipo y la cantidad enviados, ya que resetForm() reinicia
+    // registrationType y el formulario en cuanto el registro se confirma.
+    this.lastSubmissionType = this.registrationType;
+    this.lastSubmissionCount = members.length;
+
     this.api.addRegister(
       this.mapOriginType(f.origin_type),
       f.state,
@@ -267,7 +280,12 @@ export class RegisterComponent implements OnInit {
       this.mapTransportMethod(f.transport_method),
       f.folio_delivery_method,
       members,
-    ).then(() => {
+    ).then((res: any) => {
+      // Reutilizamos la respuesta del backend tal cual venga (mismo contrato
+      // que ya usan el resto de vistas: res.data.data), sin duplicar modelos.
+      this.registrationResult = res?.data?.data ?? res?.data ?? null;
+      this.registrationComplete = true;
+
       this.toastMessage = 'Registro completado. Recibirás un correo de confirmación.';
       this.showToast('success');
       this.loading = false;
@@ -285,6 +303,94 @@ export class RegisterComponent implements OnInit {
     this.registrationType = 'individual';
     this.activeParticipantIndex = 0;
     this.buildForm();
+  }
+
+  /** Vuelve a mostrar el formulario inicial sin recargar la página. */
+  startNewRegistration(): void {
+    this.registrationComplete = false;
+    this.registrationResult = null;
+  }
+
+  /**
+   * Reutiliza exactamente la misma lógica que el módulo "Consulta de Registro":
+   * this.api.getReceiptUrl(folio, email) + window.open. Sin segunda implementación.
+   */
+  downloadReceipt(folio: string, email: string): void {
+    if (!folio || folio === '—') return;
+    const url = this.api.getReceiptUrl(folio, email);
+    window.open(url, '_blank');
+  }
+
+  // ====== Datos derivados para la pantalla de confirmación ======
+  get resultFolio(): string {
+    return this.registrationResult?.folio
+      ?? this.registrationResult?.participants?.[0]?.folio
+      ?? '—';
+  }
+
+  get resultParticipantName(): string {
+    const p = this.registrationResult?.participants?.[0];
+    if (p?.first_name || p?.last_name) {
+      return `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim();
+    }
+    return this.registrationResult?.name ?? '—';
+  }
+
+  get resultParticipantEmail(): string {
+    return this.registrationResult?.participants?.[0]?.email
+      ?? this.registrationResult?.email
+      ?? '—';
+  }
+
+  get resultQrUrl(): string | null {
+    return this.registrationResult?.qr_url ?? this.registrationResult?.qr_code ?? null;
+  }
+
+  get resultTypeLabel(): string {
+    return this.lastSubmissionType === 'group' ? 'Grupal' : 'Individual';
+  }
+
+  get isGroupRegistration(): boolean {
+    return this.lastSubmissionType === 'group';
+  }
+
+  /**
+   * Folios individuales para la vista grupal (una tarjeta por participante).
+   * Si el backend no regresa el arreglo `participants`, se cae de vuelta a
+   * un solo resultado (mismo comportamiento que el registro individual).
+   */
+  get resultParticipants(): Array<{ folio: string; name: string; email: string; qrUrl: string | null }> {
+    const participants = this.registrationResult?.participants;
+
+    if (Array.isArray(participants) && participants.length > 0) {
+      return participants.map((p: any) => ({
+        folio: p.folio ?? this.resultFolio,
+        name: `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || (p.name ?? '—'),
+        email: p.email ?? '—',
+        qrUrl: p.qr_url ?? p.qr_code ?? null,
+      }));
+    }
+
+    return [{
+      folio: this.resultFolio,
+      name: this.resultParticipantName,
+      email: this.resultParticipantEmail,
+      qrUrl: this.resultQrUrl,
+    }];
+  }
+
+  get resultParticipantsCount(): number {
+    return this.registrationResult?.participants?.length ?? this.lastSubmissionCount;
+  }
+
+  get resultDate(): string {
+    const raw = this.registrationResult?.created_at;
+    const date = raw ? new Date(raw) : new Date();
+    return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  get resultStatus(): string {
+    return this.registrationResult?.status ?? 'Confirmado';
   }
 
   showToast(type: 'success' | 'error'): void {

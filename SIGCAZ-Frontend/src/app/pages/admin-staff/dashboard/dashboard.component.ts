@@ -4,6 +4,13 @@ import { ApiService } from '../../../services/api.service';
 
 Chart.register(...registerables);
 
+// Tipografía y comportamiento por defecto para todas las gráficas del dashboard.
+Chart.defaults.font.family = "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#8a8790';
+Chart.defaults.interaction.mode = 'nearest';
+Chart.defaults.interaction.intersect = false;
+
 type FilterOption = {
   value: string;
   label: string;
@@ -177,6 +184,41 @@ loadingChart = false;
     return this.genderColors[key] ?? null;
   }
 
+  /**
+   * Tooltip moderno y consistente para todas las gráficas
+   * (fondo oscuro translúcido, esquinas redondeadas, tipografía cuidada).
+   */
+  private tooltipOptions() {
+    return {
+      enabled: true,
+      backgroundColor: 'rgba(38, 36, 42, 0.92)',
+      titleColor: '#fff',
+      bodyColor: 'rgba(255,255,255,0.85)',
+      titleFont: { weight: 'bold' as const, size: 12.5 },
+      bodyFont: { size: 12 },
+      padding: 12,
+      cornerRadius: 10,
+      boxPadding: 6,
+      caretSize: 6,
+      displayColors: true,
+      usePointStyle: true,
+      borderColor: 'rgba(255,255,255,0.08)',
+      borderWidth: 1,
+    };
+  }
+
+  /**
+   * Delay progresivo por punto/barra para que la gráfica "crezca" en cascada
+   * en vez de aparecer toda de golpe.
+   */
+  private staggerDelay(totalPoints: number, totalDurationMs = 900) {
+    return (context: any) => {
+      if (context.type !== 'data') return 0;
+      const perItem = totalPoints > 0 ? totalDurationMs / totalPoints : 0;
+      return context.dataIndex * perItem + context.datasetIndex * 60;
+    };
+  }
+
   private renderChart(canvas: HTMLCanvasElement, labels: string[], values: number[]): void {
     this.mainChart?.destroy();
 
@@ -193,6 +235,57 @@ loadingChart = false;
       ? labels.map((label, i) => this.getGenderColor(label) ?? defaultPalette[i % defaultPalette.length])
       : '#eb815b';
 
+    const isPie = this.chartType === 'pie';
+    const isLine = this.chartType === 'line';
+    const isBar = this.chartType === 'bar';
+    const pointCount = values.length;
+
+    // Animación específica según el tipo de gráfica:
+    // - Pastel: aparición radial (rotación + escala) vía options.animation.
+    // - Línea: efecto de "dibujado" de izquierda a derecha, punto por punto,
+    //   vía options.animations (config por propiedad x/y).
+    // - Barra: crecimiento progresivo vía options.animation.delay (staggerDelay).
+    const animationConfig: any = isPie
+      ? {
+          duration: 900,
+          easing: 'easeOutQuart',
+          animateRotate: true,
+          animateScale: true,
+        }
+      : isLine
+      ? { duration: 900, easing: 'easeOutQuart' }
+      : {
+          duration: 900,
+          easing: 'easeOutQuart',
+          delay: this.staggerDelay(pointCount),
+        };
+
+    const perPropertyAnimations: any = isLine
+      ? {
+          x: {
+            type: 'number',
+            easing: 'linear',
+            duration: 900,
+            from: NaN,
+            delay: (ctx: any) => {
+              if (ctx.type !== 'data' || ctx.xStarted) return 0;
+              ctx.xStarted = true;
+              return (ctx.index * 900) / Math.max(pointCount, 1);
+            },
+          },
+          y: {
+            type: 'number',
+            easing: 'easeOutQuart',
+            duration: 900,
+            delay: (ctx: any) => {
+              if (ctx.type !== 'data' || ctx.yStarted) return 0;
+              ctx.yStarted = true;
+              return (ctx.index * 900) / Math.max(pointCount, 1);
+            },
+          },
+        }
+      : undefined;
+
     const config: ChartConfiguration = {
       type: this.chartType,
       data: {
@@ -202,19 +295,58 @@ loadingChart = false;
           data: values,
           backgroundColor,
           borderColor,
-          borderWidth: this.chartType === 'line' ? 2 : 1,
-          tension: 0.35,
-          fill: this.chartType === 'line',
+          borderWidth: isLine ? 3 : (isPie ? 2 : 1),
+          borderRadius: isBar ? 8 : 0,
+          borderSkipped: false,
+          maxBarThickness: isBar ? 46 : undefined,
+          tension: 0.4,
+          fill: isLine,
+          pointRadius: isLine ? 4 : 0,
+          pointHoverRadius: isLine ? 7 : 0,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: borderColor as any,
+          pointBorderWidth: 2,
+          pointHoverBorderWidth: 3,
+          hoverBackgroundColor: isPie ? backgroundColor : undefined,
+          hoverBorderWidth: isBar ? 2 : (isLine ? 3 : 3),
+          hoverOffset: isPie ? 14 : 0,
+          spacing: isPie ? 2 : 0,
         }],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: { display: this.chartType === 'pie' },
+        animation: animationConfig,
+        ...(perPropertyAnimations ? { animations: perPropertyAnimations } : {}),
+        transitions: {
+          active: { animation: { duration: 250 } },
         },
-        scales: this.chartType === 'pie' ? {} : {
-          y: { beginAtZero: true },
+        interaction: { mode: 'nearest', intersect: isPie },
+        plugins: {
+          legend: {
+            display: isPie,
+            position: 'bottom',
+            labels: {
+              usePointStyle: true,
+              pointStyle: 'circle',
+              padding: 16,
+              font: { size: 12 },
+            },
+          },
+          tooltip: this.tooltipOptions() as any,
+        },
+        scales: isPie ? {} : {
+          x: {
+            grid: { display: false },
+            border: { display: false } as any,
+            ticks: { padding: 8 },
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(80,79,81,0.08)' } as any,
+            border: { display: false } as any,
+            ticks: { padding: 8, precision: 0 } as any,
+          },
         },
       },
     };
@@ -225,6 +357,8 @@ loadingChart = false;
   private renderYearChart(canvas: HTMLCanvasElement, labels: string[], values: number[]): void {
     this.yearChart?.destroy();
 
+    const pointCount = values.length;
+
     this.yearChart = new Chart(canvas, {
       type: 'line',
       data: {
@@ -234,15 +368,66 @@ loadingChart = false;
           data: values,
           borderColor: '#8ec0d2',
           backgroundColor: 'rgba(142,192,210,0.18)',
-          tension: 0.35,
+          borderWidth: 3,
+          tension: 0.4,
           fill: true,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#8ec0d2',
+          pointBorderWidth: 2,
+          pointHoverBorderWidth: 3,
+          hoverBorderWidth: 3,
         }],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } },
+        animation: { duration: 900, easing: 'easeOutQuart' },
+        animations: {
+          x: {
+            type: 'number',
+            easing: 'linear',
+            duration: 900,
+            from: NaN,
+            delay: (ctx: any) => {
+              if (ctx.type !== 'data' || ctx.xStarted) return 0;
+              ctx.xStarted = true;
+              return (ctx.index * 900) / Math.max(pointCount, 1);
+            },
+          },
+          y: {
+            type: 'number',
+            easing: 'easeOutQuart',
+            duration: 900,
+            delay: (ctx: any) => {
+              if (ctx.type !== 'data' || ctx.yStarted) return 0;
+              ctx.yStarted = true;
+              return (ctx.index * 900) / Math.max(pointCount, 1);
+            },
+          },
+        },
+        transitions: {
+          active: { animation: { duration: 250 } },
+        },
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: this.tooltipOptions() as any,
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false } as any,
+            ticks: { padding: 8 },
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(80,79,81,0.08)' } as any,
+            border: { display: false } as any,
+            ticks: { padding: 8, precision: 0 } as any,
+          },
+        },
       },
     });
   }

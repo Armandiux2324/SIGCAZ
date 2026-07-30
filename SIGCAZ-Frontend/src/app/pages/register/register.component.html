@@ -1,4 +1,5 @@
 <div class="register-wrap">
+  <ng-container *ngIf="!registrationComplete; else confirmationTpl">
   <h2 class="register-title">Registro de Participantes</h2>
   <p class="register-subtitle">Complete el formulario para registrarse en el evento</p>
 
@@ -301,4 +302,111 @@
       [class.error]="toastType === 'error'">
       {{ toastMessage }}
     </div>
+  </ng-container>
+
+  <!-- ====== Pantalla de confirmación (mismo componente, sin nueva ruta) ====== -->
+  <ng-template #confirmationTpl>
+    <div class="confirmation-view">
+
+      <section class="confirmation-header">
+        <div class="confirmation-icon">
+          <i class="bi bi-check-lg"></i>
+        </div>
+        <h2 class="confirmation-title">¡Registro completado con éxito!</h2>
+        <p class="confirmation-text">
+          Tu registro ha sido generado. A continuación podrás visualizar y descargar tu folio y tu código QR de acceso.
+        </p>
+      </section>
+
+      <section class="form-section confirmation-card">
+        <div class="confirmation-card-header">
+          <h3>Folio{{ isGroupRegistration ? 's' : '' }} de acceso ({{ resultParticipantsCount }} participante{{ resultParticipantsCount === 1 ? '' : 's' }})</h3>
+          <span class="type-badge" [class.type-badge--group]="isGroupRegistration">
+            <i class="bi" [class.bi-person]="!isGroupRegistration" [class.bi-people-fill]="isGroupRegistration"></i>
+            Registro {{ resultTypeLabel }}
+          </span>
+        </div>
+
+        <!-- Individual: una sola tarjeta -->
+        <div class="folio-box" *ngIf="!isGroupRegistration">
+          <div class="folio-qr">
+            <img *ngIf="resultQrUrl" [src]="resultQrUrl" alt="Código QR de acceso">
+            <i *ngIf="!resultQrUrl" class="bi bi-qr-code-scan"></i>
+          </div>
+
+          <div class="folio-details">
+            <div class="form-individual">
+              <label>Folio de registro</label>
+              <p class="folio-code">{{ resultFolio }}</p>
+            </div>
+            <div class="form-individual">
+              <label><i class="bi bi-person"></i> Participante</label>
+              <p>{{ resultParticipantName }}</p>
+            </div>
+            <div class="form-individual">
+              <label><i class="bi bi-envelope"></i> Correo</label>
+              <p>{{ resultParticipantEmail }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupal: una tarjeta independiente por participante -->
+        <div class="folios-grid" *ngIf="isGroupRegistration">
+          <div class="folio-card" *ngFor="let participant of resultParticipants">
+            <div class="folio-qr">
+              <img *ngIf="participant.qrUrl" [src]="participant.qrUrl" alt="Código QR de acceso">
+              <i *ngIf="!participant.qrUrl" class="bi bi-qr-code-scan"></i>
+            </div>
+
+            <div class="form-individual">
+              <label>Folio de registro</label>
+              <p class="folio-code">{{ participant.folio }}</p>
+            </div>
+            <div class="form-individual">
+              <label><i class="bi bi-person"></i> Participante</label>
+              <p>{{ participant.name }}</p>
+            </div>
+            <div class="form-individual">
+              <label><i class="bi bi-envelope"></i> Correo</label>
+              <p>{{ participant.email }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section confirmation-card">
+        <h3>Resumen del registro</h3>
+
+        <div class="row">
+          <div class="form-individual">
+            <label>Tipo</label>
+            <p>{{ resultTypeLabel }}</p>
+          </div>
+          <div class="form-individual">
+            <label>Participantes</label>
+            <p>{{ resultParticipantsCount }}</p>
+          </div>
+          <div class="form-individual">
+            <label>Fecha de registro</label>
+            <p>{{ resultDate }}</p>
+          </div>
+        </div>
+
+        <div class="confirmation-note">
+          <i class="bi bi-envelope-check"></i>
+          Se ha enviado un correo electrónico con tu folio, código QR y detalles del registro.
+        </div>
+      </section>
+
+      <div class="registro-terminado confirmation-actions">
+        <button type="button" class="btn-prev" (click)="startNewRegistration()">
+          <i class="bi bi-arrow-repeat"></i> Nuevo registro
+        </button>
+        <button type="button" class="btn-submit" [disabled]="resultFolio === '—'" (click)="downloadReceipt(resultFolio, resultParticipantEmail)">
+          <i class="bi bi-download"></i> Descargar comprobante
+        </button>
+      </div>
+
+    </div>
+  </ng-template>
 </div>
