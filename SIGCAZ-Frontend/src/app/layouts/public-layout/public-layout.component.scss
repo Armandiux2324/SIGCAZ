@@ -1,4 +1,3 @@
-// public-layout.component.scss
 @use "sass:color";
 
 $color-primary: #7a0c2e;
@@ -25,14 +24,12 @@ $transition-base: 0.3s ease;
   background: transparent;
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: none;
 
   transition: background $transition-base,
               backdrop-filter $transition-base,
               -webkit-backdrop-filter $transition-base,
               box-shadow $transition-base,
-              border-color $transition-base,
               padding $transition-base;
 
   &.scrolled {
@@ -40,7 +37,6 @@ $transition-base: 0.3s ease;
     background: color.adjust($color-primary-dark, $alpha: -0.15);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom-color: rgba(255, 255, 255, 0.12);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   }
 

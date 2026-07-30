@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface HeroSlide {
@@ -63,6 +64,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   private revealObserver?: IntersectionObserver;
+  private fragmentSub?: Subscription;
 
   // Galería
 galleryPhotos: GalleryPhoto[] = [
@@ -88,6 +90,7 @@ galleryPhotos: GalleryPhoto[] = [
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private el: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -105,10 +108,27 @@ galleryPhotos: GalleryPhoto[] = [
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.initRevealAnimations();
+
+    // Navega a la sección correcta cuando se llega con un fragmento (p. ej. /home#galeria),
+    // ya sea al entrar desde otra página o al hacer clic en el header estando ya en /home.
+    this.fragmentSub = this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.scrollToFragment(fragment);
+      }
+    });
+  }
+
+  private scrollToFragment(fragment: string): void {
+    // Se espera un tick para asegurar que la sección ya esté renderizada
+    // (relevante sobre todo al cargar /home por primera vez desde otra ruta).
+    setTimeout(() => {
+      document.getElementById(fragment)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
   }
 
   ngOnDestroy(): void {
     this.revealObserver?.disconnect();
+    this.fragmentSub?.unsubscribe();
     if (this.heroInterval) {
       clearInterval(this.heroInterval);
     }

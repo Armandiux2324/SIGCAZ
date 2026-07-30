@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-public-layout',
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.scss'
 })
-export class PublicLayoutComponent implements AfterViewInit, OnDestroy {
+export class PublicLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('footerRef', { static: false }) footerRef!: ElementRef;
 
   menuOpen = false;
@@ -16,11 +18,25 @@ export class PublicLayoutComponent implements AfterViewInit, OnDestroy {
   footerVisible = false;
 
   private footerObserver?: IntersectionObserver;
+  private routerSub?: Subscription;
 
   constructor(
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
+
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Al cambiar entre home/register/search-register, sube la página al inicio;
+    // si la navegación trae fragmento (p. ej. /home#galeria), HomeComponent
+    // se encarga de hacer scroll suave hasta esa sección justo después.
+    this.routerSub = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(() => {
+        window.scrollTo(0, 0);
+      });
+  }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -29,6 +45,7 @@ export class PublicLayoutComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.footerObserver?.disconnect();
+    this.routerSub?.unsubscribe();
   }
 
   @HostListener('window:scroll')
@@ -38,6 +55,10 @@ export class PublicLayoutComponent implements AfterViewInit, OnDestroy {
 
   private initFooterObserver(): void {
     if (!this.footerRef?.nativeElement) return;
+
+    const footerEl = this.footerRef.nativeElement as HTMLElement;
+    // Estado inicial oculto: sin esta clase, la transición de la animación nunca se dispara.
+    footerEl.classList.add('animate');
 
     this.footerObserver = new IntersectionObserver(
       (entries) => {
@@ -49,7 +70,7 @@ export class PublicLayoutComponent implements AfterViewInit, OnDestroy {
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
 
-    this.footerObserver.observe(this.footerRef.nativeElement);
+    this.footerObserver.observe(footerEl);
   }
 
   toggleMenu(): void {
