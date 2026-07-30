@@ -1,5 +1,4 @@
-// home.component.ts
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -34,10 +33,6 @@ interface FaqItem {
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('footerRef', { static: false }) footerRef!: ElementRef;
-
-  menuOpen = false;
-  footerVisible = false;
   videoUrl: SafeResourceUrl;
 
   // Hero / carrusel propio (sin Bootstrap Carousel)
@@ -67,7 +62,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     { icon: 'bi-award', title: 'Turismo y Tradición', description: 'Descubre la riqueza cultural, gastronómica y turística que distingue a Zacatecas.' }
   ];
 
-  private footerObserver?: IntersectionObserver;
   private revealObserver?: IntersectionObserver;
 
   // Galería
@@ -110,12 +104,10 @@ galleryPhotos: GalleryPhoto[] = [
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    this.initFooterObserver();
     this.initRevealAnimations();
   }
 
   ngOnDestroy(): void {
-    this.footerObserver?.disconnect();
     this.revealObserver?.disconnect();
     if (this.heroInterval) {
       clearInterval(this.heroInterval);
@@ -139,22 +131,6 @@ galleryPhotos: GalleryPhoto[] = [
 
   toggleFaq(index: number): void {
     this.activeFaq = this.activeFaq === index ? null : index;
-  }
-
-  private initFooterObserver(): void {
-    if (!this.footerRef?.nativeElement) return;
-
-    this.footerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          this.footerVisible = entry.isIntersecting;
-          entry.target.classList.toggle('is-visible', entry.isIntersecting);
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
-
-    this.footerObserver.observe(this.footerRef.nativeElement);
   }
 
   private initRevealAnimations(): void {
@@ -184,14 +160,6 @@ galleryPhotos: GalleryPhoto[] = [
 
   redirectToSearchRegister(){
     this.router.navigate(['/search-register']);
-  }
-
-  redirectToLogin(){
-    this.router.navigate(['/login']);
-  }
-
-  toggleMenu(){
-    this.menuOpen = !this.menuOpen;
   }
 
   scrollToTop(){
