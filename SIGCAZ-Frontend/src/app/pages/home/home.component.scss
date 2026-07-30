@@ -5,13 +5,14 @@ $color-primary: #7a0c2e;
 $color-primary-dark: #5c0921;
 $color-accent: #d12d45;
 $color-gold: #c1873c;
+$color-yellow-soft: #e0a952;
 $color-text: #333;
 $color-white: #fff;
 $font-main: 'Montserrat', sans-serif;
 $transition-base: 0.3s ease;
 
 // ==========================================================================
-// Header / Navbar (transparente -> glassmorphism al hacer scroll)
+// Header / Navbar
 // ==========================================================================
 .site-header {
   position: fixed;
@@ -19,22 +20,28 @@ $transition-base: 0.3s ease;
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 20px 30px;
-  background-color: transparent;
-  border-bottom: 1px solid transparent;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  padding: 16px 30px;
+
+  background: transparent;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: none;
-  transition: background-color 0.45s ease, backdrop-filter 0.45s ease,
-    box-shadow 0.45s ease, border-color 0.45s ease, padding 0.45s ease;
+
+  transition: background $transition-base,
+              backdrop-filter $transition-base,
+              -webkit-backdrop-filter $transition-base,
+              box-shadow $transition-base,
+              border-color $transition-base,
+              padding $transition-base;
 
   &.scrolled {
     padding: 10px 30px;
-    background-color: rgba(20, 4, 9, 0.55);
+    background: color.adjust($color-primary-dark, $alpha: -0.15);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   }
 
   .header-content {
@@ -53,7 +60,7 @@ $transition-base: 0.3s ease;
   .logo {
     width: 60px;
     height: auto;
-    transition: width 0.35s ease;
+    transition: width $transition-base;
   }
 
   nav {
@@ -78,16 +85,16 @@ $transition-base: 0.3s ease;
       display: block;
       width: 100%;
       height: 2px;
-      background-color: $color-white;
+      background-color: #D4B366;
       border-radius: 2px;
-      transition: transform $transition-base, opacity $transition-base;
+      transition: transform $transition-base, opacity $transition-base, background-color $transition-base;
     }
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 12px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -95,58 +102,54 @@ $transition-base: 0.3s ease;
     li {
       a {
         display: inline-block;
-        color: $color-white;
+        color: #D4B366;
         text-decoration: none;
         font-family: $font-main;
         font-size: 14px;
         font-weight: 600;
-        letter-spacing: 0.3px;
-        padding: 10px 16px;
-        border-radius: 30px;
+        letter-spacing: 0.4px;
+        padding: 8px 12px;
         cursor: pointer;
-        transition: background-color $transition-base, transform $transition-base, color $transition-base, filter $transition-base;
-        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.22);
+        transition: color $transition-base, opacity $transition-base;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.15);
-          transform: translateY(-2px);
+          opacity: 0.75;
         }
       }
 
       &.nav-cta a {
-        background-color: $color-accent;
+        background-color: $color-primary;
+        color: $color-white;
+        padding: 9px 20px;
+        border-radius: 6px;
 
         &:hover {
-          background-color: color.adjust($color-accent, $lightness: -8%);
+          background-color: $color-accent;
+          opacity: 1;
         }
       }
 
       &.nav-cta--outline a {
         background-color: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #D4B366;
+        border: 1px solid #e6e2d8;
+        border-radius: 6px;
+        padding: 8px 18px;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.15);
+          background-color: rgba(212, 179, 102, 0.15);
+          opacity: 1;
         }
       }
-
-      &.nav-highlight a {
-        color: $color-gold;
-        filter: drop-shadow(0 0 3px rgba(193, 135, 60, 0.55));
-      }
-    }
-
-    .nav-link-shadow {
-      color: $color-gold;
-      text-shadow: 0 1px 6px rgba(193, 135, 60, 0.65);
     }
   }
 }
 
+// Responsive (Mobile Menu)
 @media (max-width: 992px) {
   .site-header {
     .logo {
-      width: 120px;
+      width: 50px;
     }
 
     .hamburger {
@@ -159,14 +162,14 @@ $transition-base: 0.3s ease;
       right: -100%;
       height: 100vh;
       width: 280px;
-      background-color: $color-primary;
+      background-color: $color-primary-dark;
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
-      gap: 10px;
+      gap: 12px;
       padding: 30px;
       transition: right $transition-base;
-      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
 
       &.active {
         right: 0;
@@ -179,7 +182,11 @@ $transition-base: 0.3s ease;
           width: 100%;
           text-align: center;
           padding: 14px 10px;
-          border-radius: 6px;
+          border-radius: 8px;
+        }
+
+        &.nav-cta a {
+          border-radius: 8px;
         }
       }
     }
@@ -187,7 +194,7 @@ $transition-base: 0.3s ease;
 }
 
 // ==========================================================================
-// Hero / Carrusel propio (sin Bootstrap Carousel)
+// Hero / Carrusel
 // ==========================================================================
 .hero-section {
   position: relative;
@@ -518,44 +525,6 @@ $transition-base: 0.3s ease;
   }
 }
 
-.about-event__stats {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  padding: 18px 22px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(21, 4, 9, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.about-event__stat {
-  min-width: 90px;
-
-  &-value {
-    margin: 0;
-    font-family: $font-main;
-    font-size: 26px;
-    font-weight: 700;
-    color: $color-white;
-  }
-
-  &-label {
-    margin: 2px 0 0;
-    font-family: $font-main;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.8);
-  }
-}
-
 .about-event__content {
   display: flex;
   flex-direction: column;
@@ -765,50 +734,6 @@ $transition-base: 0.3s ease;
       border-radius: 50%;
       background-color: $color-accent;
       flex-shrink: 0;
-    }
-  }
-}
-
-// ==========================================================================
-// Icon Section (accesos rápidos, dentro de Video Promocional)
-// ==========================================================================
-.icon-section {
-  display: flex;
-  gap: 14px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-
-  .icon-item {
-    flex: 1 1 150px;
-    color: $color-text;
-    cursor: pointer;
-    background-color: $color-white;
-    border: 1px solid #eee;
-    border-radius: 14px;
-    padding: 18px 14px;
-    text-align: center;
-    transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base;
-
-    i {
-      display: block;
-      font-size: 20px;
-      color: $color-accent;
-      margin-bottom: 8px;
-    }
-
-    p {
-      font-size: 13px;
-      font-weight: 600;
-      margin: 0;
-      color: $color-primary;
-      font-family: $font-main;
-      line-height: 1.3;
-    }
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-      border-color: $color-accent;
     }
   }
 }
@@ -1070,7 +995,7 @@ $transition-base: 0.3s ease;
 }
 
 // ==========================================================================
-// Preguntas Frecuentes (Accordion nativo Angular + CSS)
+// Preguntas Frecuentes
 // ==========================================================================
 .faq {
   width: 100%;
@@ -1186,34 +1111,7 @@ $transition-base: 0.3s ease;
 }
 
 // ==========================================================================
-// Botón volver arriba
-// ==========================================================================
-.to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: none;
-  background-color: $color-primary;
-  color: $color-white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: background-color $transition-base, transform $transition-base;
-  z-index: 200;
-
-  &:hover {
-    background-color: $color-primary-dark;
-    transform: translateY(-3px);
-  }
-}
-
-/// ==========================================================================
-// Footer (contenido conservado, diseño renovado)
+// Footer
 // ==========================================================================
 .zacatecas-footer {
   position: relative;
@@ -1450,19 +1348,6 @@ $transition-base: 0.3s ease;
 }
 
 @media (max-width: 576px) {
-  .about-event__stats {
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .icon-section {
-    flex-direction: column;
-  }
-
-  .icon-section .icon-item {
-    flex: 1 1 auto;
-  }
-
   .footer-bottom {
     justify-content: center;
     text-align: center;
