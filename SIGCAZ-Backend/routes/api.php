@@ -52,6 +52,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/reports/participants', [ReportController::class, 'participants']);
         Route::get('/reports/gender', [ReportController::class, 'byGender']);
         Route::get('/reports/shirt-size', [ReportController::class, 'byShirtSize']);
+        Route::get('/reports/origin', [ReportController::class, 'byOrigin']);
         Route::get('/reports/state', [ReportController::class, 'byState']);
         Route::get('/reports/municipality', [ReportController::class, 'byMunicipality']);
         Route::get('/reports/group', [ReportController::class, 'byGroup']);
