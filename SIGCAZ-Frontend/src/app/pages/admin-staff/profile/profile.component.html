@@ -65,12 +65,11 @@
         </div>
       </div>
 
-      <div class="card-footer">
-        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
-          <i class="bi" [class.bi-check2]="!saving" [class.bi-arrow-repeat]="saving"></i>
-          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
-        </button>
-      </div>
+<div class="card-footer">
+  <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving">
+    {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+  </button>
+</div>
     </section>
   </ng-container>
 </div>
