@@ -42,7 +42,7 @@ class ReportController extends Controller
         $year = $request->query('year');
 
         $rows = Participant::with('register')
-            ->when($year, fn ($q) => $q->whereHas('register', fn ($r) => $r->whereYear('created_at', $year)))
+            ->when($year, fn($q) => $q->whereHas('register', fn($r) => $r->whereYear('created_at', $year)))
             ->orderBy('id')->get();
 
         $spreadsheet = new Spreadsheet();
@@ -50,9 +50,19 @@ class ReportController extends Controller
         $sheet->setTitle('Participantes');
 
         $headers = [
-            'Folio', 'Nombre', 'Apellidos', 'Teléfono', 'Correo',
-            'Género', 'Talla', 'Primera vez', 'Participaciones previas',
-            'Cuadrilla', 'Estado', 'Municipio', 'Asistió',
+            'Folio',
+            'Nombre',
+            'Apellidos',
+            'Teléfono',
+            'Correo',
+            'Género',
+            'Talla',
+            'Primera vez',
+            'Participaciones previas',
+            'Cuadrilla',
+            'Estado',
+            'Municipio',
+            'Asistió',
         ];
         $sheet->fromArray($headers, null, 'A1');
         $sheet->getStyle('A1:M1')->applyFromArray($this->headerStyle());
@@ -90,7 +100,7 @@ class ReportController extends Controller
         $year = $request->query('year');
 
         $data = Participant::query()
-            ->when($year, fn ($q) => $q->whereHas('register', fn ($r) => $r->whereYear('created_at', $year)))
+            ->when($year, fn($q) => $q->whereHas('register', fn($r) => $r->whereYear('created_at', $year)))
             ->selectRaw('gender, COUNT(*) as total')->groupBy('gender')->get();
 
         $spreadsheet = new Spreadsheet();
@@ -121,8 +131,8 @@ class ReportController extends Controller
         $order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
         $data = Participant::query()
-            ->when($year, fn ($q) => $q->whereHas('register', fn ($r) => $r->whereYear('created_at', $year)))
-            ->selectRaw('shirt_size, COUNT(*) as total')->groupBy('shirt_size')->get()->sortBy(fn ($r) => array_search($r->shirt_size, $order));
+            ->when($year, fn($q) => $q->whereHas('register', fn($r) => $r->whereYear('created_at', $year)))
+            ->selectRaw('shirt_size, COUNT(*) as total')->groupBy('shirt_size')->get()->sortBy(fn($r) => array_search($r->shirt_size, $order));
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -145,13 +155,49 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_tallas_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
     }
 
-    // 4. Por estado
+    // 4. Por origen (Nacional / Estatal)
+    public function byOrigin(Request $request): StreamedResponse
+    {
+        $year = $request->query('year');
+
+        $labels = [
+            'national' => 'Nacional',
+            'state' => 'Estatal',
+        ];
+
+        $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
+            ->selectRaw('registers.origin_type, COUNT(participants.id) as total')
+            ->groupBy('registers.origin_type')->orderBy('total', 'desc')->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Por Origen');
+
+        $sheet->fromArray(['Origen', 'Total de participantes'], null, 'A1');
+        $sheet->getStyle('A1:B1')->applyFromArray($this->headerStyle());
+
+        $r = 2;
+        foreach ($data as $row) {
+            $sheet->setCellValue("A{$r}", $labels[$row->origin_type] ?? $row->origin_type);
+            $sheet->setCellValue("B{$r}", $row->total);
+            $r++;
+        }
+
+        foreach (['A', 'B'] as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        return $this->download($spreadsheet, 'reporte_origen_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
+    }
+
+    // 5. Por estado
     public function byState(Request $request): StreamedResponse
     {
         $year = $request->query('year');
 
         $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn ($q) => $q->whereYear('registers.created_at', $year))
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
             ->selectRaw('registers.state, COUNT(participants.id) as total')
             ->groupBy('registers.state')->orderBy('total', 'desc')->get();
 
@@ -176,13 +222,13 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_estados_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
     }
 
-    // 5. Por municipio
+    // 6. Por municipio
     public function byMunicipality(Request $request): StreamedResponse
     {
         $year = $request->query('year');
 
         $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn ($q) => $q->whereYear('registers.created_at', $year))
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
             ->selectRaw('registers.state, registers.municipality, COUNT(participants.id) as total')->groupBy('registers.state', 'registers.municipality')
             ->orderBy('registers.state')->orderBy('total', 'desc')->get();
 
@@ -208,13 +254,13 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_municipios_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
     }
 
-    // 6. Por cuadrilla (group)
+    // 7. Por cuadrilla (group)
     public function byGroup(Request $request): StreamedResponse
     {
         $year = $request->query('year');
 
         $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn ($q) => $q->whereYear('registers.created_at', $year))
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
             ->selectRaw('registers.group, COUNT(participants.id) as total')
             ->groupBy('registers.group')->orderBy('total', 'desc')->get();
 
@@ -239,7 +285,7 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_cuadrillas_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
     }
 
-    // 7. Por tipo de hospedaje
+    // 8. Por tipo de hospedaje
     public function byAccommodation(Request $request): StreamedResponse
     {
         $year = $request->query('year');
@@ -252,7 +298,7 @@ class ReportController extends Controller
         ];
 
         $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn ($q) => $q->whereYear('registers.created_at', $year))
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
             ->selectRaw('registers.accommodation_type, COUNT(participants.id) as total')
             ->groupBy('registers.accommodation_type')->orderBy('total', 'desc')->get();
 
@@ -277,13 +323,13 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_hospedaje_' . ($year ? $year . '_' : '') . now()->format('Ymd'));
     }
 
-    // 8. Por cantidad de participaciones previas
+    // 9. Por cantidad de participaciones previas
     public function byParticipationCount(Request $request): StreamedResponse
     {
         $year = $request->query('year');
 
         $data = Participant::query()
-            ->when($year, fn ($q) => $q->whereHas('register', fn ($r) => $r->whereYear('created_at', $year)))
+            ->when($year, fn($q) => $q->whereHas('register', fn($r) => $r->whereYear('created_at', $year)))
             ->selectRaw('is_first_time, participation_count, COUNT(*) as total')->groupBy('is_first_time', 'participation_count')
             ->orderBy('is_first_time', 'desc')->orderBy('participation_count')->get();
 
@@ -309,7 +355,7 @@ class ReportController extends Controller
         return $this->download($spreadsheet, 'reporte_participaciones_previas_' . now()->format('Ymd'));
     }
 
-    // 9. Asistencia / inasistencia
+    // 10. Asistencia / inasistencia
     public function attendance(): StreamedResponse
     {
         $rows = Participant::with('register')->orderByRaw('attended_at IS NULL, attended_at ASC')->get();
@@ -319,8 +365,14 @@ class ReportController extends Controller
         $sheet->setTitle('Asistencia');
 
         $headers = [
-            'Folio', 'Nombre', 'Apellidos', 'Cuadrilla',
-            'Estado', 'Municipio', 'Asistió', 'Hora de asistencia',
+            'Folio',
+            'Nombre',
+            'Apellidos',
+            'Cuadrilla',
+            'Estado',
+            'Municipio',
+            'Asistió',
+            'Hora de asistencia',
         ];
         $sheet->fromArray($headers, null, 'A1');
         $sheet->getStyle('A1:H1')->applyFromArray($this->headerStyle());

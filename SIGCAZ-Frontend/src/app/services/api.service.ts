@@ -109,6 +109,10 @@ export class ApiService {
     return axios.get(this.url + '/settings', this.getToken(token));
   }
 
+  getPublicSettings() {
+    return axios.get(this.url + '/settings');
+  }
+
   updateSettings(eventAddress: string, eventDate: string, eventTime: string, eventImage: File | null, token: string) {
     const formData = new FormData();
     formData.append('event_address', eventAddress);

@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-public-layout',
@@ -17,16 +18,21 @@ export class PublicLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   scrolled = false;
   footerVisible = false;
 
+  logoUrl = '';
+
   private footerObserver?: IntersectionObserver;
   private routerSub?: Subscription;
 
   constructor(
     private router: Router,
+    private api: ApiService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    this.cargarLogo();
 
     // Al cambiar entre home/register/search-register, sube la página al inicio;
     // si la navegación trae fragmento (p. ej. /home#galeria), HomeComponent
@@ -36,6 +42,15 @@ export class PublicLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         window.scrollTo(0, 0);
       });
+  }
+
+  private cargarLogo(): void {
+    this.api.getPublicSettings().then((res: any) => {
+      const url = res.data?.data?.event_image_url;
+      if (url) this.logoUrl = url;
+    }).catch(() => {
+      // Si falla, se mantiene el logo estático por defecto
+    });
   }
 
   ngAfterViewInit(): void {
