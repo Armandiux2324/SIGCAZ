@@ -80,11 +80,17 @@
       </div>
       <div class="field">
         <label>Estado</label>
-        <input type="text" [(ngModel)]="dataToAdd.state" placeholder="Ej. Zacatecas">
+        <select [(ngModel)]="dataToAdd.state" (ngModelChange)="onStateChange('add')">
+          <option value="">Seleccione...</option>
+          <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+        </select>
       </div>
       <div class="field">
         <label>Municipio</label>
-        <input type="text" [(ngModel)]="dataToAdd.municipality" placeholder="Ej. Guadalupe">
+        <select [(ngModel)]="dataToAdd.municipality" [disabled]="!dataToAdd.state">
+          <option value="">{{ dataToAdd.state ? 'Seleccione...' : 'Primero elija un estado' }}</option>
+          <option *ngFor="let m of municipalitiesAdd" [value]="m">{{ m }}</option>
+        </select>
       </div>
     </div>
 
@@ -213,11 +219,17 @@
       </div>
       <div class="field">
         <label>Estado</label>
-        <input type="text" [(ngModel)]="dataToEdit.state">
+        <select [(ngModel)]="dataToEdit.state" (ngModelChange)="onStateChange('edit')">
+          <option value="">Seleccione...</option>
+          <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+        </select>
       </div>
       <div class="field">
         <label>Municipio</label>
-        <input type="text" [(ngModel)]="dataToEdit.municipality">
+        <select [(ngModel)]="dataToEdit.municipality" [disabled]="!dataToEdit.state">
+          <option value="">{{ dataToEdit.state ? 'Seleccione...' : 'Primero elija un estado' }}</option>
+          <option *ngFor="let m of municipalitiesEdit" [value]="m">{{ m }}</option>
+        </select>
       </div>
     </div>
 
