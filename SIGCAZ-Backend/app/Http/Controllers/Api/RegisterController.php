@@ -290,8 +290,8 @@ class RegisterController extends Controller
             ], 404);
         }
 
-        $pdf = $pdfService->build($participant);
+        $pdf = $pdfService->buildForRegister($participant->register);
 
-        return $pdf->download("comprobante-{$participant->folio}.pdf");
+        return $pdf->download("comprobante-registro-{$participant->register_id}.pdf");
     }
 }

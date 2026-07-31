@@ -284,8 +284,6 @@ export class RegisterComponent implements OnInit {
       f.folio_delivery_method,
       members,
     ).then((res: any) => {
-      // Reutilizamos la respuesta del backend tal cual venga (mismo contrato
-      // que ya usan el resto de vistas: res.data.data), sin duplicar modelos.
       this.registrationResult = res?.data?.data ?? res?.data ?? null;
       this.registrationComplete = true;
 

@@ -14,22 +14,58 @@
                         <td style="padding:32px 32px 16px 32px;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td valign="top" style="font-size:13px; color:#888888;">
-                                        Tu registro
-                                        <div style="font-size:22px; font-weight:bold; color:#222222; margin-top:4px;">
-                                            {{ $participant->first_name }} {{ $participant->last_name }}
-                                        </div>
-                                        <div style="font-size:13px; color:#888888; margin-top:8px;">
-                                            Folio: <strong style="color:#333333;">{{ $participant->folio }}</strong>
-                                        </div>
-                                    </td>
-                                    <td valign="top" align="right" width="140">
+                                    <td valign="top" width="140" align="center">
                                         @if ($qrBinary)
                                             <img src="{{ $message->embedData($qrBinary, $participant->folio . '.png', 'image/png') }}"
                                                  alt="QR {{ $participant->folio }}"
                                                  width="130" height="130"
-                                                 style="display:block; border:1px solid #eeeeee; border-radius:4px;">
+                                                 style="border:1px solid #eeeeee; border-radius:4px;">
                                         @endif
+                                        <div style="text-align:center; font-size:11px; color:#888888; margin-top:6px;">
+                                            {{ $participant->folio }}
+                                        </div>
+                                    </td>
+                                    <td valign="middle" style="padding-left:20px;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td valign="middle" style="width:60%;">
+                                                    <div style="font-size:11px; color:#888888; text-transform:uppercase;">Folio de registro</div>
+                                                    <div style="font-size:16px; font-weight:bold; color:#222222; margin-top:2px;">
+                                                        {{ $participant->folio }}
+                                                    </div>
+                                                    <div style="font-size:15px; font-weight:bold; color:#222222; margin-top:14px;">
+                                                        {{ $participant->first_name }} {{ $participant->last_name }}
+                                                    </div>
+                                                    <div style="font-size:12px; color:#888888; margin-top:2px;">
+                                                        {{ $participant->email }}
+                                                    </div>
+                                                </td>
+                                                <td valign="middle" align="right" style="width:40%;">
+                                                    <table role="presentation" style="width:auto; margin-left:auto;" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td valign="top" style="width:18px; padding-top:2px;">
+                                                                <img src="{{ asset('images/icon-calendar.png') }}" width="14" height="14">
+                                                            </td>
+                                                            <td valign="top" style="font-size:12px; color:#333333; padding-left:6px; white-space:nowrap;">
+                                                                {{ $eventDate ?? 'Por confirmar' }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top" style="width:18px; padding-top:8px;">
+                                                                <img src="{{ asset('images/icon-pin.png') }}" width="14" height="14">
+                                                            </td>
+                                                            <td valign="top" style="font-size:12px; color:#888888; padding-left:6px; padding-top:8px; text-align:right; max-width:170px;">
+                                                                @if ($eventAddress)
+                                                                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($eventAddress) }}" style="color:#888888; text-decoration:underline;">{{ $eventAddress }}</a>
+                                                                @else
+                                                                    Por confirmar
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>

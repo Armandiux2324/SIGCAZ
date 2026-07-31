@@ -264,10 +264,8 @@
         </select>
       </div>
       <div class="field">
-        <label>Entrega de folio</label>
-        <select [(ngModel)]="dataToEdit.folio_delivery_method">
-          <option *ngFor="let f of folioDeliveryOptions" [value]="f.value">{{ f.label }}</option>
-        </select>
+        <label>Personas con las que viaja</label>
+        <input type="number" min="1" [(ngModel)]="dataToEdit.participant_count">
       </div>
     </div>
 

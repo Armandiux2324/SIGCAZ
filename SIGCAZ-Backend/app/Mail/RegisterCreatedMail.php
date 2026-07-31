@@ -33,12 +33,16 @@ class RegisterCreatedMail extends Mailable implements ShouldQueue
             $qrBinary = Storage::disk('public')->get($this->participant->qr_path);
         }
 
+        $eventInfo = app(RegisterReceiptPdfService::class)->eventInfo();
+
         return new Content(
             view: 'emails.register-created',
             with: [
                 'register' => $this->register,
                 'participant' => $this->participant,
                 'qrBinary' => $qrBinary,
+                'eventDate' => $eventInfo['eventDate'],
+                'eventAddress' => $eventInfo['eventAddress'],
             ],
         );
     }
