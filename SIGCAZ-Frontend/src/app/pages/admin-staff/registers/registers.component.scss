@@ -325,7 +325,15 @@ $header-offset: 3.5rem;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 400;
+  animation: modal-backdrop-in 0.25s ease both;
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-box {
@@ -341,8 +349,28 @@ $header-offset: 3.5rem;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  animation: modal-box-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   &--sm { width: min(380px, 92vw); }
+  &--qr { width: min(880px, 94vw); }
+}
+
+@keyframes modal-box-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-box {
+    animation: none;
+  }
 }
 
 .modal-header {
@@ -474,6 +502,195 @@ $header-offset: 3.5rem;
   align-items: center;
 
   &:hover { opacity: 0.75; }
+}
+
+// ── Modal: Código QR ────────────────────────────────────────────────────────
+.qr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.35rem 0.9rem;
+  border-radius: $radius-pill;
+  background: rgba($color-guinda, 0.1);
+  color: $color-guinda;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+
+  &--group {
+    background: $color-neutral-bg;
+    color: $color-neutral-icon;
+  }
+}
+
+.qr-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $color-text;
+  padding-bottom: 0.75rem;
+  border-bottom: 1.5px solid $color-border;
+
+  &__count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $color-text-muted;
+  }
+}
+
+.qr-participant {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.75rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.qr-participant__code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.qr-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 200px;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-bg-page;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: $color-text-muted;
+  font-size: 3rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.qr-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: $color-text-muted;
+  text-align: center;
+
+  i {
+    color: $color-guinda;
+    margin-top: 0.15rem;
+  }
+}
+
+.qr-participant__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.qr-section-title {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $color-guinda;
+
+  &:first-child { margin-top: 0; }
+}
+
+.qr-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.35rem 1.5rem;
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: $color-text;
+  }
+}
+
+.qr-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1.5px solid $color-border;
+  padding-top: 1.25rem;
+}
+
+.qr-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 0.65rem;
+}
+
+.qr-participant-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-bg;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    background: rgba($color-guinda, 0.06);
+    transform: translateY(-2px);
+  }
+
+  &--active {
+    border-color: $color-guinda;
+    background: rgba($color-guinda, 0.08);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    background: $color-neutral-bg;
+    color: $color-neutral-icon;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $color-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__folio {
+    font-size: 0.72rem;
+    color: $color-text-muted;
+  }
 }
 
 .modal-footer {

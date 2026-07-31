@@ -36,6 +36,9 @@
         </div>
 
         <div class="register-actions">
+          <button class="action-btn" title="Ver código QR" (click)="openQrModal(r)">
+            <i class="bi bi-qr-code"></i>
+          </button>
           <button class="action-btn" title="Editar" (click)="openEditModal(r)">
             <i class="bi bi-pencil-square"></i>
           </button>
@@ -77,17 +80,11 @@
       </div>
       <div class="field">
         <label>Estado</label>
-        <select [(ngModel)]="dataToAdd.state" (ngModelChange)="onStateChange('add')">
-          <option value="">Seleccione...</option>
-          <option *ngFor="let s of states" [value]="s">{{ s }}</option>
-        </select>
+        <input type="text" [(ngModel)]="dataToAdd.state" placeholder="Ej. Zacatecas">
       </div>
       <div class="field">
         <label>Municipio</label>
-        <select [(ngModel)]="dataToAdd.municipality" [disabled]="!dataToAdd.state">
-          <option value="">{{ dataToAdd.state ? 'Seleccione...' : 'Primero elija un estado' }}</option>
-          <option *ngFor="let m of municipalitiesAdd" [value]="m">{{ m }}</option>
-        </select>
+        <input type="text" [(ngModel)]="dataToAdd.municipality" placeholder="Ej. Guadalupe">
       </div>
     </div>
 
@@ -119,12 +116,7 @@
           <option *ngFor="let t of transportOptions" [value]="t.value">{{ t.label }}</option>
         </select>
       </div>
-      <div class="field">
-        <label>Entrega de folio</label>
-        <select [(ngModel)]="dataToAdd.folio_delivery_method">
-          <option *ngFor="let f of folioDeliveryOptions" [value]="f.value">{{ f.label }}</option>
-        </select>
-      </div>
+      
     </div>
 
     <div class="participants-section">
@@ -221,17 +213,11 @@
       </div>
       <div class="field">
         <label>Estado</label>
-        <select [(ngModel)]="dataToEdit.state" (ngModelChange)="onStateChange('edit')">
-          <option value="">Seleccione...</option>
-          <option *ngFor="let s of states" [value]="s">{{ s }}</option>
-        </select>
+        <input type="text" [(ngModel)]="dataToEdit.state">
       </div>
       <div class="field">
         <label>Municipio</label>
-        <select [(ngModel)]="dataToEdit.municipality" [disabled]="!dataToEdit.state">
-          <option value="">{{ dataToEdit.state ? 'Seleccione...' : 'Primero elija un estado' }}</option>
-          <option *ngFor="let m of municipalitiesEdit" [value]="m">{{ m }}</option>
-        </select>
+        <input type="text" [(ngModel)]="dataToEdit.municipality">
       </div>
     </div>
 
@@ -343,6 +329,85 @@
     <button class="btn-cancel" (click)="closeEditModal()">Cancelar</button>
     <button class="btn-confirm" [disabled]="saving" (click)="editRegister()">
       {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Código QR -->
+<div class="modal-backdrop" *ngIf="showQrModal" (click)="closeQrModal()"></div>
+<div class="modal-box modal-box--qr" *ngIf="showQrModal">
+  <div class="modal-header">
+    <h3>Código de acceso</h3>
+    <button class="modal-close" (click)="closeQrModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+
+  <div class="modal-body" *ngIf="activeQrParticipant as p">
+    <span class="qr-badge" [class.qr-badge--group]="qrIsGroup">
+      <i class="bi" [ngClass]="qrIsGroup ? 'bi-people-fill' : 'bi-person-fill'"></i>
+      {{ qrIsGroup ? 'Registro Grupal' : 'Registro Individual' }}
+    </span>
+
+    <div class="qr-card-title">
+      Participante
+      <span *ngIf="qrIsGroup" class="qr-card-title__count">{{ activeParticipantIndex + 1 }} de {{ qrParticipants.length }}</span>
+    </div>
+
+    <div class="qr-participant">
+      <div class="qr-participant__code">
+        <div class="qr-image">
+          <i class="bi bi-qr-code"></i>
+        </div>
+        <p class="qr-hint"><i class="bi bi-shield-check"></i> Este código será utilizado para el control de acceso y asistencia.</p>
+      </div>
+
+      <div class="qr-participant__details">
+        <h4 class="qr-section-title">Datos Personales</h4>
+        <div class="qr-data-grid">
+          <p><span class="info-label">Nombre:</span> {{ p.firstName || '—' }}</p>
+          <p><span class="info-label">Apellidos:</span> {{ p.lastName || '—' }}</p>
+          <p><span class="info-label">Teléfono:</span> {{ p.phone || '—' }}</p>
+          <p><span class="info-label">Correo electrónico:</span> {{ p.email || '—' }}</p>
+          <p><span class="info-label">Género:</span> {{ genderLabel(p.gender) }}</p>
+          <p><span class="info-label">Talla de playera:</span> {{ p.shirtSize || '—' }}</p>
+          <p><span class="info-label">Primera vez que participa:</span> {{ p.isFirstTime ? 'Sí' : 'No' }}</p>
+          <p><span class="info-label">Participaciones previas:</span> {{ p.participationCount }}</p>
+          <p><span class="info-label">Con cuántas personas viaja:</span> {{ qrParticipants.length - 1 }}</p>
+        </div>
+
+        <h4 class="qr-section-title">Datos Generales</h4>
+        <div class="qr-data-grid">
+          <p><span class="info-label">Origen:</span> {{ originLabel(qrRegister?.origin_type) }}</p>
+          <p><span class="info-label">Estado:</span> {{ qrRegister?.state }}</p>
+          <p><span class="info-label">Municipio:</span> {{ qrRegister?.municipality }}</p>
+          <p><span class="info-label">Tipo de hospedaje:</span> {{ accommodationLabel(qrRegister?.accommodation_type) }}</p>
+          <p><span class="info-label">Hospedaje al que llegarán:</span> {{ qrRegister?.lodging || '—' }}</p>
+          <p><span class="info-label">Días de estancia:</span> {{ qrRegister?.stay_days }}</p>
+          <p><span class="info-label">Transporte que usarán:</span> {{ transportLabel(qrRegister?.transport_method) }}</p>
+          <p><span class="info-label">Cuadrilla a la que pertenecen:</span> {{ qrRegister?.group || '—' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qr-group-list" *ngIf="qrIsGroup">
+      <h4 class="qr-section-title">Participantes del grupo</h4>
+      <div class="qr-group-grid">
+        <button type="button" class="qr-participant-card" *ngFor="let gp of qrParticipants; let i = index"
+          [class.qr-participant-card--active]="i === activeParticipantIndex"
+          (click)="selectQrParticipant(i)">
+          <span class="qr-participant-card__icon"><i class="bi bi-person-circle"></i></span>
+          <span class="qr-participant-card__info">
+            <span class="qr-participant-card__name">{{ gp.firstName }} {{ gp.lastName }}</span>
+            <span class="qr-participant-card__folio">{{ gp.folio }}</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="closeQrModal()">Cerrar</button>
+    <button class="btn-confirm" [disabled]="!activeQrParticipant?.folio || activeQrParticipant?.folio === '—'" (click)="downloadReceipt()">
+      <i class="bi bi-download"></i> Descargar comprobante
     </button>
   </div>
 </div>

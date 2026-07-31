@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
-import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../../data/mexico-estados';
+
 
 type ParticipantForm = {
   id?: number;
@@ -58,9 +58,12 @@ export class RegistersComponent implements OnInit {
   showAddModal = false;
   showEditModal = false;
   showDeleteModal = false;
+  showQrModal = false;
   saving = false;
 
   selectedRegister: any = null;
+  qrRegister: any = null;
+  activeParticipantIndex = 0;
 
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
@@ -69,9 +72,7 @@ export class RegistersComponent implements OnInit {
   dataToAdd = emptyRegisterForm();
   dataToEdit: any = emptyRegisterForm();
 
-  states: string[] = ESTADOS;
-  municipalitiesAdd: string[] = [];
-  municipalitiesEdit: string[] = [];
+
 
   originOptions = [
     { value: 'national', label: 'Nacional' },
@@ -112,6 +113,9 @@ export class RegistersComponent implements OnInit {
   }
   transportLabel(value: string): string {
     return this.transportOptions.find(o => o.value === value)?.label ?? value;
+  }
+  genderLabel(value: string): string {
+    return this.genderOptions.find(o => o.value === value)?.label ?? value;
   }
 
   loadRegisters(page: number = 1): void {
@@ -169,7 +173,7 @@ export class RegistersComponent implements OnInit {
 
   openAddModal(): void {
     this.dataToAdd = emptyRegisterForm();
-    this.municipalitiesAdd = [];
+
     this.showAddModal = true;
   }
 
@@ -182,15 +186,7 @@ export class RegistersComponent implements OnInit {
     form.participants.push(emptyParticipant());
   }
 
-  onStateChange(target: 'add' | 'edit'): void {
-    if (target === 'add') {
-      this.municipalitiesAdd = ESTADOS_MUNICIPIOS[this.dataToAdd.state] ?? [];
-      this.dataToAdd.municipality = '';
-    } else {
-      this.municipalitiesEdit = ESTADOS_MUNICIPIOS[this.dataToEdit.state] ?? [];
-      this.dataToEdit.municipality = '';
-    }
-  }
+
 
   removeParticipant(target: 'add' | 'edit', index: number): void {
     const form = target === 'add' ? this.dataToAdd : this.dataToEdit;
@@ -245,7 +241,7 @@ export class RegistersComponent implements OnInit {
         participation_count: p.participation_count ?? 0,
       })),
     };
-    this.municipalitiesEdit = ESTADOS_MUNICIPIOS[register.state] ?? [];
+
     this.showEditModal = true;
   }
 
@@ -270,6 +266,60 @@ export class RegistersComponent implements OnInit {
       this.showToast('error');
       this.saving = false;
     });
+  }
+
+  //  Modal: Código QR //
+  openQrModal(register: any): void {
+    this.qrRegister = register;
+    this.activeParticipantIndex = 0;
+    this.showQrModal = true;
+  }
+
+  closeQrModal(): void {
+    this.showQrModal = false;
+    this.qrRegister = null;
+  }
+
+  selectQrParticipant(index: number): void {
+    this.activeParticipantIndex = index;
+  }
+
+  get qrIsGroup(): boolean {
+    return (this.qrRegister?.participants?.length ?? 0) > 1;
+  }
+
+  get qrParticipants(): Array<{
+    folio: string; firstName: string; lastName: string; phone: string; email: string;
+    gender: string; shirtSize: string; isFirstTime: boolean; participationCount: number; qrUrl: string | null;
+  }> {
+    const participants = this.qrRegister?.participants ?? [];
+    return participants.map((p: any) => ({
+      folio: p.folio ?? this.qrRegister?.folio ?? '—',
+      firstName: p.first_name ?? '',
+      lastName: p.last_name ?? '',
+      phone: p.phone ?? '',
+      email: p.email ?? '',
+      gender: p.gender ?? '',
+      shirtSize: p.shirt_size ?? '',
+      isFirstTime: !!p.is_first_time,
+      participationCount: p.participation_count ?? 0,
+      qrUrl: p.qr_url ?? p.qr_code ?? null,
+    }));
+  }
+
+  get activeQrParticipant(): {
+    folio: string; firstName: string; lastName: string; phone: string; email: string;
+    gender: string; shirtSize: string; isFirstTime: boolean; participationCount: number; qrUrl: string | null;
+  } | null {
+    return this.qrParticipants[this.activeParticipantIndex] ?? this.qrParticipants[0] ?? null;
+  }
+
+
+  downloadReceipt(): void {
+    const participant = this.activeQrParticipant;
+    if (!participant || !participant.folio || participant.folio === '—') return;
+    const url = this.api.getReceiptUrl(participant.folio, participant.email);
+    window.open(url, '_blank');
   }
 
   openDeleteModal(register: any): void {
