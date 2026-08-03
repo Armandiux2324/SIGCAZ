@@ -14,16 +14,35 @@ export class LoginComponent {
   password = '';
   loading = false;
 
+  showPassword = false;
+  loginError = false;
+
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
   showToastFlag = false;
 
   constructor(private api: ApiService, private router: Router, private session: SessionService) { }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  private triggerLoginError(): void {
+    // Solo controla la animación/mensaje inline; no cambia la lógica de login.
+    this.loginError = false;
+    // Se reinicia en el siguiente tick para que la animación CSS vuelva a dispararse
+    // aunque el error anterior siga visible (dos intentos fallidos seguidos).
+    setTimeout(() => {
+      this.loginError = true;
+      setTimeout(() => { this.loginError = false; }, 4000);
+    });
+  }
+
   login() {
     if (!this.email || !this.password) {
       this.toastMessage = 'Todos los campos son obligatorios.';
       this.showToast('error');
+      this.triggerLoginError();
       return;
     }
 
@@ -44,6 +63,7 @@ export class LoginComponent {
       this.loading = false;
       this.toastMessage = "Error al iniciar sesión. Verifica tus datos";
       this.showToast('error');
+      this.triggerLoginError();
       console.log(error)
     })
   }
