@@ -25,11 +25,6 @@
         </div>
       </div>
 
-      <div class="card-footer">
-        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving"> <i *ngIf="!saving"></i>
-          {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
-        </button>
-      </div>
     </section>
 
     <section class="settings-card">
@@ -52,6 +47,12 @@
             <input type="file" accept="image/png,image/svg+xml,image/jpeg" (change)="onImageSelected($event)" hidden>
           </label>
         </div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-confirm" (click)="saveChanges()" [disabled]="saving"> <i *ngIf="!saving"></i>
+          {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
       </div>
     </section>
   </ng-container>
