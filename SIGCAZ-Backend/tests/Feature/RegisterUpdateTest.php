@@ -10,7 +10,7 @@ use Laravel\Sanctum\Sanctum;
 // Requerimiento relacionado: RFA-011
 // Diseño relacionado: D16
 
-function createGroupRegisterForPU17(): Register
+function createGroupRegisterForPU17(string $suffix = 'a'): Register
 {
     test()->postJson('/api/v1/registers', [
         'origin_type' => 'state',
@@ -27,8 +27,8 @@ function createGroupRegisterForPU17(): Register
             [
                 'first_name' => 'Armando',
                 'last_name' => 'Candelas',
-                'phone' => '4921110001',
-                'email' => 'armando.pu17@example.com',
+                'phone' => '49'.random_int(10000000, 99999999),
+                'email' => "armando.pu17.{$suffix}@example.com",
                 'gender' => 'male',
                 'shirt_size' => 'L',
                 'is_first_time' => true,
@@ -36,8 +36,8 @@ function createGroupRegisterForPU17(): Register
             [
                 'first_name' => 'María',
                 'last_name' => 'López',
-                'phone' => '4921110002',
-                'email' => 'maria.pu17@example.com',
+                'phone' => '49'.random_int(10000000, 99999999),
+                'email' => "maria.pu17.{$suffix}@example.com",
                 'gender' => 'female',
                 'shirt_size' => 'M',
                 'is_first_time' => true,
@@ -81,8 +81,8 @@ test('PU17 - agrega, actualiza y elimina participantes en la misma edición', fu
                 'id' => $armando->id,
                 'first_name' => 'Armando',
                 'last_name' => 'Candelas Alvarado', // actualizado
-                'phone' => '4921110001',
-                'email' => 'armando.pu17@example.com',
+                'phone' => $armando->phone,
+                'email' => $armando->email,
                 'gender' => 'male',
                 'shirt_size' => 'L',
                 'is_first_time' => true,
@@ -90,8 +90,8 @@ test('PU17 - agrega, actualiza y elimina participantes en la misma edición', fu
             [
                 'first_name' => 'Pedro', // nuevo participante
                 'last_name' => 'Ramírez',
-                'phone' => '4921110003',
-                'email' => 'pedro.pu17@example.com',
+                'phone' => '49'.random_int(10000000, 99999999),
+                'email' => 'pedro.pu17.nuevo@example.com',
                 'gender' => 'male',
                 'shirt_size' => 'XL',
                 'is_first_time' => true,
@@ -102,13 +102,14 @@ test('PU17 - agrega, actualiza y elimina participantes en la misma edición', fu
     $response->assertOk()->assertJsonCount(2, 'data.participants')->assertJsonPath('data.participant_count', 2);
 
     $this->assertDatabaseHas('participants', ['id' => $armando->id, 'last_name' => 'Candelas Alvarado']);
-    $this->assertDatabaseMissing('participants', ['email' => 'maria.pu17@example.com']);
-    $this->assertDatabaseHas('participants', ['email' => 'pedro.pu17@example.com']);
+    $this->assertDatabaseMissing('participants', ['email' => $register->participants->firstWhere('first_name', 'María')->email]);
+    $this->assertDatabaseHas('participants', ['email' => 'pedro.pu17.nuevo@example.com']);
 });
 
 test('PU17 - rechaza la edición cuando el correo de un participante ya está registrado por otro', function () {
     $register = createGroupRegisterForPU17();
     $armando = $register->participants->firstWhere('first_name', 'Armando');
+    $maria = $register->participants->firstWhere('first_name', 'María');
 
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
@@ -118,8 +119,8 @@ test('PU17 - rechaza la edición cuando el correo de un participante ya está re
             'id' => $armando->id,
             'first_name' => 'Armando',
             'last_name' => 'Candelas',
-            'phone' => '4921110001',
-            'email' => 'maria.pu17@example.com', // correo de María, ya registrado
+            'phone' => $armando->phone,
+            'email' => $maria->email, // correo de María, ya registrado
             'gender' => 'male',
             'shirt_size' => 'L',
             'is_first_time' => true,
@@ -130,8 +131,8 @@ test('PU17 - rechaza la edición cuando el correo de un participante ya está re
 });
 
 test('PU17 - rechaza la edición cuando el id de participante no pertenece al registro', function () {
-    $register = createGroupRegisterForPU17();
-    $otroRegistro = createGroupRegisterForPU17();
+    $register = createGroupRegisterForPU17('a');
+    $otroRegistro = createGroupRegisterForPU17('b');
     $participanteAjeno = $otroRegistro->participants->first();
 
     $staff = User::factory()->create(['role' => 'staff']);
@@ -142,7 +143,7 @@ test('PU17 - rechaza la edición cuando el id de participante no pertenece al re
             'id' => $participanteAjeno->id,
             'first_name' => 'Intruso',
             'last_name' => 'Ajeno',
-            'phone' => '4920000000',
+            'phone' => '49'.random_int(10000000, 99999999),
             'email' => 'intruso.pu17@example.com',
             'gender' => 'male',
             'shirt_size' => 'M',

@@ -11,7 +11,7 @@ use Laravel\Sanctum\Sanctum;
 // Requerimiento relacionado: RFA-012
 // Diseño relacionado: D17
 
-function createRegisterForPU18(): Register
+function createRegisterForPU18(string $suffix = 'a'): Register
 {
     Storage::fake('public');
     Mail::fake();
@@ -30,8 +30,8 @@ function createRegisterForPU18(): Register
         'participants' => [[
             'first_name' => 'Carlos',
             'last_name' => 'PU18',
-            'phone' => '3311110099',
-            'email' => 'carlos.pu18@example.com',
+            'phone' => '33'.random_int(10000000, 99999999),
+            'email' => "carlos.pu18.{$suffix}@example.com",
             'gender' => 'male',
             'shirt_size' => 'M',
             'is_first_time' => true,
