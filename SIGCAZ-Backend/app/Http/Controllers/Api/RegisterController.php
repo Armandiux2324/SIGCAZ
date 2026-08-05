@@ -249,7 +249,7 @@ class RegisterController extends Controller
         try {
             $query = $request->string('q')->trim();
 
-            if (! $query) {
+            if ($query->isEmpty()) {
                 return response()->json([
                     'message' => 'El parámetro de búsqueda es requerido.',
                 ], 422);
@@ -290,8 +290,8 @@ class RegisterController extends Controller
             ], 404);
         }
 
-        $pdf = $pdfService->buildForRegister($participant->register);
+        $pdf = $pdfService->build($participant);
 
-        return $pdf->download("comprobante-registro-{$participant->register_id}.pdf");
+        return $pdf->download("comprobante-{$participant->folio}.pdf");
     }
 }
