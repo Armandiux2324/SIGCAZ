@@ -1,20 +1,21 @@
 <?php
 
+use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-// PU22 - Validar la exportación del reporte de participantes agrupados por estado de origen.
+// PU27 - Validar la exportación del reporte de asistencia e inasistencia.
 // Requerimiento relacionado: RFA-013
 // Diseño relacionado: D18
 
-function createReportParticipantWithState(string $state, string $email): void
+function createReportParticipantForAttendance(string $email): Participant
 {
     test()->postJson('/api/v1/registers', [
         'origin_type' => 'national',
-        'state' => $state,
+        'state' => 'Jalisco',
         'municipality' => 'Guadalajara',
         'group' => 'Cuadrilla 2',
         'attendance_type' => 'alone',
@@ -24,7 +25,7 @@ function createReportParticipantWithState(string $state, string $email): void
         'transport_method' => 'car',
         'folio_delivery_method' => 'phone',
         'participants' => [[
-            'first_name' => 'PU22',
+            'first_name' => 'PU27',
             'last_name' => 'Test',
             'phone' => '33'.random_int(10000000, 99999999),
             'email' => $email,
@@ -33,45 +34,42 @@ function createReportParticipantWithState(string $state, string $email): void
             'is_first_time' => true,
         ]],
     ])->assertCreated();
+
+    return Participant::where('email', $email)->first();
 }
 
-test('PU22 - exporta el reporte de participantes agrupados por estado de origen, ordenado de mayor a menor', function () {
+test('PU27 - exporta el reporte de asistencia marcando quién asistió y quién no', function () {
     Storage::fake('public');
     Mail::fake();
-    createReportParticipantWithState('Zacatecas', 'z1.pu22@example.com');
-    createReportParticipantWithState('Zacatecas', 'z2.pu22@example.com');
-    createReportParticipantWithState('Jalisco', 'j1.pu22@example.com');
+
+    $asistio = createReportParticipantForAttendance('asistio.pu27@example.com');
+    $asistio->update(['attended_at' => now()]);
+    createReportParticipantForAttendance('noasistio.pu27@example.com');
 
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
 
-    $response = $this->get('/api/v1/reports/state');
+    $response = $this->get('/api/v1/reports/attendance');
 
     $response->assertOk();
     $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    expect($response->headers->get('content-disposition'))->toContain('reporte_estados_');
+    expect($response->headers->get('content-disposition'))->toContain('reporte_asistencia_');
 
-    $tmpFile = tempnam(sys_get_temp_dir(), 'pu22_').'.xlsx';
+    $tmpFile = tempnam(sys_get_temp_dir(), 'pu27_').'.xlsx';
     file_put_contents($tmpFile, $response->streamedContent());
     $sheet = IOFactory::load($tmpFile)->getActiveSheet();
     unlink($tmpFile);
 
-    expect($sheet->getCell('A1')->getValue())->toBe('Estado');
-    expect($sheet->getCell('B1')->getValue())->toBe('Total de participantes');
-
-    $totals = [];
+    $asistieron = [];
     for ($row = 2; $row <= $sheet->getHighestRow(); $row++) {
-        $totals[$sheet->getCell("A{$row}")->getValue()] = $sheet->getCell("B{$row}")->getValue();
+        $asistieron[$sheet->getCell("A{$row}")->getValue()] = $sheet->getCell("G{$row}")->getValue();
     }
 
-    // Orden esperado: Zacatecas primero por tener mayor total
-    expect(array_key_first($totals))->toBe('Zacatecas');
-    expect($totals['Zacatecas'])->toBe(2);
-    expect($totals['Jalisco'])->toBe(1);
+    expect($asistieron[$asistio->folio])->toBe('Sí');
 });
 
-test('PU22 - rechaza la exportación por estado sin autenticación', function () {
-    $response = $this->getJson('/api/v1/reports/state');
+test('PU27 - rechaza la exportación de asistencia sin autenticación', function () {
+    $response = $this->getJson('/api/v1/reports/attendance');
 
     $response->assertUnauthorized();
 });

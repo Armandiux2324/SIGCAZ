@@ -8,6 +8,7 @@ use App\Models\Register;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class StatsController extends Controller
@@ -83,7 +84,11 @@ class StatsController extends Controller
     public function byYear(): JsonResponse
     {
         try {
-            $data = Register::selectRaw('YEAR(created_at) as year, COUNT(*) as total')->groupBy('year')->orderBy('year')->get();
+            $yearExpression = DB::connection()->getDriverName() === 'sqlite'
+                ? "CAST(strftime('%Y', created_at) AS INTEGER)"
+                : 'YEAR(created_at)';
+
+            $data = Register::selectRaw("{$yearExpression} as year, COUNT(*) as total")->groupBy('year')->orderBy('year')->get();
 
             return response()->json([
                 'data' => [
@@ -166,7 +171,8 @@ class StatsController extends Controller
     {
         $rows = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
             ->when($year, fn ($q) => $q->whereYear('registers.created_at', $year))
-            ->selectRaw('registers.group, COUNT(participants.id) as total')
+            ->select('registers.group')
+            ->selectRaw('COUNT(participants.id) as total')
             ->groupBy('registers.group')->orderBy('total', 'desc')->get();
 
         return [$rows->pluck('group')->all(), $rows->pluck('total')->all()];
