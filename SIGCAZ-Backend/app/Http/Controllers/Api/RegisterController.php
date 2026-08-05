@@ -255,8 +255,12 @@ class RegisterController extends Controller
                 ], 422);
             }
 
+            $fullNameExpression = DB::connection()->getDriverName() === 'sqlite'
+                ? "(first_name || ' ' || last_name)"
+                : "CONCAT(first_name, ' ', last_name)";
+
             $participant = Participant::where('folio', 'LIKE', "%{$query}%")->orWhere('first_name', 'LIKE', "%{$query}%")
-                ->orWhere('last_name', 'LIKE', "%{$query}%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
+                ->orWhere('last_name', 'LIKE', "%{$query}%")->orWhereRaw("{$fullNameExpression} LIKE ?", ["%{$query}%"])
                 ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('phone', 'LIKE', "%{$query}%")->first();
 
             if (! $participant) {

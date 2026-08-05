@@ -45,7 +45,11 @@ function createGroupRegisterForPU17(string $suffix = 'a'): Register
         ],
     ])->assertCreated();
 
-    return Register::with('participants')->latest()->first();
+    // Se ordena por id (no por created_at) porque dos registros creados en el
+    // mismo segundo pueden empatar en created_at (timestamps de precisión de
+    // segundo), lo que haría que latest()->first() devuelva el registro
+    // equivocado de forma intermitente.
+    return Register::with('participants')->latest('id')->first();
 }
 
 beforeEach(function () {

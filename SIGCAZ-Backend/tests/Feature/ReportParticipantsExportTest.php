@@ -90,7 +90,7 @@ test('PU19 - filtra el reporte de participantes por año cuando se envía el par
 });
 
 test('PU19 - rechaza la exportación de reportes sin autenticación', function () {
-    $response = $this->get('/api/v1/reports/participants');
+    $response = $this->getJson('/api/v1/reports/participants');
 
     $response->assertUnauthorized();
 });

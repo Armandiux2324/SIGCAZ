@@ -70,7 +70,7 @@ test('PU21 - exporta el reporte de participantes agrupados por talla, ordenado d
 });
 
 test('PU21 - rechaza la exportación por talla sin autenticación', function () {
-    $response = $this->get('/api/v1/reports/shirt-size');
+    $response = $this->getJson('/api/v1/reports/shirt-size');
 
     $response->assertUnauthorized();
 });
