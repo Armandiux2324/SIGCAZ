@@ -260,9 +260,8 @@ class ReportController extends Controller
         $year = $request->query('year');
 
         $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
-            ->selectRaw('registers.group, COUNT(participants.id) as total')
-            ->groupBy('registers.group')->orderBy('total', 'desc')->get();
+            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))->select('registers.group')
+            ->selectRaw('COUNT(participants.id) as total')->groupBy('registers.group')->orderBy('total', 'desc')->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -297,10 +296,8 @@ class ReportController extends Controller
             'family_or_friends' => 'Casa de familiares o amigos',
         ];
 
-        $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')
-            ->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
-            ->selectRaw('registers.accommodation_type, COUNT(participants.id) as total')
-            ->groupBy('registers.accommodation_type')->orderBy('total', 'desc')->get();
+        $data = Participant::join('registers', 'participants.register_id', '=', 'registers.id')->when($year, fn($q) => $q->whereYear('registers.created_at', $year))
+            ->selectRaw('registers.accommodation_type, COUNT(participants.id) as total')->groupBy('registers.accommodation_type')->orderBy('total', 'desc')->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

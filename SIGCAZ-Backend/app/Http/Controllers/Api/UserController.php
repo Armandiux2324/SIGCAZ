@@ -167,7 +167,7 @@ class UserController extends Controller
         try {
             $email = $request->string('email')->trim()->lower();
 
-            if (! $email) {
+            if ($email->isEmpty()) {
                 return response()->json([
                     'message' => 'El parámetro email es requerido.',
                 ], 422);

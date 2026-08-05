@@ -249,14 +249,18 @@ class RegisterController extends Controller
         try {
             $query = $request->string('q')->trim();
 
-            if (! $query) {
+            if ($query->isEmpty()) {
                 return response()->json([
                     'message' => 'El parámetro de búsqueda es requerido.',
                 ], 422);
             }
 
+            $fullNameExpression = DB::connection()->getDriverName() === 'sqlite'
+                ? "(first_name || ' ' || last_name)"
+                : "CONCAT(first_name, ' ', last_name)";
+
             $participant = Participant::where('folio', 'LIKE', "%{$query}%")->orWhere('first_name', 'LIKE', "%{$query}%")
-                ->orWhere('last_name', 'LIKE', "%{$query}%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
+                ->orWhere('last_name', 'LIKE', "%{$query}%")->orWhereRaw("{$fullNameExpression} LIKE ?", ["%{$query}%"])
                 ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('phone', 'LIKE', "%{$query}%")->first();
 
             if (! $participant) {
@@ -290,8 +294,8 @@ class RegisterController extends Controller
             ], 404);
         }
 
-        $pdf = $pdfService->buildForRegister($participant->register);
+        $pdf = $pdfService->build($participant);
 
-        return $pdf->download("comprobante-registro-{$participant->register_id}.pdf");
+        return $pdf->download("comprobante-{$participant->folio}.pdf");
     }
 }
