@@ -88,9 +88,9 @@
               </div>
             </div>
 
-            <div class="form-individual" *ngIf="f['is_first_time'].value === true">
+            <div class="form-individual" *ngIf="f['is_first_time'].value === false">
               <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-              <input type="number" min="0" formControlName="participation_count">
+              <input type="number" min="1" formControlName="participation_count">
               <span class="error" *ngIf="f['participation_count'].invalid && f['participation_count'].touched">Campo requerido</span>
             </div>
 
@@ -190,9 +190,9 @@
                   </div>
                 </div>
 
-                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === true">
+                <div class="form-individual" *ngIf="getParticipantControls(i)['is_first_time'].value === false">
                   <label>NÚMERO DE PARTICIPACIONES PREVIAS</label>
-                  <input type="number" min="0" formControlName="participation_count">
+                  <input type="number" min="1" formControlName="participation_count">
                   <span class="error" *ngIf="getParticipantControls(i)['participation_count'].invalid && getParticipantControls(i)['participation_count'].touched">Campo requerido</span>
                 </div>
 
@@ -234,13 +234,10 @@
             </select>
             <span class="error" *ngIf="f['state'].invalid && f['state'].touched">Campo requerido</span>
           </div>
- 
+
           <div class="form-individual">
             <label>MUNICIPIO</label>
-            <select formControlName="municipality" [disabled]="!f['state'].value">
-              <option value="">{{ f['state'].value ? 'Seleccione...' : 'Primero elija un estado' }}</option>
-              <option *ngFor="let m of municipalities" [value]="m">{{ m }}</option>
-            </select>
+            <input type="text" formControlName="municipality" placeholder="Ej. Guadalupe">
             <span class="error" *ngIf="f['municipality'].invalid && f['municipality'].touched">Campo requerido</span>
           </div>
         </div>
@@ -361,17 +358,19 @@
               <i *ngIf="!participant.qrUrl" class="bi bi-qr-code-scan"></i>
             </div>
 
-            <div class="form-individual">
-              <label>Folio de registro</label>
-              <p class="folio-code">{{ participant.folio }}</p>
-            </div>
-            <div class="form-individual">
-              <label><i class="bi bi-person"></i> Participante</label>
-              <p>{{ participant.name }}</p>
-            </div>
-            <div class="form-individual">
-              <label><i class="bi bi-envelope"></i> Correo</label>
-              <p>{{ participant.email }}</p>
+            <div class="folio-card-details">
+              <div class="form-individual">
+                <label>Folio de registro</label>
+                <p class="folio-code">{{ participant.folio }}</p>
+              </div>
+              <div class="form-individual">
+                <label><i class="bi bi-person"></i> Participante</label>
+                <p>{{ participant.name }}</p>
+              </div>
+              <div class="form-individual">
+                <label><i class="bi bi-envelope"></i> Correo</label>
+                <p>{{ participant.email }}</p>
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../data/mexico-estados';
 
 @Component({
   selector: 'app-register',
@@ -20,9 +19,7 @@ export class RegisterComponent implements OnInit {
   registrationType: 'individual' | 'group' = 'individual';
   activeParticipantIndex = 0;
 
-  // ====== Estado de confirmación de registro ======
-  // Controla si se muestra el formulario o la pantalla de confirmación,
-  // ambos dentro del mismo RegisterComponent (sin nueva ruta/componente).
+
   registrationComplete = false;
   registrationResult: any = null;
   lastSubmissionType: 'individual' | 'group' = 'individual';
@@ -30,10 +27,13 @@ export class RegisterComponent implements OnInit {
 
   @ViewChildren('tabRef') tabRefs!: QueryList<ElementRef<HTMLButtonElement>>;
 
-  states: string[] = ESTADOS;
-
-  // Municipios disponibles según el estado seleccionado
-  municipalities: string[] = [];
+  states: string[] = [
+    'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
+    'Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato',
+    'Guerrero','Hidalgo','Jalisco','Estado de México','Michoacán','Morelos','Nayarit',
+    'Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí',
+    'Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas',
+  ];
 
   constructor(private api: ApiService, private fb: FormBuilder) {}
 
@@ -60,15 +60,10 @@ export class RegisterComponent implements OnInit {
       gender: ['', Validators.required],
       shirt_size: ['', Validators.required],
       is_first_time: [true, Validators.required],
-      participation_count: [0],
+      participation_count: [0, [Validators.min(1)]],
       travel_companions_count: [0, [Validators.required, Validators.min(0)]],
 
       participants: this.fb.array([this.createParticipant(), this.createParticipant()]),
-    });
-
-    this.registerForm.get('state')?.valueChanges.subscribe((estado: string) => {
-      this.municipalities = ESTADOS_MUNICIPIOS[estado] ?? [];
-      this.registerForm.get('municipality')?.setValue('');
     });
   }
 
@@ -81,7 +76,7 @@ export class RegisterComponent implements OnInit {
       gender: ['', Validators.required],
       shirt_size: ['', Validators.required],
       is_first_time: [true, Validators.required],
-      participation_count: [0],
+      participation_count: [0, [Validators.min(1)]],
       travel_companions_count: [0, [Validators.required, Validators.min(0)]],
     });
   }
@@ -265,8 +260,6 @@ export class RegisterComponent implements OnInit {
           participationCount: m.is_first_time ? 0 : Number(m.participation_count),
         }));
 
-    // Guardamos el tipo y la cantidad enviados, ya que resetForm() reinicia
-    // registrationType y el formulario en cuanto el registro se confirma.
     this.lastSubmissionType = this.registrationType;
     this.lastSubmissionCount = members.length;
 
@@ -284,6 +277,7 @@ export class RegisterComponent implements OnInit {
       f.folio_delivery_method,
       members,
     ).then((res: any) => {
+ 
       this.registrationResult = res?.data?.data ?? res?.data ?? null;
       this.registrationComplete = true;
 
@@ -306,23 +300,18 @@ export class RegisterComponent implements OnInit {
     this.buildForm();
   }
 
-  /** Vuelve a mostrar el formulario inicial sin recargar la página. */
   startNewRegistration(): void {
     this.registrationComplete = false;
     this.registrationResult = null;
   }
 
-  /**
-   * Reutiliza exactamente la misma lógica que el módulo "Consulta de Registro":
-   * this.api.getReceiptUrl(folio, email) + window.open. Sin segunda implementación.
-   */
+
   downloadReceipt(folio: string, email: string): void {
     if (!folio || folio === '—') return;
     const url = this.api.getReceiptUrl(folio, email);
     window.open(url, '_blank');
   }
 
-  // ====== Datos derivados para la pantalla de confirmación ======
   get resultFolio(): string {
     return this.registrationResult?.folio
       ?? this.registrationResult?.participants?.[0]?.folio
@@ -355,11 +344,7 @@ export class RegisterComponent implements OnInit {
     return this.lastSubmissionType === 'group';
   }
 
-  /**
-   * Folios individuales para la vista grupal (una tarjeta por participante).
-   * Si el backend no regresa el arreglo `participants`, se cae de vuelta a
-   * un solo resultado (mismo comportamiento que el registro individual).
-   */
+
   get resultParticipants(): Array<{ folio: string; name: string; email: string; qrUrl: string | null }> {
     const participants = this.registrationResult?.participants;
 

@@ -1,9 +1,11 @@
 <div class="login-wrapper">
 
-  <div class="container">
+  <div class="login-container">
 
     <div class="left">
-      <img src="logo.png" class="logo">
+      <div class="logo-wrapper">
+        <img src="logo.png" class="logo">
+      </div>
     </div>
 
 
@@ -12,7 +14,7 @@
       <h2>INICIAR SESIÓN</h2>
       <p>Ingresa tu correo electrónico y contraseña para iniciar sesión.</p>
 
-      <div class="form">
+      <div class="form" [class.shake]="loginError" [class.success]="loginSuccess">
 
         <div class="input-group">
           <label>Correo Electrónico</label>
@@ -21,11 +23,20 @@
 
         <div class="input-group">
           <label>Contraseña</label>
-          <input type="text" [(ngModel)]="password" placeholder="********">
+
+          <div class="password-shell" [class.has-error]="loginError">
+            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" placeholder="********">
+
+            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
+            </button>
+          </div>
         </div>
 
-        <button (click)="login()">
-          {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        <button [class.success]="loginSuccess" [disabled]="loading || loginSuccess" (click)="login()">
+          <i class="bi bi-check-circle-fill" *ngIf="loginSuccess"></i>
+          {{ loginSuccess ? '¡Bienvenido!' : (loading ? 'Iniciando sesión...' : 'Iniciar Sesión') }}
         </button>
 
           <button class="bbtn-back" (click)="backToHome()">
@@ -49,6 +60,3 @@
 
 
 </div>
-
-
-
