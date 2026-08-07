@@ -18,7 +18,7 @@ test('PU31 - el Administrador actualiza la dirección, fecha e imagen del evento
     $response = $this->putJson('/api/v1/settings', [
         'event_address' => 'Plaza de Armas, Zacatecas, Zac.',
         'event_date' => '2026-11-15 10:00:00',
-        'event_image' => UploadedFile::fake()->image('evento.jpg'),
+        'event_image' => UploadedFile::fake()->create('evento.jpg', 100, 'image/jpeg'),
     ]);
 
     $response->assertOk()
@@ -46,7 +46,7 @@ test('PU31 - al subir una nueva imagen, elimina la anterior del storage', functi
     $this->putJson('/api/v1/settings', [
         'event_address' => 'Dirección inicial',
         'event_date' => '2026-10-01 09:00:00',
-        'event_image' => UploadedFile::fake()->image('primera.jpg'),
+        'event_image' => UploadedFile::fake()->create('primera.jpg', 100, 'image/jpeg'),
     ])->assertOk();
 
     $primeraRuta = Settings::first()->event_image_path;
@@ -55,7 +55,7 @@ test('PU31 - al subir una nueva imagen, elimina la anterior del storage', functi
     $this->putJson('/api/v1/settings', [
         'event_address' => 'Dirección actualizada',
         'event_date' => '2026-10-02 09:00:00',
-        'event_image' => UploadedFile::fake()->image('segunda.jpg'),
+        'event_image' => UploadedFile::fake()->create('segunda.jpg', 100, 'image/jpeg'),
     ])->assertOk();
 
     $segundaRuta = Settings::first()->event_image_path;
@@ -74,8 +74,7 @@ test('PU31 - se puede actualizar la dirección y fecha sin enviar una nueva imag
         'event_date' => '2026-12-01 08:00:00',
     ]);
 
-    $response->assertOk()
-        ->assertJsonPath('data.event_address', 'Solo texto, sin imagen');
+    $response->assertOk()->assertJsonPath('data.event_address', 'Solo texto, sin imagen');
 });
 
 test('PU31 - rechaza la actualización cuando faltan campos requeridos', function () {

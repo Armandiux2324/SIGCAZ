@@ -60,15 +60,29 @@ export class RegisterComponent implements OnInit {
       gender: ['', Validators.required],
       shirt_size: ['', Validators.required],
       is_first_time: [true, Validators.required],
-      participation_count: [0, [Validators.min(1)]],
+      participation_count: [0],
       travel_companions_count: [0, [Validators.required, Validators.min(0)]],
 
       participants: this.fb.array([this.createParticipant(), this.createParticipant()]),
     });
+
+    this.toggleParticipationCountValidator(this.registerForm);
+    this.registerForm.get('is_first_time')?.valueChanges.subscribe(() =>
+      this.toggleParticipationCountValidator(this.registerForm)
+    );
+  }
+
+  // participation_count solo aplica (y solo es visible) cuando is_first_time es false
+  private toggleParticipationCountValidator(group: FormGroup): void {
+    const control = group.get('participation_count');
+    const isFirstTime = group.get('is_first_time')?.value === true;
+
+    control?.setValidators(isFirstTime ? [] : [Validators.required, Validators.min(1)]);
+    control?.updateValueAndValidity();
   }
 
   createParticipant(): FormGroup {
-    return this.fb.group({
+    const group = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -76,9 +90,14 @@ export class RegisterComponent implements OnInit {
       gender: ['', Validators.required],
       shirt_size: ['', Validators.required],
       is_first_time: [true, Validators.required],
-      participation_count: [0, [Validators.min(1)]],
+      participation_count: [0],
       travel_companions_count: [0, [Validators.required, Validators.min(0)]],
     });
+
+    this.toggleParticipationCountValidator(group);
+    group.get('is_first_time')?.valueChanges.subscribe(() => this.toggleParticipationCountValidator(group));
+
+    return group;
   }
 
   get participants(): FormArray {
