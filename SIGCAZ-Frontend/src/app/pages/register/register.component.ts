@@ -353,7 +353,11 @@ export class RegisterComponent implements OnInit {
   }
 
   get resultQrUrl(): string | null {
-    return this.registrationResult?.qr_url ?? this.registrationResult?.qr_code ?? null;
+    return this.registrationResult?.qr_url
+      ?? this.registrationResult?.qr_code
+      ?? this.registrationResult?.participants?.[0]?.qr_url
+      ?? this.registrationResult?.participants?.[0]?.qr_code
+      ?? null;
   }
 
   get resultTypeLabel(): string {

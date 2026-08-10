@@ -365,8 +365,10 @@
     <div class="qr-participant">
       <div class="qr-participant__code">
         <div class="qr-image">
-          <i class="bi bi-qr-code"></i>
+          <img *ngIf="p.qrUrl" [src]="p.qrUrl" [alt]="'QR ' + p.folio" class="qr-image__img">
+          <i *ngIf="!p.qrUrl" class="bi bi-qr-code"></i>
         </div>
+        <p class="qr-hint qr-hint__folio">{{ p.folio }}</p>
         <p class="qr-hint"><i class="bi bi-shield-check"></i> Este código será utilizado para el control de acceso y asistencia.</p>
       </div>
 
@@ -415,7 +417,6 @@
   </div>
 
   <div class="modal-footer">
-    <button class="btn-cancel" (click)="closeQrModal()">Cerrar</button>
     <button class="btn-confirm" [disabled]="!activeQrParticipant?.folio || activeQrParticipant?.folio === '—'" (click)="downloadReceipt()">
       <i class="bi bi-download"></i> Descargar comprobante
     </button>

@@ -32,6 +32,8 @@ class Participant extends Model
         'attended_at' => 'datetime',
     ];
 
+    protected $appends = ['qr_url'];
+
     public function register()
     {
         return $this->belongsTo(Register::class);
@@ -50,5 +52,10 @@ class Participant extends Model
     public function getIsFirstTimeLabelAttribute(): string
     {
         return $this->is_first_time ? 'Sí' : 'No';
+    }
+
+    public function getQrUrlAttribute(): ?string
+    {
+        return $this->qr_path ? asset('storage/'.$this->qr_path) : null;
     }
 }
