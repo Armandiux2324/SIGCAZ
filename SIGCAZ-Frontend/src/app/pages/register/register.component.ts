@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../data/mexico-estados';
 
 @Component({
   selector: 'app-register',
@@ -27,18 +28,18 @@ export class RegisterComponent implements OnInit {
 
   @ViewChildren('tabRef') tabRefs!: QueryList<ElementRef<HTMLButtonElement>>;
 
-  states: string[] = [
-    'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
-    'Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato',
-    'Guerrero','Hidalgo','Jalisco','Estado de México','Michoacán','Morelos','Nayarit',
-    'Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí',
-    'Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas',
-  ];
+  states: string[] = ESTADOS;
+
+  municipalities: string[] = [];
 
   constructor(private api: ApiService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.buildForm();
+    this.registerForm.get('state')!.valueChanges.subscribe((state: string) => {
+      this.municipalities = ESTADOS_MUNICIPIOS[state] ?? [];
+      this.registerForm.get('municipality')!.setValue('');
+    });
   }
 
   buildForm(): void {
@@ -214,8 +215,8 @@ export class RegisterComponent implements OnInit {
     const map: Record<string, string> = {
       'Airbnb': 'airbnb',
       'Hotel': 'hotel',
-      'Hostal': 'own_home',
-      'Casa Propia / Familiar': 'family_or_friends',
+      'Casa Propia': 'own_home',
+      'Casa de Familiares o Amigos': 'family_or_friends',
     };
     return map[val] ?? val;
   }
