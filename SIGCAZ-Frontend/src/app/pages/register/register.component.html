@@ -235,9 +235,12 @@
             <span class="error" *ngIf="f['state'].invalid && f['state'].touched">Campo requerido</span>
           </div>
 
-          <div class="form-individual">
+           <div class="form-individual">
             <label>MUNICIPIO</label>
-            <input type="text" formControlName="municipality" placeholder="Ej. Guadalupe">
+            <select formControlName="municipality" [disabled]="!f['state'].value">
+              <option value="">{{ f['state'].value ? 'Seleccione...' : 'Primero elija un estado' }}</option>
+              <option *ngFor="let m of municipalities" [value]="m">{{ m }}</option>
+            </select>
             <span class="error" *ngIf="f['municipality'].invalid && f['municipality'].touched">Campo requerido</span>
           </div>
         </div>
@@ -249,8 +252,8 @@
               <option value="">Seleccione...</option>
               <option value="Airbnb">Airbnb</option>
               <option value="Hotel">Hotel</option>
-              <option value="Hostal">Hostal</option>
-              <option value="Casa Propia / Familiar">Casa Propia / Familiar</option>
+              <option value="Casa Propia">Casa Propia</option>
+              <option value="Casa de Familiares o Amigos">Casa de Familiares o Amigos</option>
             </select>
             <span class="error" *ngIf="f['accommodation_type'].invalid && f['accommodation_type'].touched">Campo requerido</span>
           </div>
@@ -269,7 +272,7 @@
 
         <div class="row">
           <div class="form-individual">
-            <label>TRANSPORTE QUE USARÁS</label>
+            <label>TRANSPORTE QUE USARÁN</label>
             <select formControlName="transport_method">
               <option value="">Seleccione...</option>
               <option value="Automóvil">Automóvil</option>
