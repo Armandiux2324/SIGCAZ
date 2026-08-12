@@ -68,6 +68,7 @@ export interface RegistroAsistencia {
   nombre:    string;
   matricula: string;   // folio
   talla:     string;
+  genero:    string;
   fecha:     string;   // formateada "dd/mm/yyyy"
   hora:      string;   // formateada "HH:MM"
 }
@@ -122,6 +123,7 @@ export class AsistenciaService {
       nombre:    `${item.participant.first_name} ${item.participant.last_name}`,
       matricula: item.participant.folio,
       talla:     item.participant.shirt_size,
+      genero:    item.participant.gender,
       fecha:     fecha.toLocaleDateString('es-MX'),
       hora:      fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
     };
@@ -137,6 +139,7 @@ export class AsistenciaService {
       nombre:    `${res.data.first_name} ${res.data.last_name}`,
       matricula: res.data.folio,
       talla:     res.data.shirt_size,
+      genero:   res.data.gender,
       fecha:     ahora.toLocaleDateString('es-MX'),
       hora:      ahora.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
     };

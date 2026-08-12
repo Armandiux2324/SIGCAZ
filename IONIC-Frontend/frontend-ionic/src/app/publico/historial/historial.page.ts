@@ -89,8 +89,7 @@ export class HistorialPage implements OnInit, OnDestroy {
         this.paginacion = res.data;
 
         // Mapear cada ScanItem al RegistroAsistencia que usa el template
-        this.registrosPagina = res.data.data
-          .map(item => this.asistenciaService.mapearRegistro(item));
+        this.registrosPagina = res.data.data.map(item => this.asistenciaService.mapearRegistro(item));
       },
       error: (err) => {
         this.cargando = false;
@@ -151,20 +150,5 @@ export class HistorialPage implements OnInit, OnDestroy {
   // ── trackBy para performance ──────────────────────────────────────────────
   trackById(_index: number, item: RegistroAsistencia): string {
     return item.id;
-  }
-
-  // ── Exportar CSV con los registros de la página/filtro actual ─────────────
-  exportarDatos(): void {
-    const cabecera = 'Nombre,Folio,Talla,Fecha,Hora\n';
-    const filas = this.registrosPagina
-      .map(r => `${r.nombre},${r.matricula},${r.talla},${r.fecha},${r.hora}`)
-      .join('\n');
-    const blob = new Blob([cabecera + filas], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `asistencia_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 }

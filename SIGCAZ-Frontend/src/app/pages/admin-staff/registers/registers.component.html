@@ -102,6 +102,7 @@
       <div class="field">
         <label>Tipo de hospedaje</label>
         <select [(ngModel)]="dataToAdd.accommodation_type">
+          <option value="">Seleccione...</option>
           <option *ngFor="let a of accommodationOptions" [value]="a.value">{{ a.label }}</option>
         </select>
       </div>

@@ -9,11 +9,6 @@
       <ion-icon name="list-outline" class="title-icon"></ion-icon>
       Historial de Asistencia
     </ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="exportarDatos()">
-        <ion-icon name="download-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -25,62 +20,9 @@
       <ion-icon name="people-outline"></ion-icon>
       <div>
         <span class="stat-num">{{ totalRegistros }}</span>
-        <span class="stat-label">Total</span>
+        <span class="stat-label">Asistencias Totales</span>
       </div>
     </div>
-    <div class="stat-chip">
-      <ion-icon name="today-outline"></ion-icon>
-      <div>
-        <span class="stat-num">{{ registrosHoy }}</span>
-        <span class="stat-label">Hoy</span>
-      </div>
-    </div>
-    <div class="stat-chip">
-      <ion-icon name="checkmark-done-outline"></ion-icon>
-      <div>
-        <span class="stat-num">{{ paginaActual }}/{{ totalPaginas }}</span>
-        <span class="stat-label">Página</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── FILTROS ── -->
-  <div class="filtros-card">
-
-    <div class="search-wrapper">
-      <ion-icon name="search-outline" class="search-icon"></ion-icon>
-      <ion-input
-        placeholder="Buscar registro…"
-        [(ngModel)]="terminoBusqueda"
-        (ionInput)="onBusqueda()"
-        class="search-input"
-        clearInput="true">
-      </ion-input>
-    </div>
-
-    <div class="fecha-row">
-      <ion-label class="fecha-label">
-        <ion-icon name="calendar-outline"></ion-icon>
-        Filtrar por fecha
-      </ion-label>
-      <ion-datetime-button datetime="filtroFecha" class="fecha-btn"></ion-datetime-button>
-      <ion-modal [keepContentsMounted]="true">
-        <ng-template>
-          <ion-datetime
-            id="filtroFecha"
-            presentation="date"
-            locale="es-MX"
-            [(ngModel)]="fechaFiltro"
-            (ionChange)="onFechaChange()"
-            [max]="hoy">
-          </ion-datetime>
-        </ng-template>
-      </ion-modal>
-      <ion-button fill="clear" size="small" *ngIf="fechaFiltro" (click)="limpiarFecha()" class="clear-fecha">
-        <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </div>
-
   </div>
 
   <!-- ── LOADING ── -->
@@ -128,6 +70,9 @@
             </ion-badge>
             <ion-badge color="light" class="badge-talla">
               Talla: {{ r.talla }}
+            </ion-badge>
+            <ion-badge color="light" class="badge-talla">
+              Género: {{ r.genero }}
             </ion-badge>
           </div>
         </div>
