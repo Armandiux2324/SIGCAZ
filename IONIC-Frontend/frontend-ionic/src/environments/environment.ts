@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url: 'https://labs-civic-shareholders-never.trycloudflare.com/api/v1'
+  base_url: 'http://localhost:8000/api/v1'
 };
 
 /*
