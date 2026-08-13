@@ -102,23 +102,6 @@ export class HistorialPage implements OnInit, OnDestroy {
     });
   }
 
-  // ── Búsqueda con debounce ─────────────────────────────────────────────────
-  onBusqueda(): void {
-    this.busqueda$.next(this.terminoBusqueda);
-  }
-
-  // ── Filtro por fecha ──────────────────────────────────────────────────────
-  onFechaChange(): void {
-    this.paginaActual = 1;
-    this.cargarHistorial();
-  }
-
-  limpiarFecha(): void {
-    this.fechaFiltro  = null;
-    this.paginaActual = 1;
-    this.cargarHistorial();
-  }
-
   // ── Paginación — usa prev/next de Laravel, no cálculo local ──────────────
   cambiarPagina(pagina: number): void {
     if (pagina < 1 || pagina > this.totalPaginas) return;

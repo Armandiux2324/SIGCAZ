@@ -365,11 +365,13 @@ ion-header ion-toolbar {
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--color-primary);
+  text-decoration: underline;
 }
 
 .fecha {
   font-size: 0.72rem;
   color: var(--color-text-muted);
+  text-decoration: underline;
 }
 
 
