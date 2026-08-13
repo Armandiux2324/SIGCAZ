@@ -52,34 +52,23 @@
     </div>
 
     <!-- Registros -->
-    <div class="asistencia-list" *ngIf="registrosPagina.length > 0">
-      <div class="asistencia-item" *ngFor="let r of registrosPagina; trackBy: trackById">
+    <div class="registro-list" *ngIf="registrosPagina.length > 0">
+      <div class="registro-card" *ngFor="let r of registrosPagina; trackBy: trackById">
 
-        <div class="item-left">
-          <div class="avatar-circle">
-            {{ r.nombre | slice:0:1 }}
-          </div>
+        <div class="registro-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
         </div>
 
-        <div class="item-center">
-          <span class="item-nombre">{{ r.nombre }}</span>
-          <div class="item-meta-row">
-            <ion-badge color="light" class="badge-matricula">
-              <ion-icon name="card-outline"></ion-icon>
-              {{ r.matricula }}
-            </ion-badge>
-            <ion-badge color="light" class="badge-talla">
-              Talla: {{ r.talla }}
-            </ion-badge>
-            <ion-badge color="light" class="badge-talla">
-              Género: {{ r.genero }}
-            </ion-badge>
-          </div>
+        <div class="registro-info">
+          <span class="registro-nombre">{{ r.nombre }}</span>
+          <span class="registro-meta">Folio: {{ r.matricula }}</span>
+          <span class="registro-meta">Talla: {{ r.talla }}</span>
+          <span class="registro-meta">Género: {{ r.genero }}</span>
         </div>
 
-        <div class="item-right">
-          <span class="item-hora">{{ r.hora }}</span>
-          <span class="item-fecha">{{ r.fecha }}</span>
+        <div class="registro-tiempo">
+          <span class="hora">{{ r.hora }}</span>
+          <span class="fecha">{{ r.fecha }}</span>
         </div>
 
       </div>
@@ -114,10 +103,5 @@
     </ion-button>
 
   </div>
-
-  <!-- Contador — usa totalRegistros que viene de la paginación de Laravel -->
-  <p class="resultado-info" *ngIf="!cargando && totalRegistros > 0">
-    Mostrando {{ rangoDesde }}–{{ rangoHasta }} de {{ totalRegistros }} registros
-  </p>
 
 </ion-content>
