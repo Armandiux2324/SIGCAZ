@@ -34,7 +34,7 @@ class UpdateRegisterRequest extends FormRequest
             'participants.*.id' => ['nullable', 'integer'],
             'participants.*.first_name' => ['required_with:participants', 'string', 'max:255'],
             'participants.*.last_name' => ['required_with:participants', 'string', 'max:255'],
-            'participants.*.phone' => ['required_with:participants', 'string', 'max:20'],
+            'participants.*.phone' => ['required_with:participants', 'string', 'regex:/^\d{10}$/'],
             'participants.*.email' => ['required_with:participants', 'email', 'max:255'],
             'participants.*.gender' => ['required_with:participants', 'in:male,female'],
             'participants.*.shirt_size' => ['required_with:participants', 'string', 'max:10'],

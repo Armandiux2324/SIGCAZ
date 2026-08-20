@@ -161,7 +161,7 @@
           </div>
           <div class="field">
             <label>Teléfono</label>
-            <input type="text" [(ngModel)]="p.phone">
+            <input type="tel" inputmode="numeric" maxlength="10" [(ngModel)]="p.phone" (input)="sanitizePhoneInput($event, p)">
           </div>
         </div>
 
@@ -303,7 +303,7 @@
           </div>
           <div class="field">
             <label>Teléfono</label>
-            <input type="text" [(ngModel)]="p.phone">
+             <input type="tel" inputmode="numeric" maxlength="10" [(ngModel)]="p.phone" (input)="sanitizePhoneInput($event, p)">
           </div>
         </div>
 

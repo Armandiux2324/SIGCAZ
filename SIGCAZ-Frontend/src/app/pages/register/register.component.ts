@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ESTADOS, ESTADOS_MUNICIPIOS } from '../../data/mexico-estados';
 
 @Component({
@@ -167,6 +167,15 @@ export class RegisterComponent implements OnInit {
 
   get f() {
     return this.registerForm.controls;
+  }
+
+  /** Deja solo dígitos en el campo de teléfono, sin importar si se escribe o se pega. */
+  sanitizePhoneInput(event: Event, control: AbstractControl): void {
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/\D/g, '').slice(0, 10);
+    if (digitsOnly !== input.value) {
+      control.setValue(digitsOnly);
+    }
   }
 
   private page1Fields = [

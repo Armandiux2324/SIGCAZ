@@ -262,6 +262,16 @@ export class RegistersComponent implements OnInit {
     this.showEditModal = false;
   }
 
+  /** Deja solo dígitos en el campo de teléfono (máx. 10), sin importar si se escribe o se pega. */
+  sanitizePhoneInput(event: Event, participant: any): void {
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/\D/g, '').slice(0, 10);
+    participant.phone = digitsOnly;
+    if (input.value !== digitsOnly) {
+      input.value = digitsOnly;
+    }
+  }
+
   editRegister(): void {
     this.saving = true;
     const id = this.dataToEdit.id;
