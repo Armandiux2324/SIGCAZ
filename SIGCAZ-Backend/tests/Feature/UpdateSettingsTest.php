@@ -6,11 +6,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 
-// PU31 - Validar la actualización de la fecha, imagen y dirección del evento.
+// PU32 - Validar la actualización de la fecha, imagen y dirección del evento.
 // Requerimiento relacionado: RFA-017/RFA-018/RFA-019
 // Diseño relacionado: D22
 
-test('PU31 - el Administrador actualiza la dirección, fecha e imagen del evento', function () {
+test('PU32 - el Administrador actualiza la dirección, fecha e imagen del evento', function () {
     Storage::fake('public');
     $admin = User::factory()->create(['role' => 'admin']);
     Sanctum::actingAs($admin);
@@ -38,7 +38,7 @@ test('PU31 - el Administrador actualiza la dirección, fecha e imagen del evento
     Storage::disk('public')->assertExists($settings->event_image_path);
 });
 
-test('PU31 - al subir una nueva imagen, elimina la anterior del storage', function () {
+test('PU32 - al subir una nueva imagen, elimina la anterior del storage', function () {
     Storage::fake('public');
     $admin = User::factory()->create(['role' => 'admin']);
     Sanctum::actingAs($admin);
@@ -64,7 +64,7 @@ test('PU31 - al subir una nueva imagen, elimina la anterior del storage', functi
     Storage::disk('public')->assertExists($segundaRuta);
 });
 
-test('PU31 - se puede actualizar la dirección y fecha sin enviar una nueva imagen', function () {
+test('PU32 - se puede actualizar la dirección y fecha sin enviar una nueva imagen', function () {
     Storage::fake('public');
     $admin = User::factory()->create(['role' => 'admin']);
     Sanctum::actingAs($admin);
@@ -77,7 +77,7 @@ test('PU31 - se puede actualizar la dirección y fecha sin enviar una nueva imag
     $response->assertOk()->assertJsonPath('data.event_address', 'Solo texto, sin imagen');
 });
 
-test('PU31 - rechaza la actualización cuando faltan campos requeridos', function () {
+test('PU32 - rechaza la actualización cuando faltan campos requeridos', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     Sanctum::actingAs($admin);
 
@@ -86,7 +86,7 @@ test('PU31 - rechaza la actualización cuando faltan campos requeridos', functio
     $response->assertUnprocessable()->assertJsonValidationErrors(['event_address', 'event_date']);
 });
 
-test('PU31 - rechaza la actualización cuando el archivo de imagen no es una imagen válida', function () {
+test('PU32 - rechaza la actualización cuando el archivo de imagen no es una imagen válida', function () {
     Storage::fake('public');
     $admin = User::factory()->create(['role' => 'admin']);
     Sanctum::actingAs($admin);
@@ -100,7 +100,7 @@ test('PU31 - rechaza la actualización cuando el archivo de imagen no es una ima
     $response->assertUnprocessable()->assertJsonValidationErrors(['event_image']);
 });
 
-test('PU31 - rechaza la actualización cuando la solicita un usuario con rol Personal', function () {
+test('PU32 - rechaza la actualización cuando la solicita un usuario con rol Personal', function () {
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
 
@@ -112,7 +112,7 @@ test('PU31 - rechaza la actualización cuando la solicita un usuario con rol Per
     $response->assertForbidden();
 });
 
-test('PU31 - rechaza la actualización sin autenticación', function () {
+test('PU32 - rechaza la actualización sin autenticación', function () {
     $response = $this->putJson('/api/v1/settings', [
         'event_address' => 'Sin sesión',
         'event_date' => '2026-12-01 08:00:00',

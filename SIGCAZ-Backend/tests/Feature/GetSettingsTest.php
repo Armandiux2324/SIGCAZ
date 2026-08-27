@@ -2,11 +2,11 @@
 
 use App\Models\Settings;
 
-// PU32 - Validar la consulta de la configuración vigente del evento.
+// PU31 - Validar la consulta de la configuración vigente del evento.
 // Requerimiento relacionado: RFA-016
 // Diseño relacionado: D21
 
-test('PU32 - obtiene la dirección, fecha, hora e imagen configuradas del evento', function () {
+test('PU31 - obtiene la dirección, fecha, hora e imagen configuradas del evento', function () {
     $settings = Settings::first();
     $settings->update([
         'event_address' => 'Plaza de Armas, Zacatecas, Zac.',
@@ -28,7 +28,7 @@ test('PU32 - obtiene la dirección, fecha, hora e imagen configuradas del evento
     expect($response->json('data.event_image_url'))->toContain('event_images/evento.jpg');
 });
 
-test('PU32 - devuelve event_image_url en null cuando no se ha configurado una imagen', function () {
+test('PU31 - devuelve event_image_url en null cuando no se ha configurado una imagen', function () {
     $settings = Settings::first();
     $settings->update(['event_image_path' => null]);
 
@@ -37,7 +37,7 @@ test('PU32 - devuelve event_image_url en null cuando no se ha configurado una im
     $response->assertOk()->assertJsonPath('data.event_image_url', null);
 });
 
-test('PU32 - la consulta es pública y no requiere autenticación', function () {
+test('PU31 - la consulta es pública y no requiere autenticación', function () {
     // (se usa en el header del sitio público y de la app móvil sin sesión).
     $response = $this->getJson('/api/v1/settings');
 

@@ -41,7 +41,7 @@
 
             <div class="form-individual">
               <label>TELÉFONO</label>
-              <input type="text" formControlName="phone" placeholder="10 dígitos">
+              <input type="tel" inputmode="numeric" maxlength="10" formControlName="phone" (input)="sanitizePhoneInput($event, f['phone'])" placeholder="10 dígitos">
               <span class="error" *ngIf="f['phone'].invalid && f['phone'].touched">Ingresa 10 dígitos</span>
             </div>
           </div>
