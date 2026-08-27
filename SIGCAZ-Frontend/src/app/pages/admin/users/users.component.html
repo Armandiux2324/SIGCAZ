@@ -62,7 +62,7 @@
     </div>
     <div class="field">
       <label>Teléfono</label>
-      <input type="text" [(ngModel)]="dataToAdd.phone" placeholder="10 dígitos">
+      <input type="tel" inputmode="numeric" maxlength="10" [ngModel]="dataToAdd.phone" (ngModelChange)="dataToAdd.phone = sanitizePhone($event)" placeholder="10 dígitos">
     </div>
     <div class="field">
       <label>Contraseña</label>
@@ -100,7 +100,7 @@
     </div>
     <div class="field">
       <label>Teléfono</label>
-      <input type="text" [(ngModel)]="dataToEdit.phone">
+      <input type="tel" inputmode="numeric" maxlength="10" [ngModel]="dataToEdit.phone" (ngModelChange)="dataToEdit.phone = sanitizePhone($event)">
     </div>
     <div class="field">
       <label>Nueva contraseña <span class="optional">(dejar vacío para no cambiar)</span></label>
