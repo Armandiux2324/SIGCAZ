@@ -75,6 +75,11 @@ export class UsersComponent implements OnInit {
     this.showAddModal = false;
   }
 
+  /** Deja solo dígitos (máx. 10) en el valor del teléfono, sin importar si se escribe o se pega. */
+  sanitizePhone(value: string): string {
+    return (value || '').replace(/\D/g, '').slice(0, 10);
+  }
+
   addUser(): void {
     const { name, email, password, phone, role } = this.dataToAdd;
     this.api.addUser(name, email, password, phone, role, this.token).then(() => {

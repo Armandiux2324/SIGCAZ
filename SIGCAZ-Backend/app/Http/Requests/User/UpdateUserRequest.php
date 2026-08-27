@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'password' => ['sometimes', 'string', 'min:8'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:20', Rule::unique('users', 'phone')->ignore($userId)],
+            'phone' => ['sometimes', 'nullable', 'string', 'regex:/^(\d{10})?$/', Rule::unique('users', 'phone')->ignore($userId)],
             'role' => ['sometimes', Rule::in(['admin', 'staff'])],
         ];
     }
