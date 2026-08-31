@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 
-// PU34 - Validar la consulta del historial de escaneos ordenado cronológicamente.
+// PU36 - Validar la consulta del historial de escaneos ordenado cronológicamente.
 // Requerimiento relacionado: RFEM-002/RFEM-003
-// Diseño relacionado: D23
+// Diseño relacionado: D28
 
 function createParticipantForHistory(string $email): Participant
 {
@@ -28,7 +28,7 @@ function createParticipantForHistory(string $email): Participant
         'transport_method' => 'car',
         'folio_delivery_method' => 'phone',
         'participants' => [[
-            'first_name' => 'PU34',
+            'first_name' => 'PU36',
             'last_name' => 'Test',
             'phone' => '33'.random_int(10000000, 99999999),
             'email' => $email,
@@ -51,11 +51,11 @@ function createScanAt(Participant $participant, User $scanner, string $status, s
     ]);
 }
 
-test('PU34 - devuelve el historial de escaneos ordenado del más reciente al más antiguo', function () {
+test('PU36 - devuelve el historial de escaneos ordenado del más reciente al más antiguo', function () {
     $staff = User::factory()->create(['role' => 'staff']);
-    $p1 = createParticipantForHistory('primero.pu34@example.com');
-    $p2 = createParticipantForHistory('segundo.pu34@example.com');
-    $p3 = createParticipantForHistory('tercero.pu34@example.com');
+    $p1 = createParticipantForHistory('primero.pu36@example.com');
+    $p2 = createParticipantForHistory('segundo.pu36@example.com');
+    $p3 = createParticipantForHistory('tercero.pu36@example.com');
 
     createScanAt($p1, $staff, 'valid', '2026-08-01 09:00:00');
     createScanAt($p2, $staff, 'valid', '2026-08-01 09:05:00');
@@ -72,9 +72,9 @@ test('PU34 - devuelve el historial de escaneos ordenado del más reciente al má
     expect($folios->all())->toBe([$p3->folio, $p2->folio, $p1->folio]);
 });
 
-test('PU34 - incluye el estado y los datos del participante en cada escaneo', function () {
+test('PU36 - incluye el estado y los datos del participante en cada escaneo', function () {
     $staff = User::factory()->create(['role' => 'staff']);
-    $participant = createParticipantForHistory('detalle.pu34@example.com');
+    $participant = createParticipantForHistory('detalle.pu36@example.com');
     createScanAt($participant, $staff, 'valid', now());
 
     Sanctum::actingAs($staff);
@@ -82,14 +82,14 @@ test('PU34 - incluye el estado y los datos del participante en cada escaneo', fu
     $response = $this->getJson('/api/v1/scans');
 
     $response->assertOk()->assertJsonPath('data.data.0.status', 'valid')->assertJsonPath('data.data.0.participant.folio', $participant->folio)
-        ->assertJsonPath('data.data.0.participant.first_name', 'PU34');
+        ->assertJsonPath('data.data.0.participant.first_name', 'PU36');
 });
 
-test('PU34 - pagina el historial de escaneos', function () {
+test('PU36 - pagina el historial de escaneos', function () {
     $staff = User::factory()->create(['role' => 'staff']);
 
     for ($i = 0; $i < 3; $i++) {
-        $participant = createParticipantForHistory("pagina{$i}.pu34@example.com");
+        $participant = createParticipantForHistory("pagina{$i}.pu36@example.com");
         createScanAt($participant, $staff, 'valid', now()->addMinutes($i));
     }
 
@@ -100,7 +100,7 @@ test('PU34 - pagina el historial de escaneos', function () {
     $response->assertOk()->assertJsonPath('data.total', 3)->assertJsonPath('data.per_page', 50);
 });
 
-test('PU34 - devuelve el historial vacío cuando no hay escaneos registrados', function () {
+test('PU36 - devuelve el historial vacío cuando no hay escaneos registrados', function () {
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
 
@@ -109,7 +109,7 @@ test('PU34 - devuelve el historial vacío cuando no hay escaneos registrados', f
     $response->assertOk()->assertJsonPath('data.total', 0)->assertJsonCount(0, 'data.data');
 });
 
-test('PU34 - rechaza la consulta del historial sin autenticación', function () {
+test('PU36 - rechaza la consulta del historial sin autenticación', function () {
     $response = $this->getJson('/api/v1/scans');
 
     $response->assertUnauthorized();

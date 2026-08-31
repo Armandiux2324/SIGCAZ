@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 
-// PU33 - Validar el escaneo de un código QR válido y el registro de asistencia.
+// PU35 - Validar el escaneo de un código QR válido y el registro de asistencia.
 // Requerimiento relacionado: RFEM-001
-// Diseño relacionado: D22
+// Diseño relacionado: D27
 
 function createParticipantForScan(string $email): Participant
 {
@@ -28,9 +28,9 @@ function createParticipantForScan(string $email): Participant
         'transport_method' => 'car',
         'folio_delivery_method' => 'phone',
         'participants' => [[
-            'first_name' => 'PU33',
+            'first_name' => 'PU35',
             'last_name' => 'Test',
-            'phone' => '33'.random_int(10000000, 99999999),
+            'phone' => '35'.random_int(10000000, 99999999),
             'email' => $email,
             'gender' => 'male',
             'shirt_size' => 'M',
@@ -41,8 +41,8 @@ function createParticipantForScan(string $email): Participant
     return Participant::where('email', $email)->first();
 }
 
-test('PU33 - registra la asistencia al escanear un folio válido', function () {
-    $participant = createParticipantForScan('valido.pu33@example.com');
+test('PU35 - registra la asistencia al escanear un folio válido', function () {
+    $participant = createParticipantForScan('valido.pu35@example.com');
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
 
@@ -54,7 +54,7 @@ test('PU33 - registra la asistencia al escanear un folio válido', function () {
             'message' => 'Asistencia registrada correctamente.',
             'data' => [
                 'folio' => $participant->folio,
-                'first_name' => 'PU33',
+                'first_name' => 'PU35',
                 'last_name' => 'Test',
             ],
         ]);
@@ -69,7 +69,7 @@ test('PU33 - registra la asistencia al escanear un folio válido', function () {
     expect($participant->attended_at)->not->toBeNull();
 });
 
-test('PU33 - rechaza el escaneo cuando falta el folio', function () {
+test('PU35 - rechaza el escaneo cuando falta el folio', function () {
     $staff = User::factory()->create(['role' => 'staff']);
     Sanctum::actingAs($staff);
 
@@ -78,8 +78,8 @@ test('PU33 - rechaza el escaneo cuando falta el folio', function () {
     $response->assertUnprocessable()->assertJsonValidationErrors(['folio']);
 });
 
-test('PU33 - rechaza el escaneo sin autenticación', function () {
-    $participant = createParticipantForScan('sinsesion.pu33@example.com');
+test('PU35 - rechaza el escaneo sin autenticación', function () {
+    $participant = createParticipantForScan('sinsesion.pu35@example.com');
 
     $response = $this->postJson('/api/v1/scans', ['folio' => $participant->folio]);
 
