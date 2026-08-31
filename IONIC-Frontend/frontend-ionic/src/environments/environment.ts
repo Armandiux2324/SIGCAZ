@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url: 'https://rolls-essex-eau-spiritual.trycloudflare.com/api/v1'
+  base_url: 'https://adjusted-recent-emerging-transaction.trycloudflare.com/api/v1'
 };
 
 /*
